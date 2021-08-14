@@ -1,0 +1,324 @@
+---
+title: "Amiga Disk File Explorer"
+author: "Pepijn de Vries"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Amiga Disk File Explorer}
+  %\VignettePackage{adfExplorer} 
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+Although the adfExplorer package is well documented, information is
+scattered over various methods, functions and data. This vignette
+attempts to provide a more complete overview of the package and its
+background.
+
+## Amiga Disk Files - Introduction
+
+The Commodore Amiga was a home computer that relied heavily on it's
+build-in 3.5 inch floppy disk drive in the late eighties and early
+nineties. The Amiga was a popular system which nowadays can 
+be accurately [emulated](https://en.wikipedia.org/wiki/Amiga_emulation)
+on modern machines. A problem with the emulation of the Amiga
+is that most modern machines no longer have floppy disk drives.
+And if they do, they are usually physically not able to read
+Amiga formatted disks. To overcome this problem, the Amiga Disk File
+(ADF) was created. Such files are a virtual representation of a
+floppy disks which can be used in emulation.
+
+### Legal issues
+
+Emulating the Commodore Amiga hardware is, as far as I can tell, legal.
+However, the Amiga had its operating system stored on a read only memory
+chip. Which is commonly referred to as the kickstart. This kickstart software
+is still protected by copyright law. Licensed copies can be bought legally
+from [AmigaForever](www.amigaforever.com). The same is true for much of the
+Amiga software, which is still protected by copyright.
+
+Note that for analysing ADF files with the adfExplorer package you don't
+need the kickstart software. Just make sure the ADF files you use contain
+data or software for which you own (or don't need) a licence. 
+
+## The adfExplorer package
+
+This package will allow you to analyse Amiga Disk Files (ADF) with
+the R scripting language. It can also be used to transfer files
+from and to ADF in batches, e.g. for preparing disks for emulation 
+purposes.
+
+The focus will be on the older Amiga operating systems (i.e.,
+OS 3.x and less), as I am most familiar with those systems. In
+newer versions floppy disks became less important anyway.
+Note that this package cannot read extended ADF files containing
+information on the disk's
+[Modified Frequency Modulation (MFM)](https://en.wikipedia.org/wiki/Modified_Frequency_Modulation).
+This information is typically only required for copy protected disk's
+and is therefore out of the scope of this package.
+
+### Future developments
+
+The package is still maturing. The foundation of the package is solid
+and it provides the essential means to access ADF files, there is still
+room for improvement. The following improvements are planned for future
+releases of the package:
+
+* check and optimise current code;
+* include better validation routines;
+* put files or directories onto a virtual disk;
+* delete files or directories from a virtual disk;
+* retrieve and or modify file and directory details;
+* optimise disk structure (when information is fragmented).
+
+The usefulness of this package will increase with better support of Amiga
+file formats. I do have plans to develop a separate package for supporting
+typical Amiga file formats. I'm not sure when the first release will be
+available, as I work on these projects in my spare time. For now the
+ProTracker module format is supported in R
+(https://cran.r-project.org/package=ProTrackR).
+
+## Technical background
+
+Some technical details will be presented here, as they will help
+you better understand some of the package functionalities. I will
+not discuss the ADF format in depth. A more detailed description
+can be found in the [FAQ](http://lclevy.free.fr/adflib/adf_info.html)
+by Laurent Cl&eacute;vy. In fact, I used that document as the main
+source of information during the development of this package; it is
+a very accurate description of the ADF format.
+
+A physical Amiga floppy disk is divided into 80 cylinders, on 2 tracks
+or sides, which contain 11 (double density (DD) disk) or
+22 (high density (HD) disk) sectors or blocks. So in total a disk is
+composed of either 1,760 or 3,520 blocks. Each block holds 512 bytes
+of information. An Amiga Disk File (ADF) is dump of such ordered
+blocks in a file. The adfExplorer package represents ADF files as
+`amigaDisk` objects. A completely blank disk can be created using the
+object constructor (`new`).
+
+```{r}
+library(adfExplorer)
+blank.disk <- new("amigaDisk")
+```
+
+The blocks on Amiga disks are represented by `amigaBlock` objects, which
+can be created with the constructor, or it can be extracted from an `amigaDisk`
+object.
+
+```{r}
+## Create with constructor:
+blank.block <- new("amigaBlock")
+
+## Extract the first block from an amigaDisk object:
+blank.block <- amigaBlock(blank.disk, block = 0)
+```
+
+The relationship between the physical location on the disk and the block
+identifier can be obtained with the `get.blockID` method.
+
+```{r}
+get.blockID(disktype = "DD", sector = 4, side = 0, cylinder = 35)
+```
+
+Note that the identifiers have a base index of zero as opposed to one used
+by R. The physical location can also be calculated from the block
+identifier with the `get.diskLocation` method.
+
+```{r}
+get.diskLocation(disktype = "DD", block = 1231)
+```
+
+The completely `blank.disk` created earlier with the constructor can hold any
+kind of data. However, in order to hold files, the disk needs to be formatted
+with a specific file system. That way, the Amiga Disk Operating System (DOS)
+can access it. We can use the `blank.amigaDOSDisk` method to create a blank
+disk, structured such that it can hold files.
+
+```{r}
+blank.disk <- blank.amigaDOSDisk(diskname = "empty")
+print(blank.disk)
+```
+
+As you can see, although it is blank, it is not completely empty. This is
+because the file system also consumes disk space. To understand this you
+need to know a bit more about the Amiga's file system and they way information
+is stored in blocks on the disk. This will be discussed to some extent.
+
+### File systems on the Amiga {#filesystem}
+
+With Amiga OS version 2.0, the so-called Fast File System (FFS) was introduced.
+The previous file system was not named at the time, but is now commonly
+referred to as the Old File System (OFS). The OFS sacrifices disk space
+for validation purposes, making it more robust in case of data recovery when
+a disk got damaged. This advantage was dropped with the FFS making it
+slightly faster (on original machines) and gaining disk space for file
+data. The FFS does not have backward compatability. So disks formatted with
+this file systems cannot be read by Amiga OS versions <2.0.
+
+In OS version 2.0 the 'international mode' was also introduced. This mode was
+meant to correct for a mistake in the routine to convert text into upper case.
+On the Amiga file names can have both lower and upper case characters. But
+during file name matching, the case is ignored. For that purpose, file names
+are shifted to upper case in file name matching routines.
+
+The Amiga uses the ISO 8859 Latin-1 character set, where in older
+operating systems (<2.0), international characters (e.g., '&oslash;')
+were not capitalised. This mistake was corrected in OS 2.0, but is
+optional. In combination with the 'directory cache mode' (see below),
+the international mode is mandatory.
+
+With Amiga OS 3.0, the '[directory cache mode](#dircacheblock)' was
+introduced. With the direct cache mode, one or more blocks are stored
+for each directory (including the root) with basic information about
+the files stored in that directory. In older versions, the directory
+[header](#headerblock) only stored pointers to the files in that directory.
+This meant that in older OS versions the header of each file needed to be
+loaded to list all files in that directory. As with the directory cache mode
+all information was stored in one (or more when necessary) block, it
+was faster at listing directory content. On the original machine that
+is, as floppy disk drives were pretty slow.
+
+Information is stored in separate blocks, where each block is composed of 512
+bytes. So even when a file is 10 bytes long, it will still consume at least
+512 bytes of disk space. There are several different types of blocks,
+carnying different types of information. Some of them will be discussed below.
+
+Instead of working with a blank disk, it can be more informative to work
+with a disk with some data on it. From here on let's work with the example
+`amigaDisk` object provided with the package.
+
+```{r}
+data("adf.example")
+```
+
+### The bootblock {#bootblock}
+
+The bootblock are actually the first two blocks on an Amiga disk:
+`amigaBlock(adf.example, 0)` and `amigaBlock(adf.example, 1)`. When the
+Commodore Amiga system boots, it will first load these blocks in memory
+and uses this to check what type of disk it is. Any executable code on this
+block will be run when the bootblock checksum is valid. When the system is
+already booted when the disk is insert, the bootblock will just be used to
+determine what type of disk it represents.
+
+### The root block
+
+The root block holds information on the files and directories in the root of
+the disk. It also holds information on the disk name, creation and modification
+date. It is usually situated at the centre of the blocks, at block 880 for
+DD disks.
+
+```{r}
+amigaBlock(adf.example, 880)
+```
+
+### The bitmap block
+
+The bitmap block, contains information on which blocks on the disk are in use
+and which are free. The first for bytes in this block form a checksum, the
+following 220 bytes (for a DD disk, twice as many for a HD disk). Each byte
+is composed of 8 bits. When a bit is set, it represents a used block, when it
+is not set, it reflects a free block. The bitmap block is usually situate next
+to the root block, at block 881 on a DD disk.
+
+```{r}
+amigaBlock(adf.example, 881)
+```
+
+The bitmap is thus used to allocate free blocks on the disk to put new files.
+When files are removed (and blocks) are thus freed, this will also be marked
+in the bitmap. The bitmap is also used to calculate the free space on a disk.
+
+### Header blocks {#headerblock}
+
+As indicated before, files are stored as 512 blocks. But not only the file
+data is written to the disk. Information about the file (i.e., the file name,
+it's size, where to find the data on the disk etc.) also needs to be stored.
+This block, containing information on the file (or directory) is called a
+header block. Each file, directory or link on the disk starts with a header
+block. The root block is a special case of a header block; it marks the root
+directory.
+
+Header blocks of directories contain pointers to the files (and directories)
+in that directory. Header blocks of files contain pointers to data blocks,
+containing the data of the file.
+
+### Data blocks
+
+In the Fast [File System](#filesystem), the data blocks are only composed of
+file data; nothing else. The location of the data blocks are provided in the
+file's header. In the Old [File System](#filesystem), each data block contains
+additional information, most importantly: a pointer to the next data block and
+a checksum.
+
+### The directory cache block {#dircacheblock}
+
+The directory cache block is a block listing the most important information
+of files and directories within a specific directory. This block type was
+introduced with the [direct cache mode](#filesystem) in Amiga OS 3.0. It
+basically stores a summary of header block information of all files in a
+specific directory at a central place, making directory listing faster.
+
+There is no backward compatibility for the directory cache mode, meaning that
+OS versions <3.0 are not able to read disks that are formatted in this mode.
+The directory cache mode is always used in combination with the
+'[international mode](#filesystem)'.
+
+## Examples
+
+The package contains an example of an `amigaDisk` object, which is formatted
+with the old [file system](#filesystem) and a [bootable bootblock](#bootblock).
+Files and directories in the root directory can easily be listed.
+
+```{r}
+list.adf.files(adf.example)
+```
+
+The disk also contains a file called 'Startup-Sequence'. This executable
+script file that is run when the disk is booted from the disk. It is
+comparable with the (probably better known) 'autoexec.bat' files on
+IBM PC DOS systems. Let's have a little peek at this file.
+
+```{r}
+## get the file from the amigaDisk object:
+startup <- get.adf.file(adf.example, "df0:s/Startup-Sequence")
+
+## the file content is returned as raw data.
+## let's convert it to text:
+startup <- rawToChar(startup)
+
+## let's show it
+cat(startup)
+```
+
+As you can see this startup sequence contains mostly some comments
+and will print (Echo) some text to the command line interface and
+doesn't do more than that.
+
+There is currently little support for Amiga file types in R. An
+exception is the ProTracker module format, as shown in the following
+example.
+
+```{r}
+## first get the file as raw data.
+mod.raw <- get.adf.file(adf.example, "df0:mods/mod.intro")
+
+## For the rest of the example we need
+## the ProTrackR package
+if (requireNamespace("ProTrackR", quietly = TRUE)) {
+  con <- rawConnection(mod.raw, "rb")
+
+  ## and read it as a ProTracker module
+  mod <- ProTrackR::read.module(con)
+  close(con)
+
+  ## plot the first sample from the module:
+  par(mar = c(5, 4, 0, 0) + 0.1)
+  plot(ProTrackR::waveform(ProTrackR::PTSample(mod, 1)),
+       type = "l", ylab = "Amplitude")
+  
+  ## and to play it, uncomment the following line:
+  ## ProTrackR::playMod(mod)
+}
+```

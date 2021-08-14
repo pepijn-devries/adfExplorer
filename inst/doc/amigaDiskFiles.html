@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Pepijn de Vries" />
+
+<meta name="date" content="2017-10-28" />
+
+<title>Amiga Disk File Explorer</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+
+
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Amiga Disk File Explorer</h1>
+<h4 class="author"><em>Pepijn de Vries</em></h4>
+<h4 class="date"><em>2017-10-28</em></h4>
+
+
+
+<p>Although the adfExplorer package is well documented, information is scattered over various methods, functions and data. This vignette attempts to provide a more complete overview of the package and its background.</p>
+<div id="amiga-disk-files---introduction" class="section level2">
+<h2>Amiga Disk Files - Introduction</h2>
+<p>The Commodore Amiga was a home computer that relied heavily on it’s build-in 3.5 inch floppy disk drive in the late eighties and early nineties. The Amiga was a popular system which nowadays can be accurately <a href="https://en.wikipedia.org/wiki/Amiga_emulation">emulated</a> on modern machines. A problem with the emulation of the Amiga is that most modern machines no longer have floppy disk drives. And if they do, they are usually physically not able to read Amiga formatted disks. To overcome this problem, the Amiga Disk File (ADF) was created. Such files are a virtual representation of a floppy disks which can be used in emulation.</p>
+<div id="legal-issues" class="section level3">
+<h3>Legal issues</h3>
+<p>Emulating the Commodore Amiga hardware is, as far as I can tell, legal. However, the Amiga had its operating system stored on a read only memory chip. Which is commonly referred to as the kickstart. This kickstart software is still protected by copyright law. Licensed copies can be bought legally from <a href="www.amigaforever.com">AmigaForever</a>. The same is true for much of the Amiga software, which is still protected by copyright.</p>
+<p>Note that for analysing ADF files with the adfExplorer package you don’t need the kickstart software. Just make sure the ADF files you use contain data or software for which you own (or don’t need) a licence.</p>
+</div>
+</div>
+<div id="the-adfexplorer-package" class="section level2">
+<h2>The adfExplorer package</h2>
+<p>This package will allow you to analyse Amiga Disk Files (ADF) with the R scripting language. It can also be used to transfer files from and to ADF in batches, e.g. for preparing disks for emulation purposes.</p>
+<p>The focus will be on the older Amiga operating systems (i.e., OS 3.x and less), as I am most familiar with those systems. In newer versions floppy disks became less important anyway. Note that this package cannot read extended ADF files containing information on the disk’s <a href="https://en.wikipedia.org/wiki/Modified_Frequency_Modulation">Modified Frequency Modulation (MFM)</a>. This information is typically only required for copy protected disk’s and is therefore out of the scope of this package.</p>
+<div id="future-developments" class="section level3">
+<h3>Future developments</h3>
+<p>The package is still maturing. The foundation of the package is solid and it provides the essential means to access ADF files, there is still room for improvement. The following improvements are planned for future releases of the package:</p>
+<ul>
+<li>check and optimise current code;</li>
+<li>include better validation routines;</li>
+<li>put files or directories onto a virtual disk;</li>
+<li>delete files or directories from a virtual disk;</li>
+<li>retrieve and or modify file and directory details;</li>
+<li>optimise disk structure (when information is fragmented).</li>
+</ul>
+<p>The usefulness of this package will increase with better support of Amiga file formats. I do have plans to develop a separate package for supporting typical Amiga file formats. I’m not sure when the first release will be available, as I work on these projects in my spare time. For now the ProTracker module format is supported in R (<a href="https://cran.r-project.org/package=ProTrackR" class="uri">https://cran.r-project.org/package=ProTrackR</a>).</p>
+</div>
+</div>
+<div id="technical-background" class="section level2">
+<h2>Technical background</h2>
+<p>Some technical details will be presented here, as they will help you better understand some of the package functionalities. I will not discuss the ADF format in depth. A more detailed description can be found in the <a href="http://lclevy.free.fr/adflib/adf_info.html">FAQ</a> by Laurent Clévy. In fact, I used that document as the main source of information during the development of this package; it is a very accurate description of the ADF format.</p>
+<p>A physical Amiga floppy disk is divided into 80 cylinders, on 2 tracks or sides, which contain 11 (double density (DD) disk) or 22 (high density (HD) disk) sectors or blocks. So in total a disk is composed of either 1,760 or 3,520 blocks. Each block holds 512 bytes of information. An Amiga Disk File (ADF) is dump of such ordered blocks in a file. The adfExplorer package represents ADF files as <code>amigaDisk</code> objects. A completely blank disk can be created using the object constructor (<code>new</code>).</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(adfExplorer)
+blank.disk &lt;-<span class="st"> </span><span class="kw">new</span>(<span class="st">&quot;amigaDisk&quot;</span>)</code></pre></div>
+<p>The blocks on Amiga disks are represented by <code>amigaBlock</code> objects, which can be created with the constructor, or it can be extracted from an <code>amigaDisk</code> object.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Create with constructor:
+blank.block &lt;-<span class="st"> </span><span class="kw">new</span>(<span class="st">&quot;amigaBlock&quot;</span>)
+
+## Extract the first block from an amigaDisk object:
+blank.block &lt;-<span class="st"> </span><span class="kw">amigaBlock</span>(blank.disk, <span class="dt">block =</span> <span class="dv">0</span>)</code></pre></div>
+<p>The relationship between the physical location on the disk and the block identifier can be obtained with the <code>get.blockID</code> method.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">get.blockID</span>(<span class="dt">disktype =</span> <span class="st">&quot;DD&quot;</span>, <span class="dt">sector =</span> <span class="dv">4</span>, <span class="dt">side =</span> <span class="dv">0</span>, <span class="dt">cylinder =</span> <span class="dv">35</span>)</code></pre></div>
+<pre><code>## [1] 774</code></pre>
+<p>Note that the identifiers have a base index of zero as opposed to one used by R. The physical location can also be calculated from the block identifier with the <code>get.diskLocation</code> method.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">get.diskLocation</span>(<span class="dt">disktype =</span> <span class="st">&quot;DD&quot;</span>, <span class="dt">block =</span> <span class="dv">1231</span>)</code></pre></div>
+<pre><code>## $sector
+## [1] 10
+## 
+## $side
+## [1] 1
+## 
+## $cylinder
+## [1] 55</code></pre>
+<p>The completely <code>blank.disk</code> created earlier with the constructor can hold any kind of data. However, in order to hold files, the disk needs to be formatted with a specific file system. That way, the Amiga Disk Operating System (DOS) can access it. We can use the <code>blank.amigaDOSDisk</code> method to create a blank disk, structured such that it can hold files.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">blank.disk &lt;-<span class="st"> </span><span class="kw">blank.amigaDOSDisk</span>(<span class="dt">diskname =</span> <span class="st">&quot;empty&quot;</span>)
+<span class="kw">print</span>(blank.disk)</code></pre></div>
+<pre><code>## 
+## Amiga (DD) Disk File:
+##  Type:           bootable DOS
+##  Volume name:        empty
+##  percentage full:    0.2%
+##  Fast File System:   FALSE
+##  International mode: FALSE
+##  Direct cache mode:  FALSE</code></pre>
+<p>As you can see, although it is blank, it is not completely empty. This is because the file system also consumes disk space. To understand this you need to know a bit more about the Amiga’s file system and they way information is stored in blocks on the disk. This will be discussed to some extent.</p>
+<div id="filesystem" class="section level3">
+<h3>File systems on the Amiga</h3>
+<p>With Amiga OS version 2.0, the so-called Fast File System (FFS) was introduced. The previous file system was not named at the time, but is now commonly referred to as the Old File System (OFS). The OFS sacrifices disk space for validation purposes, making it more robust in case of data recovery when a disk got damaged. This advantage was dropped with the FFS making it slightly faster (on original machines) and gaining disk space for file data. The FFS does not have backward compatability. So disks formatted with this file systems cannot be read by Amiga OS versions &lt;2.0.</p>
+<p>In OS version 2.0 the ‘international mode’ was also introduced. This mode was meant to correct for a mistake in the routine to convert text into upper case. On the Amiga file names can have both lower and upper case characters. But during file name matching, the case is ignored. For that purpose, file names are shifted to upper case in file name matching routines.</p>
+<p>The Amiga uses the ISO 8859 Latin-1 character set, where in older operating systems (&lt;2.0), international characters (e.g., ‘ø’) were not capitalised. This mistake was corrected in OS 2.0, but is optional. In combination with the ‘directory cache mode’ (see below), the international mode is mandatory.</p>
+<p>With Amiga OS 3.0, the ‘<a href="#dircacheblock">directory cache mode</a>’ was introduced. With the direct cache mode, one or more blocks are stored for each directory (including the root) with basic information about the files stored in that directory. In older versions, the directory <a href="#headerblock">header</a> only stored pointers to the files in that directory. This meant that in older OS versions the header of each file needed to be loaded to list all files in that directory. As with the directory cache mode all information was stored in one (or more when necessary) block, it was faster at listing directory content. On the original machine that is, as floppy disk drives were pretty slow.</p>
+<p>Information is stored in separate blocks, where each block is composed of 512 bytes. So even when a file is 10 bytes long, it will still consume at least 512 bytes of disk space. There are several different types of blocks, carnying different types of information. Some of them will be discussed below.</p>
+<p>Instead of working with a blank disk, it can be more informative to work with a disk with some data on it. From here on let’s work with the example <code>amigaDisk</code> object provided with the package.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(<span class="st">&quot;adf.example&quot;</span>)</code></pre></div>
+</div>
+<div id="bootblock" class="section level3">
+<h3>The bootblock</h3>
+<p>The bootblock are actually the first two blocks on an Amiga disk: <code>amigaBlock(adf.example, 0)</code> and <code>amigaBlock(adf.example, 1)</code>. When the Commodore Amiga system boots, it will first load these blocks in memory and uses this to check what type of disk it is. Any executable code on this block will be run when the bootblock checksum is valid. When the system is already booted when the disk is insert, the bootblock will just be used to determine what type of disk it represents.</p>
+</div>
+<div id="the-root-block" class="section level3">
+<h3>The root block</h3>
+<p>The root block holds information on the files and directories in the root of the disk. It also holds information on the disk name, creation and modification date. It is usually situated at the centre of the blocks, at block 880 for DD disks.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">amigaBlock</span>(adf.example, <span class="dv">880</span>)</code></pre></div>
+<pre><code>## 0x000  00000002 00000000 00000000 00000048  ...............H
+## 0x010  00000000 F665FC39 00000000 00000000  ....öeü9........
+## 0x020  00000000 00000000 00000000 00000000  ................
+## 0x030  00000000 00000000 00000000 00000000  ................
+## 0x040  00000000 00000000 00000000 00000000  ................
+## 0x050  00000000 00000000 00000000 00000000  ................
+## 0x060  00000000 00000000 00000000 00000000  ................
+## 0x070  00000373 00000000 00000372 00000000  ...s.......r....
+## 0x080  00000000 00000000 00000000 00000000  ................
+## 0x090  00000000 00000000 00000000 00000000  ................
+## 0x0A0  00000000 00000000 00000000 00000000  ................
+## 0x0B0  00000000 00000000 00000000 00000000  ................
+## 0x0C0  00000000 00000000 00000000 00000000  ................
+## 0x0D0  00000000 00000000 00000375 00000000  ...........u....
+## 0x0E0  00000000 00000374 00000000 00000000  .......t........
+## 0x0F0  00000000 00000000 00000000 00000000  ................
+## 0x100  00000000 00000000 00000000 00000000  ................
+## 0x110  00000000 00000000 00000000 00000000  ................
+## 0x120  00000000 00000000 00000000 00000000  ................
+## 0x130  00000000 00000000 FFFFFFFF 00000371  ........ÿÿÿÿ...q
+## 0x140  00000000 00000000 00000000 00000000  ................
+## 0x150  00000000 00000000 00000000 00000000  ................
+## 0x160  00000000 00000000 00000000 00000000  ................
+## 0x170  00000000 00000000 00000000 00000000  ................
+## 0x180  00000000 00000000 00000000 00000000  ................
+## 0x190  00000000 00000000 00000000 00000000  ................
+## 0x1A0  00000000 000038C6 0000027D 00000716  ......8Æ...}....
+## 0x1B0  0D616466 4578616D 706C654F 46530000  .adfExampleOFS..
+## 0x1C0  00000000 00000000 00000000 00000000  ................
+## 0x1D0  00000000 00000000 000038C6 000002B5  ..........8Æ...µ
+## 0x1E0  000006DB 000038C6 000001C4 000007E3  ...Û..8Æ...Ä...ã
+## 0x1F0  00000000 00000000 00000000 00000001  ................</code></pre>
+</div>
+<div id="the-bitmap-block" class="section level3">
+<h3>The bitmap block</h3>
+<p>The bitmap block, contains information on which blocks on the disk are in use and which are free. The first for bytes in this block form a checksum, the following 220 bytes (for a DD disk, twice as many for a HD disk). Each byte is composed of 8 bits. When a bit is set, it represents a used block, when it is not set, it reflects a free block. The bitmap block is usually situate next to the root block, at block 881 on a DD disk.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">amigaBlock</span>(adf.example, <span class="dv">881</span>)</code></pre></div>
+<pre><code>## 0x000  000E0036 FFFFFFFF FFFFFFFF FFFFFFFF  ...6ÿÿÿÿÿÿÿÿÿÿÿÿ
+## 0x010  FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF  ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿ
+## 0x020  FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF  ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿ
+## 0x030  FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF  ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿ
+## 0x040  FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF  ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿ
+## 0x050  FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF  ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿ
+## 0x060  FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF  ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿ
+## 0x070  00003FFF FFF1C000 FFFFFFFF FFFFFFFF  ..?ÿÿñÀ.ÿÿÿÿÿÿÿÿ
+## 0x080  FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF  ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿ
+## 0x090  FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF  ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿ
+## 0x0A0  FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF  ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿ
+## 0x0B0  FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF  ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿ
+## 0x0C0  FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF  ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿ
+## 0x0D0  FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF  ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿ
+## 0x0E0  00000000 00000000 00000000 00000000  ................
+## 0x0F0  00000000 00000000 00000000 00000000  ................
+## 0x100  00000000 00000000 00000000 00000000  ................
+## 0x110  00000000 00000000 00000000 00000000  ................
+## 0x120  00000000 00000000 00000000 00000000  ................
+## 0x130  00000000 00000000 00000000 00000000  ................
+## 0x140  00000000 00000000 00000000 00000000  ................
+## 0x150  00000000 00000000 00000000 00000000  ................
+## 0x160  00000000 00000000 00000000 00000000  ................
+## 0x170  00000000 00000000 00000000 00000000  ................
+## 0x180  00000000 00000000 00000000 00000000  ................
+## 0x190  00000000 00000000 00000000 00000000  ................
+## 0x1A0  00000000 00000000 00000000 00000000  ................
+## 0x1B0  00000000 00000000 00000000 00000000  ................
+## 0x1C0  00000000 00000000 00000000 00000000  ................
+## 0x1D0  00000000 00000000 00000000 00000000  ................
+## 0x1E0  00000000 00000000 00000000 00000000  ................
+## 0x1F0  00000000 00000000 00000000 00000000  ................</code></pre>
+<p>The bitmap is thus used to allocate free blocks on the disk to put new files. When files are removed (and blocks) are thus freed, this will also be marked in the bitmap. The bitmap is also used to calculate the free space on a disk.</p>
+</div>
+<div id="headerblock" class="section level3">
+<h3>Header blocks</h3>
+<p>As indicated before, files are stored as 512 blocks. But not only the file data is written to the disk. Information about the file (i.e., the file name, it’s size, where to find the data on the disk etc.) also needs to be stored. This block, containing information on the file (or directory) is called a header block. Each file, directory or link on the disk starts with a header block. The root block is a special case of a header block; it marks the root directory.</p>
+<p>Header blocks of directories contain pointers to the files (and directories) in that directory. Header blocks of files contain pointers to data blocks, containing the data of the file.</p>
+</div>
+<div id="data-blocks" class="section level3">
+<h3>Data blocks</h3>
+<p>In the Fast <a href="#filesystem">File System</a>, the data blocks are only composed of file data; nothing else. The location of the data blocks are provided in the file’s header. In the Old <a href="#filesystem">File System</a>, each data block contains additional information, most importantly: a pointer to the next data block and a checksum.</p>
+</div>
+<div id="dircacheblock" class="section level3">
+<h3>The directory cache block</h3>
+<p>The directory cache block is a block listing the most important information of files and directories within a specific directory. This block type was introduced with the <a href="#filesystem">direct cache mode</a> in Amiga OS 3.0. It basically stores a summary of header block information of all files in a specific directory at a central place, making directory listing faster.</p>
+<p>There is no backward compatibility for the directory cache mode, meaning that OS versions &lt;3.0 are not able to read disks that are formatted in this mode. The directory cache mode is always used in combination with the ‘<a href="#filesystem">international mode</a>’.</p>
+</div>
+</div>
+<div id="examples" class="section level2">
+<h2>Examples</h2>
+<p>The package contains an example of an <code>amigaDisk</code> object, which is formatted with the old <a href="#filesystem">file system</a> and a <a href="#bootblock">bootable bootblock</a>. Files and directories in the root directory can easily be listed.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">list.adf.files</span>(adf.example)</code></pre></div>
+<pre><code>## [1] &quot;Devs&quot; &quot;S&quot;    &quot;this&quot; &quot;mods&quot;</code></pre>
+<p>The disk also contains a file called ‘Startup-Sequence’. This executable script file that is run when the disk is booted from the disk. It is comparable with the (probably better known) ‘autoexec.bat’ files on IBM PC DOS systems. Let’s have a little peek at this file.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## get the file from the amigaDisk object:
+startup &lt;-<span class="st"> </span><span class="kw">get.adf.file</span>(adf.example, <span class="st">&quot;df0:s/Startup-Sequence&quot;</span>)
+
+## the file content is returned as raw data.
+## let's convert it to text:
+startup &lt;-<span class="st"> </span><span class="kw">rawToChar</span>(startup)
+
+## let's show it
+<span class="kw">cat</span>(startup)</code></pre></div>
+<pre><code>## ; The Startup-Sequence is executed after booting
+## ; Everything after semicolons are comments and is ignored
+## ; By default standard commands are loaded from
+## ; the ROM kickstart. Additional commands should be
+## ; stored on the disk in the SYS:C directory.
+## ; For demonstration purposes we only echo some
+## ; text to the screen... Note that this will not
+## ; work on Amiga OS &lt;2.0 as &quot;Echo&quot; is not available
+## ; in older ROM kickstart versions.
+## 
+## Echo &quot;c[22m[32mADF Explorer Example Disk&quot; ; Note that the weird characters at the start are escape-codes to format the text
+## Echo &quot;[0mThis disk was created as an example for the&quot;
+## Echo &quot;R package 'adfExplorer' by Pepijn de Vries.&quot;</code></pre>
+<p>As you can see this startup sequence contains mostly some comments and will print (Echo) some text to the command line interface and doesn’t do more than that.</p>
+<p>There is currently little support for Amiga file types in R. An exception is the ProTracker module format, as shown in the following example.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## first get the file as raw data.
+mod.raw &lt;-<span class="st"> </span><span class="kw">get.adf.file</span>(adf.example, <span class="st">&quot;df0:mods/mod.intro&quot;</span>)
+
+## For the rest of the example we need
+## the ProTrackR package
+if (<span class="kw">requireNamespace</span>(<span class="st">&quot;ProTrackR&quot;</span>, <span class="dt">quietly =</span> <span class="ot">TRUE</span>)) {
+  con &lt;-<span class="st"> </span><span class="kw">rawConnection</span>(mod.raw, <span class="st">&quot;rb&quot;</span>)
+
+  ## and read it as a ProTracker module
+  mod &lt;-<span class="st"> </span>ProTrackR::<span class="kw">read.module</span>(con)
+  <span class="kw">close</span>(con)
+
+  ## plot the first sample from the module:
+  <span class="kw">par</span>(<span class="dt">mar =</span> <span class="kw">c</span>(<span class="dv">5</span>, <span class="dv">4</span>, <span class="dv">0</span>, <span class="dv">0</span>) +<span class="st"> </span><span class="fl">0.1</span>)
+  <span class="kw">plot</span>(ProTrackR::<span class="kw">waveform</span>(ProTrackR::<span class="kw">PTSample</span>(mod, <span class="dv">1</span>)),
+       <span class="dt">type =</span> <span class="st">&quot;l&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;Amplitude&quot;</span>)
+  
+  ## and to play it, uncomment the following line:
+  ## ProTrackR::playMod(mod)
+}</code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

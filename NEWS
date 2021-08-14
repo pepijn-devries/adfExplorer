@@ -1,0 +1,10 @@
+adfExplorer v0.1.1 (Release date: 2017-10-28)
+=============
+
+First release:
+
+ * This is the first release that has basic functionality to
+   - Read and write adf files
+   - Detect the presence of a file system (Amiga OS 3.x and earlier)
+   - List files within the adf
+   - Retrieve files from within adf files

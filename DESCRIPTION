@@ -1,0 +1,28 @@
+Package: adfExplorer
+Type: Package
+Title: Import from and Export to Amiga Disk Files
+Version: 0.1.1
+Date: 2017-10-28
+Authors@R: c(person("Pepijn", "de Vries", role =c("aut", "cre", "dtc"),
+    email = "pepijn.devries@outlook.com"))
+Author: Pepijn de Vries [aut, cre, dtc]
+Maintainer: Pepijn de Vries <pepijn.devries@outlook.com>
+Description: Amiga Disk Files (ADF) are virtual
+    representations of 3.5 inch floppy disks for the
+    Commodore Amiga. Most disk drives from other systems
+    (including modern drives) are not able to read these
+    disks. To be able to emulate this system, the ADF
+    format was created. This package enables you to read
+    ADF files and import and export files from and to such
+    virtual DOS-formatted disks.
+Depends: R (>= 2.10)
+Imports: methods
+License: GPL-3
+LazyData: True
+RoxygenNote: 6.0.1
+Suggests: knitr, rmarkdown, ProTrackR
+VignetteBuilder: knitr
+NeedsCompilation: no
+Packaged: 2017-10-28 10:19:29 UTC; vries171
+Repository: CRAN
+Date/Publication: 2017-10-30 15:40:57 UTC
