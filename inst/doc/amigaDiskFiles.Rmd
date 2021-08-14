@@ -142,7 +142,7 @@ print(blank.disk)
 
 As you can see, although it is blank, it is not completely empty. This is
 because the file system also consumes disk space. To understand this you
-need to know a bit more about the Amiga's file system and they way information
+need to know a bit more about the Amiga's file system and the way information
 is stored in blocks on the disk. This will be discussed to some extent.
 
 ### File systems on the Amiga {#filesystem}
@@ -209,7 +209,7 @@ the disk. It also holds information on the disk name, creation and modification
 date. It is usually situated at the centre of the blocks, at block 880 for
 DD disks.
 
-```{r}
+```{r eval=FALSE}
 amigaBlock(adf.example, 880)
 ```
 
@@ -222,7 +222,7 @@ is composed of 8 bits. When a bit is set, it represents a used block, when it
 is not set, it reflects a free block. The bitmap block is usually situate next
 to the root block, at block 881 on a DD disk.
 
-```{r}
+```{r eval=FALSE}
 amigaBlock(adf.example, 881)
 ```
 

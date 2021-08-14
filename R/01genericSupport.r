@@ -140,8 +140,9 @@ amigaIntToRaw <- function(x, bits = 8, signed = F) {
 # Function that replaces special characters in a raw format
 # by dots than converts it into a character string...
 rawToCharDot <- function(raw_dat) {
-  raw_dat[raw_dat <= as.raw(0x19)] <- as.raw(46)
+  raw_dat[raw_dat <= as.raw(0x1F)] <- as.raw(46)
   raw_dat[raw_dat >= as.raw(0x21) & raw_dat <= as.raw(0x25)] <- as.raw(46)
+  raw_dat[raw_dat == as.raw(0x81)] <- as.raw(46)
   raw_dat[raw_dat == as.raw(0x8d)] <- as.raw(46)
   raw_dat[raw_dat == as.raw(0x8f)] <- as.raw(46)
   raw_dat[raw_dat == as.raw(0x90)] <- as.raw(46)
@@ -177,6 +178,9 @@ rawToCharDot <- function(raw_dat) {
 #' @examples
 #' ## Display some raw random data:
 #' displayRawData(as.raw(sample.int(100)))
+#' 
+#' ## Display the full ASCII table:
+#' displayRawData(as.raw(0:255))
 #' @family raw.operations
 #' @author Pepijn de Vries
 #' @export
@@ -350,51 +354,62 @@ file.info <- function(x, block = 880) {
   }
   hash.table <- hash.table[hash.table != 0]
   result <- NULL
-  ## XX dit nog beveiligen tegen oneindige loops
   ## loop through all hash chains
+  reality.check <- 0
   while (T) {
     new.result <- header.info(x, hash.table)
     result <- c(result, new.result)
     hash.table <- unlist(lapply(new.result, function(x) x$hash_chain))
     hash.table <- hash.table[hash.table != 0]
     # When there are no more new hash.tables, break.
+    reality.check <- reality.check + 1
+    if (reality.check > NUMBER_OF_SIDES*NUMBER_OF_CYLINDERS*NUMBER_OF_SECTORS_HD) stop("Hash chain appears to be unrealistically long.")
     if (length(hash.table) == 0) break
   }
   return(result)
 }
 
-dir.cache.info <- function(x) {
-  ri <- root.info(x)
+dir.cache.info <- function(x, block) {
+  if (missing(block)) block <- get.root.id(x@type)
+  hi <- header.info(x, block)[[1]]
   bi <- boot.info(x)
-  if (!bi$flag$dir.cache.mode || ri$extension == 0) stop("No pointer to direct cache block found.")
-  dc.id <- ri$extension
+  if (!(hi$sec_type %in% c("ST_ROOT", "ST_USERDIR"))) stop("Directory cache information can only be obtained from a (root) directory.")
+  if (!bi$flag$dir.cache.mode || hi$extension == 0) stop("No pointer to direct cache block found.")
+  dc.id <- hi$extension
   records <- list()
-  while (dc.id != 0) {
-    dc <- amigaBlock(x, dc.id)
+  while (dc.id[length(dc.id)] != 0) {
+    dc <- amigaBlock(x, dc.id[length(dc.id)])
     dc.info <- as.list(rawToAmigaInt(dc@data[1:(6*4)], 32))
     names(dc.info) <- c("type", "header_key", "parent", "records_nb", "next_dirc", "chksum")
-    dc.id <- dc.info$next_dirc
+    dc.id <- c(dc.id, dc.info$next_dirc)
     offset <- 24
-    for (i in 1:dc.info$records_nb) {
-      rec <- as.list(rawToAmigaInt(dc@data[offset + 1:(3*4)], 32))
-      rec <- c(rec, as.list(rawToAmigaInt(dc@data[offset + 13:16], 16)))
-      rec[[length(rec) + 1]] <- rawToAmigaDate(dc@data[offset + 17:22], "short")
-      rec <- c(rec, as.list(rawToAmigaInt(dc@data[offset + 23:24], 8)))
-      names(rec) <- c("header", "size", "protrect", "UID", "GID",
-                      "date", "type", "name_len")
-      rec$name <- rawToChar(dc@data[offset + 25:(24 + rec$name_len)])
-      rec$comment_len <- rawToAmigaInt(dc@data[offset + 25 + rec$name_len], 8)
-      if (rec$comment_len > 0) {
-        rec$comment <- rawToChar(dc@data[offset + rec$name_len + 26:(25 + rec$comment_len)])
-      } else {
-        rec$comment <- ""
+    if (dc.info$records_nb > 0) {
+      for (i in 1:dc.info$records_nb) {
+        rec <- as.list(rawToAmigaInt(dc@data[offset + 1:(3*4)], 32))
+        rec <- c(rec, as.list(rawToAmigaInt(dc@data[offset + 13:16], 16)))
+        rec[[length(rec) + 1]] <- rawToAmigaDate(dc@data[offset + 17:22], "short")
+        rec <- c(rec, as.list(rawToAmigaInt(dc@data[offset + 23], 8, T)))
+        rec <- c(rec, as.list(rawToAmigaInt(dc@data[offset + 24], 8)))
+        names(rec) <- c("header", "size", "protect", "UID", "GID",
+                        "date", "type", "name_len")
+        rec$type[rec$type < 0] <- 0x100000000 + rec$type[rec$type < 0]
+        rec$type <- SEC_TYPES$type[SEC_TYPES$value == rec$type]
+        rec$name <- rawToChar(dc@data[offset + 25:(24 + rec$name_len)])
+        rec$comment_len <- rawToAmigaInt(dc@data[offset + 25 + rec$name_len], 8)
+        if (rec$comment_len > 0) {
+          rec$comment <- rawToChar(dc@data[offset + rec$name_len + 26:(25 + rec$comment_len)])
+        } else {
+          rec$comment <- ""
+        }
+        tot.len <- 3*4 + 5*2 + 3 + rec$name_len + rec$comment_len
+        tot.len <- 2*ceiling(tot.len/2)
+        offset <- offset + tot.len
+        rec <- c(list(dir.cache = dc.info$header_key), rec)
+        records[[length(records) + 1]] <- rec
       }
-      tot.len <- 3*4 + 5*2 + 3 + rec$name_len + rec$comment_len
-      tot.len <- 2*ceiling(tot.len/2)
-      offset <- offset + tot.len
-      records[[length(records) + 1]] <- rec
     }
   }
+  attributes(records)$dc.blocks <- dc.id[-length(dc.id)]
   return(records)
 }
 

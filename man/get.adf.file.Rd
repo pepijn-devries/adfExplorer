@@ -24,7 +24,8 @@ needs to be extracted.}
 
 \item{destination}{either a file name or a file connection, that
 allows writing binary data (see e.g., \code{\link[base]{file}} or
-\code{\link[base]{url}}).}
+\code{\link[base]{url}}). When the destination is missing, the
+file content is returned as \code{raw} data.}
 }
 \value{
 Returns a \code{vector} of \code{raw} data when the

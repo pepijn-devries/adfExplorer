@@ -1,3 +1,17 @@
+adfExplorer v0.1.2 (Release date: 2017-11-03)
+=============
+
+ * Added adf.file.exists method.
+ 
+ * Modified 'displayRawData' to convert more special
+   characters to dots.
+
+ * Minor adjustments in the manual
+
+ * Vignette contained r-code output with non-supported
+   characters. As a quick fix the display of this output
+   now is suppressed in the vignette.
+
 adfExplorer v0.1.1 (Release date: 2017-10-28)
 =============
 

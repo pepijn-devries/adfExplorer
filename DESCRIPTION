@@ -1,8 +1,8 @@
 Package: adfExplorer
 Type: Package
 Title: Import from and Export to Amiga Disk Files
-Version: 0.1.1
-Date: 2017-10-28
+Version: 0.1.2
+Date: 2017-11-03
 Authors@R: c(person("Pepijn", "de Vries", role =c("aut", "cre", "dtc"),
     email = "pepijn.devries@outlook.com"))
 Author: Pepijn de Vries [aut, cre, dtc]
@@ -23,6 +23,6 @@ RoxygenNote: 6.0.1
 Suggests: knitr, rmarkdown, ProTrackR
 VignetteBuilder: knitr
 NeedsCompilation: no
-Packaged: 2017-10-28 10:19:29 UTC; vries171
+Packaged: 2017-11-03 11:48:37 UTC; vries171
 Repository: CRAN
-Date/Publication: 2017-10-30 15:40:57 UTC
+Date/Publication: 2017-11-03 12:20:39 UTC

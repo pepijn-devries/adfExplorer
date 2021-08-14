@@ -90,6 +90,7 @@ setMethod("calculate.checksum", c("raw", "ANY"), function(x, block, chcksm.pos =
     }
   }
   checksum <- 0x100000000 - checksum
+  checksum <- checksum %% 0x100000000
   if (as.raw) return(amigaIntToRaw(checksum, 32, F)) else return (checksum)
 })
 
@@ -188,7 +189,7 @@ setGeneric("read.adz", function(file) standardGeneric("read.adz"))
 #' @aliases read.adz,character-method
 #' @export
 setMethod("read.adz", "character", function(file){
-  ## get some test files to test this... XXX
+  ## get some test files to test this further... XXX
   file <- file[[1]]
   con <- gzfile(file, "rb")
   adf <- read.adf(con)
@@ -733,7 +734,8 @@ setGeneric("get.adf.file", function(x, source, destination) standardGeneric("get
 #' \code{\link{current.adf.dir}} for details on these specs.
 #' @param destination either a file name or a file connection, that
 #' allows writing binary data (see e.g., \code{\link[base]{file}} or
-#' \code{\link[base]{url}}).
+#' \code{\link[base]{url}}). When the destination is missing, the
+#' file content is returned as \code{raw} data.
 #' @return Returns a \code{vector} of \code{raw} data when the
 #' argument \code{destination} is missing. Otherwise returns nothing.
 #'
@@ -1170,3 +1172,28 @@ setMethod("blank.amigaDOSDisk", "character",
             }
             return (disk)
           })
+
+## allocate free blocks on disk
+setGeneric("allocate.amigaBlock", function(x, number) standardGeneric("allocate.amigaBlock"))
+
+## allocate single free block:
+setMethod("allocate.amigaBlock", c("amigaDisk", "missing"), function(x, number) {
+  allocate.amigaBlock(x, 1)
+})
+
+## allocate multiple free blocks:
+setMethod("allocate.amigaBlock", c("amigaDisk", "numeric"), function(x, number) {
+  NUMBER_OF_SECTORS <- NUMBER_OF_SECTORS_DD
+  if (x@type == "HD") NUMBER_OF_SECTORS <- NUMBER_OF_SECTORS_HD
+  maxblock <- NUMBER_OF_SECTORS*NUMBER_OF_CYLINDERS*NUMBER_OF_SIDES
+  number <- round(number[[1]])
+  if (number < 1) stop("Number of blocks to be allocated should be at least 1.")
+  root.id <- get.root.id(x@type)
+  bm <- bitmap.info(x)
+  ## order by which blocks should be allocated:
+  idx <- c(root.id:(maxblock - 1), 2:(root.id -1))
+  ## remove blocks that are already allocated in the bitmap:
+  idx <- idx[!(idx %in% bm)]
+  if (number > length(idx)) stop("Cannot allocate sufficien blocks.")
+  return(idx[1:number])
+})

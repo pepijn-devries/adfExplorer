@@ -41,6 +41,9 @@ columns...
 \examples{
 ## Display some raw random data:
 displayRawData(as.raw(sample.int(100)))
+
+## Display the full ASCII table:
+displayRawData(as.raw(0:255))
 }
 \seealso{
 Other raw.operations: \code{\link{amigaDateToRaw}},
