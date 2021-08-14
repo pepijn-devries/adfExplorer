@@ -12,7 +12,7 @@
 
 <meta name="author" content="Pepijn de Vries" />
 
-<meta name="date" content="2017-11-03" />
+<meta name="date" content="2018-03-05" />
 
 <title>Amiga Disk File Explorer</title>
 
@@ -70,7 +70,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Amiga Disk File Explorer</h1>
 <h4 class="author"><em>Pepijn de Vries</em></h4>
-<h4 class="date"><em>2017-11-03</em></h4>
+<h4 class="date"><em>2018-03-05</em></h4>
 
 
 
@@ -94,7 +94,6 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <ul>
 <li>check and optimise current code;</li>
 <li>include better validation routines;</li>
-<li>put files or directories onto a virtual disk;</li>
 <li>delete files or directories from a virtual disk;</li>
 <li>retrieve and or modify file and directory details;</li>
 <li>optimise disk structure (when information is fragmented).</li>
@@ -151,7 +150,7 @@ blank.block &lt;-<span class="st"> </span><span class="kw">amigaBlock</span>(bla
 </div>
 <div id="bootblock" class="section level3">
 <h3>The bootblock</h3>
-<p>The bootblock are actually the first two blocks on an Amiga disk: <code>amigaBlock(adf.example, 0)</code> and <code>amigaBlock(adf.example, 1)</code>. When the Commodore Amiga system boots, it will first load these blocks in memory and uses this to check what type of disk it is. Any executable code on this block will be run when the bootblock checksum is valid. When the system is already booted when the disk is insert, the bootblock will just be used to determine what type of disk it represents.</p>
+<p>The bootblock are actually the first two blocks on an Amiga disk: <code>amigaBlock(adf.example, 0)</code> and <code>amigaBlock(adf.example, 1)</code>. When the Commodore Amiga system boots, it will first load these blocks in memory and uses this to check what type of disk it is. Any executable code on this block will be run when the bootblock checksum is valid. When the system is already booted when the disk is inserted, the bootblock will just be used to determine what type of disk it represents.</p>
 </div>
 <div id="the-root-block" class="section level3">
 <h3>The root block</h3>
@@ -160,7 +159,7 @@ blank.block &lt;-<span class="st"> </span><span class="kw">amigaBlock</span>(bla
 </div>
 <div id="the-bitmap-block" class="section level3">
 <h3>The bitmap block</h3>
-<p>The bitmap block, contains information on which blocks on the disk are in use and which are free. The first for bytes in this block form a checksum, the following 220 bytes (for a DD disk, twice as many for a HD disk). Each byte is composed of 8 bits. When a bit is set, it represents a used block, when it is not set, it reflects a free block. The bitmap block is usually situate next to the root block, at block 881 on a DD disk.</p>
+<p>The bitmap block, contains information about which blocks on the disk are in use and which are free. The first four bytes in this block form a checksum, the following 220 bytes (for a DD disk, twice as many for a HD disk). Each byte is composed of 8 bits. When a bit is set, it represents a used block, when it is not set, it reflects a free block. The bitmap block is usually situate next to the root block, at block 881 on a DD disk.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">amigaBlock</span>(adf.example, <span class="dv">881</span>)</code></pre></div>
 <p>The bitmap is thus used to allocate free blocks on the disk to put new files. When files are removed (and blocks) are thus freed, this will also be marked in the bitmap. The bitmap is also used to calculate the free space on a disk.</p>
 </div>
@@ -230,6 +229,19 @@ if (<span class="kw">requireNamespace</span>(<span class="st">&quot;ProTrackR&qu
   ## ProTrackR::playMod(mod)
 }</code></pre></div>
 <p><img src="data:image/png;base64,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" /><!-- --></p>
+<p>The examples above show how information can be retrieved from a virtual Amiga disk. It is also possible to put data onto the disk. Let’s start by creating a temporary directory:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">adf.example &lt;-<span class="st"> </span><span class="kw">dir.create.adf</span>(adf.example, <span class="st">&quot;temp&quot;</span>)</code></pre></div>
+<p>You can also put files from your local system into this newly created directory. Let’s try to put the ‘DESCRIPTION’ file from adfExplorer package on the virtual disk:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">adf.example &lt;-<span class="st"> </span><span class="kw">put.adf.file</span>(adf.example,
+                            <span class="kw">system.file</span>(<span class="st">&quot;DESCRIPTION&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;adfExplorer&quot;</span>),
+                            <span class="st">&quot;DF0:temp&quot;</span>)</code></pre></div>
+<p>It is also possible to write raw data to the virtual disk in a similar way:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">adf.example &lt;-<span class="st"> </span><span class="kw">put.adf.file</span>(adf.example,
+                            <span class="kw">charToRaw</span>(<span class="st">&quot;This is just some text to create some content&quot;</span>),
+                            <span class="st">&quot;DF0:temp/example.txt&quot;</span>)</code></pre></div>
+<p>Look here are the files we just put onto the disk</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">list.adf.files</span>(adf.example, <span class="st">&quot;DF0:temp/&quot;</span>)</code></pre></div>
+<pre><code>## [1] &quot;example.txt&quot; &quot;DESCRIPTION&quot;</code></pre>
 </div>
 
 

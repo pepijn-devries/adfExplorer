@@ -48,7 +48,8 @@ displayRawData(as.raw(0:255))
 \seealso{
 Other raw.operations: \code{\link{amigaDateToRaw}},
   \code{\link{amigaIntToRaw}},
-  \code{\link{rawToAmigaDate}}, \code{\link{rawToAmigaInt}}
+  \code{\link{rawToAmigaDate}},
+  \code{\link{rawToAmigaInt}}, \code{\link{rawToBitmap}}
 }
 \author{
 Pepijn de Vries

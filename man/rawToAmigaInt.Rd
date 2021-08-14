@@ -59,7 +59,7 @@ length(rawToAmigaInt(as.raw(0:255), 8))
 Other raw.operations: \code{\link{amigaDateToRaw}},
   \code{\link{amigaIntToRaw}},
   \code{\link{displayRawData}},
-  \code{\link{rawToAmigaDate}}
+  \code{\link{rawToAmigaDate}}, \code{\link{rawToBitmap}}
 }
 \author{
 Pepijn de Vries

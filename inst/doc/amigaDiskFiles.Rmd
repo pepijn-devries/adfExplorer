@@ -66,7 +66,6 @@ releases of the package:
 
 * check and optimise current code;
 * include better validation routines;
-* put files or directories onto a virtual disk;
 * delete files or directories from a virtual disk;
 * retrieve and or modify file and directory details;
 * optimise disk structure (when information is fragmented).
@@ -199,7 +198,7 @@ The bootblock are actually the first two blocks on an Amiga disk:
 Commodore Amiga system boots, it will first load these blocks in memory
 and uses this to check what type of disk it is. Any executable code on this
 block will be run when the bootblock checksum is valid. When the system is
-already booted when the disk is insert, the bootblock will just be used to
+already booted when the disk is inserted, the bootblock will just be used to
 determine what type of disk it represents.
 
 ### The root block
@@ -215,8 +214,8 @@ amigaBlock(adf.example, 880)
 
 ### The bitmap block
 
-The bitmap block, contains information on which blocks on the disk are in use
-and which are free. The first for bytes in this block form a checksum, the
+The bitmap block, contains information about which blocks on the disk are in use
+and which are free. The first four bytes in this block form a checksum, the
 following 220 bytes (for a DD disk, twice as many for a HD disk). Each byte
 is composed of 8 bits. When a bit is set, it represents a used block, when it
 is not set, it reflects a free block. The bitmap block is usually situate next
@@ -321,4 +320,37 @@ if (requireNamespace("ProTrackR", quietly = TRUE)) {
   ## and to play it, uncomment the following line:
   ## ProTrackR::playMod(mod)
 }
+```
+
+The examples above show how information can be retrieved from
+a virtual Amiga disk. It is also possible to put data onto the
+disk. Let's start by creating a temporary directory:
+
+```{r}
+adf.example <- dir.create.adf(adf.example, "temp")
+```
+
+You can also put files from your local system into this newly
+created directory. Let's try to put the &lsquo;DESCRIPTION&rsquo; file
+from adfExplorer package on the virtual disk:
+
+```{r}
+adf.example <- put.adf.file(adf.example,
+                            system.file("DESCRIPTION", package = "adfExplorer"),
+                            "DF0:temp")
+```
+
+It is also possible to write raw data to the virtual disk in a
+similar way:
+
+```{r}
+adf.example <- put.adf.file(adf.example,
+                            charToRaw("This is just some text to create some content"),
+                            "DF0:temp/example.txt")
+```
+
+Look here are the files we just put onto the disk
+
+```{r}
+list.adf.files(adf.example, "DF0:temp/")
 ```

@@ -58,7 +58,8 @@ length(amigaIntToRaw(byte, 8, TRUE))
 \seealso{
 Other raw.operations: \code{\link{amigaDateToRaw}},
   \code{\link{displayRawData}},
-  \code{\link{rawToAmigaDate}}, \code{\link{rawToAmigaInt}}
+  \code{\link{rawToAmigaDate}},
+  \code{\link{rawToAmigaInt}}, \code{\link{rawToBitmap}}
 }
 \author{
 Pepijn de Vries

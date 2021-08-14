@@ -220,7 +220,7 @@ get.root.id <- function(x) {
 calculate.boot.checksum <- function(x, as.raw = T) {
   if (class(x) == "amigaDisk") {
     return(calculate.boot.checksum.dat(x@data, as.raw))
-  } else if (class(x) == "raw") {
+  } else if (typeof(x) == "raw") {
     return(calculate.boot.checksum.dat(x, as.raw))
   } else stop("x should be raw data or an amigaBlock object")
 }
@@ -254,8 +254,80 @@ boot.info <-  function(x) {
   )
 }
 
+#' Convert raw data into a bitmap or vice versa
+#'
+#' Convert raw data into a bitmap or vice versa (i.e., binary data)
+#' conform Amiga specifications.
+#'
+#' A bitmap is simply put a map of bits (binary data, which can
+#' be interpeted as 0 or 1; or FALSE and TRUE). Bitmaps can have
+#' several purposes, also on the Commodore Amiga. The Amiga file
+#' system uses a bitmap to indicates which blocks are occupied with
+#' data and which are free. Bitmaps can also be used in bitmap images
+#' where each bit indicates which color should be used for a specific
+#' pixel in an image. These function can be used to convert raw data
+#' into usable bitmaps or vice versa.
+#' 
+#' As the Commodore Amiga is a big-endian system (most significant
+#' bit first) using a 32 bit CPU, it may sometimes necessary to invert
+#' the bits of a byte or longs (4 bytes, 32 bits), which can be done
+#' with the arguments '\code{invert.bytes}' and '\code{invert.longs}'
+#' respectively.
+#'
+#' @param x A \code{vector} of \code{raw} data, in case
+#' \code{rawToBitmap} is used. A \code{vector} of \code{raw},
+#' \code{interger} or \code{logical} values should be used in
+#' case of \code{bitmapToRaw}. In the latter case each value in the
+#' \code{vector} is interpeted as a bit and should be a mutiple of
+#' 8 long.
+#' @param invert.bytes A \code{logical} value. When set to \code{TRUE},
+#' the bit order of bytes are reversed.
+#' @param invert.longs A \code{logical} value. When set to \code{TRUE},
+#' the bit order of long values (32 bits) are reversed. When \code{x}
+#' does not have a multiple length of 32 bits or 4 bytes, \code{x} will
+#' be padded with zeros to the right, but the result will be trimmed to
+#' correspond with the length of \code{x}. Note that data might get lost
+#' this way.
+#' @return Returns a \code{vector} of \code{raw} data in case of
+#' \code{bitmapToRaw}, and a \code{vector} of binary \code{raw} values
+#' in case of \code{rawToBitmap}.
+#' @examples
+#' ## The bitmap block of the example disk is located at block
+#' ## number 882 (note that this is not true for all disks,
+#' ## the actual location is stored in the root block)
+#' data(adf.example)
+#' bitmap.block <- amigaBlock(adf.example, 881)
+#'
+#' ## bitmap data are stored in bytes 5 up to 224 in this block:
+#' bitmap.raw <- bitmap.block@data[5:224]
+#' 
+#' ## let's get the bitmap from the raw data:
+#' bitmap <- rawToBitmap(bitmap.raw)
+#' 
+#' ## Whe can now get the occupied blocks (minus one is used for
+#' ## the discrepancy in indexing):
+#' which(bitmap != as.raw(0x01)) - 1
+#' 
+#' ## we can also do the reverse:
+#' bitmap.raw.new <-  bitmapToRaw(bitmap)
+#' ## it should be the same as the original raw data:
+#' all(bitmap.raw.new == bitmap.raw)
+#' 
+#' ## WARNING: don't use these methods to directly
+#' ## modify an amigaDisk objects bitmap block. The
+#' ## file system on that object may get corrupted.
+#' ## All methods in this package should update the
+#' ## bitmap block automatically and cleanly...
+#' @family raw.operations
+#' @author Pepijn de Vries
+#' @export
 rawToBitmap <- function(x, invert.bytes = F, invert.longs = T) {
-  ## XXX do some checks on x. also handle when x is of class matrix or array
+  if (typeof(x) != "raw") stop("Argument 'x' should be a vector of raw data.")
+  if (!all("logical" %in% c(typeof(invert.bytes), typeof(invert.longs)))) stop ("Both 'invert.bytes' and 'invert.longs' should be a logical value.")
+  if (length(invert.bytes) != 1 || length(invert.longs) != 1) stop("Both 'invert.bytes' and 'invert.longs' should have a length of 1.")
+  ## pad data with zeros and trim at the end
+  true.len <- length(x)
+  x <- c(x, raw(4 - (true.len %% 4)))
   len <- length(x)
   if (invert.longs) {
     l2 <- ceiling(len/4)
@@ -268,11 +340,20 @@ rawToBitmap <- function(x, invert.bytes = F, invert.longs = T) {
   } else {
     ord <- 1:(8*len)
   }
-  rawToBits(x)[ord]
+  ## trim the result to correspond with the input length (data might get lost!)
+  rawToBits(x)[ord][1:(true.len*8)]
 }
 
+#' @name bitmapToRaw
+#' @rdname rawToBitmap
+#' @export
 bitmapToRaw <- function(x, invert.bytes = T, invert.longs = T) {
-  ## XXX do some checks on x. also handle when x is of class matrix or array
+  # 'x' should be anything that is accepted by packBits
+  if (!all("logical" %in% c(typeof(invert.bytes), typeof(invert.longs)))) stop ("Both 'invert.bytes' and 'invert.longs' should be a logical value.")
+  if (length(invert.bytes) != 1 || length(invert.longs) != 1) stop("Both 'invert.bytes' and 'invert.longs' should have a length of 1.")
+  true.len <- length(x)
+  ## pad with zeros
+  x <- c(x, raw(32 - (true.len %% 32)))
   len <- length(x)/8
   if (invert.bytes) {
     ord <- 1 + sort(rep((0:(len - 1))*8, 8)) + (7:0)
@@ -285,7 +366,8 @@ bitmapToRaw <- function(x, invert.bytes = T, invert.longs = T) {
     ord2 <- ord2[1:(8*len)]
     x <- x[ord2]
   }
-  x <- packBits(x[ord])
+  ## order results and trim length to correspond with input
+  x <- packBits(x[ord])[1:ceiling(true.len/8)]
   return(x)
 }
 
@@ -420,7 +502,7 @@ setGeneric("get.diskLocation", function(disktype, block) standardGeneric("get.di
 #' Get the side, cylinder and sector on a disk, based on disk type and
 #' block id.
 #'
-#' Data on amiga floppy disks are stored as 512 byte blocks. These blocks
+#' Data on Amiga floppy disks are stored as 512 byte blocks. These blocks
 #' are physically stored on a specific cylinder and side at a specific sector.
 #' This method returns the identifiers for the physical location based on the
 #' block identifier. The inverse of this function is achieved with the
@@ -468,7 +550,7 @@ setGeneric("get.blockID", function(disktype, sector, side, cylinder) standardGen
 #' Get the block identifier based on the physical location on a disk (side,
 #' cylinder and sector) and the disk type.
 #'
-#' Data on amiga floppy disks are stored as 512 byte blocks. These blocks
+#' Data on Amiga floppy disks are stored as 512 byte blocks. These blocks
 #' are physically stored on a specific cylinder and side at a specific sector.
 #' This method returns the block identifier based on the physical location
 #' on the disk. The inverse of this function is achieved with the

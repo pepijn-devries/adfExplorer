@@ -64,3 +64,19 @@ if (requireNamespace("ProTrackR", quietly = TRUE)) {
   ## ProTrackR::playMod(mod)
 }
 
+## ------------------------------------------------------------------------
+adf.example <- dir.create.adf(adf.example, "temp")
+
+## ------------------------------------------------------------------------
+adf.example <- put.adf.file(adf.example,
+                            system.file("DESCRIPTION", package = "adfExplorer"),
+                            "DF0:temp")
+
+## ------------------------------------------------------------------------
+adf.example <- put.adf.file(adf.example,
+                            charToRaw("This is just some text to create some content"),
+                            "DF0:temp/example.txt")
+
+## ------------------------------------------------------------------------
+list.adf.files(adf.example, "DF0:temp/")
+

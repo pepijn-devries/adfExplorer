@@ -1,3 +1,23 @@
+adfExplorer v0.1.4 (Release date: 2018-03-05)
+=============
+
+ * Fix to pass CRAN checks.
+
+adfExplorer v0.1.3 (Release date: 2018-03-04)
+=============
+
+ * Minor corrections to the manual.
+
+ * Directories can now be created on the virtual Amiga
+   disk with the 'dir.create.adf' method.
+
+ * with the newly added method 'put.adf.file' it is now
+   possible to put a file onto a virtual Amiga disk.
+
+ * Functions 'rawToBitmap' and 'bitmapToRaw' have been
+   improved and are now exported and documented.
+
+
 adfExplorer v0.1.2 (Release date: 2017-11-03)
 =============
 

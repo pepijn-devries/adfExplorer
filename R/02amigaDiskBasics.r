@@ -267,7 +267,6 @@ setMethod("write.adf", c("amigaDisk", "character"), function(x, file) {
 
 setGeneric("write.adz", def = function(x, file) standardGeneric("write.adz"))
 
-##XXX
 #' @rdname write.adf
 #' @name write.adz
 #' @aliases write.adz,amigaDisk,character-method
@@ -991,7 +990,7 @@ setGeneric("blank.amigaDOSDisk", function(diskname,
 #'
 #' Create a virtual blank DOS formatted floppy disk with a file system on it.
 #'
-#' Creates a blank \code{link{amigaDisk}} object. This method differs
+#' Creates a blank \code{\link{amigaDisk}} object. This method differs
 #' from the object constructor (\code{new("amigaDisk")}) because it also
 #' installs a file system on the disk. The blank disk can thus be used to
 #' write files onto, and is also usable in Amiga emulators. For use in
@@ -1156,18 +1155,8 @@ setMethod("blank.amigaDOSDisk", "character",
             ##  4: MAKE A DIRECT CACHE BLOCK:
             ######################################################
             if (dir.cache) {
-              dc <- c(
-                TYPES$value[TYPES$type == "DIRCACHE"], # TYPE
-                root.id + 2,           # self pointer
-                root.id,               # cached dir (root)
-                0,                     # entries number
-                0,                     # next direct cache
-                0,                     # checksum
-                rep(0, 122)            # padded with zeros
-              )
-              dcblock <- amigaIntToRaw(dc, 32)
-              dcblock[21:24] <- calculate.checksum(dcblock)
-              dcblock <- methods::new("amigaBlock", data = dcblock)
+              dc <- .make.dir.cache.block(data.frame(), root.id, root.id + 2)[[1]]
+              dcblock <- methods::new("amigaBlock", data = dc)
               amigaBlock(disk, root.id + 2) <- dcblock
             }
             return (disk)
@@ -1194,6 +1183,61 @@ setMethod("allocate.amigaBlock", c("amigaDisk", "numeric"), function(x, number) 
   idx <- c(root.id:(maxblock - 1), 2:(root.id -1))
   ## remove blocks that are already allocated in the bitmap:
   idx <- idx[!(idx %in% bm)]
-  if (number > length(idx)) stop("Cannot allocate sufficien blocks.")
+  if (number > length(idx)) stop("Cannot allocate sufficient blocks.")
   return(idx[1:number])
+})
+
+## reserve amigaBlock in bitmap
+setGeneric("reserve.amigaBlock", function(x, blocks) standardGeneric("reserve.amigaBlock"))
+
+## reserve amigaBlock in bitmap
+setMethod("reserve.amigaBlock", c("amigaDisk", "numeric"), function(x, blocks) {
+  NUMBER_OF_SECTORS <- ifelse(x@type == "DD", NUMBER_OF_SECTORS_DD, NUMBER_OF_SECTORS_HD)
+  ri <- root.info(x)
+  ## first create a bitmap with all flags set.
+  bitmap <- rep(T, NUMBER_OF_CYLINDERS*NUMBER_OF_SIDES*NUMBER_OF_SECTORS)
+  ## turn of flags for blocks that are already occupied and those
+  ## that have been allocated for the new file.
+  bitmap[c(bitmap.info(x), blocks) - 1] <- F # +1 to compensate for different index base; -2 to skip boot blocks
+  ## To raw data
+  bitmap <- bitmapToRaw(bitmap)
+  ## Fill to complete block (1st 4 bytes are for the checksum)
+  bitmap <- c(raw(4), bitmap, raw(BLOCK_SIZE - length(bitmap) - 4))
+  
+  ## calculate checksum for bitmap block
+  bitmap[1:4] <- calculate.checksum(bitmap, chcksm.pos = 1)
+  bm <- ri$bm_pages[ri$bm_pages != 0]
+  if (length(bm) > 1) stop("unexpected multiple bitmap blocks found on disk, only the first will be updated.")
+  bm <- bm[[1]]
+  x@data[bm*BLOCK_SIZE + 1:BLOCK_SIZE] <- bitmap
+  return(x)
+})
+
+## clear amigaBlock, also in bitmap
+setGeneric("clear.amigaBlock", function(x, blocks) standardGeneric("clear.amigaBlock"))
+
+## clear amigaBlock, also in bitmap
+setMethod("clear.amigaBlock", c("amigaDisk", "numeric"), function(x, blocks) {
+  ## XXX note that the blocks itself are not erased
+  ## XXX only the bitmap is cleared. Maybe make it optional to clear the blocks too
+  NUMBER_OF_SECTORS <- ifelse(x@type == "DD", NUMBER_OF_SECTORS_DD, NUMBER_OF_SECTORS_HD)
+  ri <- root.info(x)
+  ## first create a bitmap with all flags set.
+  bitmap <- rep(T, NUMBER_OF_CYLINDERS*NUMBER_OF_SIDES*NUMBER_OF_SECTORS)
+  ## turn of flags for blocks that are already occupied and those
+  ## that have been allocated for the new file.
+  bitmap[bitmap.info(x) - 1] <- F # +1 to compensate for different index base; -2 to skip boot blocks
+  bitmap[blocks - 1] <- T # +1 to compensate for different index base; -2 to skip boot blocks
+  ## To raw data
+  bitmap <- bitmapToRaw(bitmap)
+  ## Fill to complete block (1st 4 bytes are for the checksum)
+  bitmap <- c(raw(4), bitmap, raw(BLOCK_SIZE - length(bitmap) - 4))
+  
+  ## calculate checksum for bitmap block
+  bitmap[1:4] <- calculate.checksum(bitmap, chcksm.pos = 1)
+  bm <- ri$bm_pages[ri$bm_pages != 0]
+  if (length(bm) > 1) stop("unexpected multiple bitmap blocks found on disk, only the first will be updated.")
+  bm <- bm[[1]]
+  x@data[bm*BLOCK_SIZE + 1:BLOCK_SIZE] <- bitmap
+  return(x)
 })

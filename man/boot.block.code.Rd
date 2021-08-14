@@ -6,7 +6,7 @@
 \title{Minimal executable code for a bootblock}
 \format{A data frame with two columns. The first column
 contains the assembled code (as \code{raw} data). The
-second column contains the corresonding Motorola 68000
+second column contains the corresponding Motorola 68000
 (the main CPU of the original Commodore Amiga) assembly
 syntax.}
 \description{

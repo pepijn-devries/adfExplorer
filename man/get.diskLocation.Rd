@@ -26,7 +26,7 @@ Get the side, cylinder and sector on a disk, based on disk type and
 block id.
 }
 \details{
-Data on amiga floppy disks are stored as 512 byte blocks. These blocks
+Data on Amiga floppy disks are stored as 512 byte blocks. These blocks
 are physically stored on a specific cylinder and side at a specific sector.
 This method returns the identifiers for the physical location based on the
 block identifier. The inverse of this function is achieved with the

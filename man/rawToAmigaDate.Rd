@@ -45,7 +45,8 @@ rawToAmigaDate(amigaIntToRaw(c(1, 1, 50), 32))
 \seealso{
 Other raw.operations: \code{\link{amigaDateToRaw}},
   \code{\link{amigaIntToRaw}},
-  \code{\link{displayRawData}}, \code{\link{rawToAmigaInt}}
+  \code{\link{displayRawData}},
+  \code{\link{rawToAmigaInt}}, \code{\link{rawToBitmap}}
 }
 \author{
 Pepijn de Vries

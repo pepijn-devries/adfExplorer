@@ -44,7 +44,8 @@ amigaDateToRaw(as.POSIXct("1978-01-01 13:30", tz = "CET"))
 \seealso{
 Other raw.operations: \code{\link{amigaIntToRaw}},
   \code{\link{displayRawData}},
-  \code{\link{rawToAmigaDate}}, \code{\link{rawToAmigaInt}}
+  \code{\link{rawToAmigaDate}},
+  \code{\link{rawToAmigaInt}}, \code{\link{rawToBitmap}}
 }
 \author{
 Pepijn de Vries

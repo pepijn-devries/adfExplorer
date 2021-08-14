@@ -58,7 +58,7 @@ system installed on it.
 Create a virtual blank DOS formatted floppy disk with a file system on it.
 }
 \details{
-Creates a blank \code{link{amigaDisk}} object. This method differs
+Creates a blank \code{\link{amigaDisk}} object. This method differs
 from the object constructor (\code{new("amigaDisk")}) because it also
 installs a file system on the disk. The blank disk can thus be used to
 write files onto, and is also usable in Amiga emulators. For use in
