@@ -120,12 +120,12 @@ setGeneric("read.adf", function(file) standardGeneric("read.adf"))
 #' @param file Either a file name or a file connection, that
 #' allows reading binary data (see e.g., \code{\link[base]{file}} or
 #' \code{\link[base]{url}}). \code{read.adz} only accepts file names.
-#' @return Returns an \code{\link{amigaDisk}} object read from the provided amiga disk file
+#' @return Returns an \code{\link{amigaDisk}} object read from the provided Amiga disk file
 #'
 #' @examples
 #' \dontrun{
 #' ## In order to read an adf-file, we first need one.
-#' ## so let's first write the example obect to a file:
+#' ## so let's first write the example object to a file:
 #' data(adf.example)
 #' 
 #' ## write it to the current working directory:
@@ -1027,7 +1027,7 @@ setGeneric("blank.amigaDOSDisk", function(diskname,
 #' Amiga OS >2.0, the 'Startup-Sequence' file needs to be present
 #' for this, otherwise the screen will remain black on booting. See also the
 #' \code{\link{boot.block.code}} data.
-#' @param creation.date A \code{\link[base]{POSIXt}} object. Will be used
+#' @param creation.date A \code{\link[base:DateTimeClasses]{POSIXt}} object. Will be used
 #' and stored as the creation date of the virtual disk. Note that the Amiga
 #' does not store the time zone and UTC is assumed as default. The Amiga
 #' stores the date and time as positive integers, relative to 1st of
@@ -1045,8 +1045,8 @@ setGeneric("blank.amigaDOSDisk", function(diskname,
 #'                                 dir.cache = FALSE,
 #'                                 bootable = TRUE)
 #' 
-#' ## create a disk that is compatable with OS 2.x and up
-#' ## (no backward compatability):
+#' ## create a disk that is compatible with OS 2.x and up
+#' ## (no backward compatibility):
 #' disk.os2x <- blank.amigaDOSDisk(diskname = "I'm_OS_2.x_compatible",
 #'                                 disktype = "DD",
 #'                                 filesystem = "FFS",
@@ -1054,8 +1054,8 @@ setGeneric("blank.amigaDOSDisk", function(diskname,
 #'                                 dir.cache = FALSE,
 #'                                 bootable = TRUE)
 #' 
-#' ## create a disk that is compatable with OS 3.x and up
-#' ## (no backward compatability):
+#' ## create a disk that is compatible with OS 3.x and up
+#' ## (no backward compatibility):
 #' disk.os3x <- blank.amigaDOSDisk(diskname = "I'm_OS_3.x_compatible",
 #'                                 disktype = "DD",
 #'                                 filesystem = "FFS",

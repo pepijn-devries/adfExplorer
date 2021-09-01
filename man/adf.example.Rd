@@ -4,7 +4,9 @@
 \name{adf.example}
 \alias{adf.example}
 \title{An example of an amigaDisk object}
-\format{An S4 \code{\link{amigaDisk-class}} object.}
+\format{
+An S4 \code{\link{amigaDisk-class}} object.
+}
 \description{
 An example of an \code{\link{amigaDisk-class}} object.
 }

@@ -54,3 +54,4 @@ new("amigaDisk")
 \author{
 Pepijn de Vries
 }
+\concept{amiga.disk.access}

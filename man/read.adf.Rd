@@ -21,7 +21,7 @@ allows reading binary data (see e.g., \code{\link[base]{file}} or
 \code{\link[base]{url}}). \code{read.adz} only accepts file names.}
 }
 \value{
-Returns an \code{\link{amigaDisk}} object read from the provided amiga disk file
+Returns an \code{\link{amigaDisk}} object read from the provided Amiga disk file
 }
 \description{
 Read data from an Amiga Disk File (ADF) to an \code{\link{amigaDisk}}
@@ -43,7 +43,7 @@ and is therefore out of the scope of this package.
 \examples{
 \dontrun{
 ## In order to read an adf-file, we first need one.
-## so let's first write the example obect to a file:
+## so let's first write the example object to a file:
 data(adf.example)
 
 ## write it to the current working directory:
@@ -69,8 +69,10 @@ print(my.disk3)
 }
 }
 \seealso{
-Other io.operations: \code{\link{write.adf}}
+Other io.operations: 
+\code{\link{write.adf}()}
 }
 \author{
 Pepijn de Vries
 }
+\concept{io.operations}

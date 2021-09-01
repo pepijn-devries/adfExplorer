@@ -52,9 +52,11 @@ amigaBlock(blank.disk, 0) <- amigaBlock(adf.example, 0)
 ## but still no file system...
 }
 \seealso{
-Other block.operations: \code{\link{get.blockID}},
-  \code{\link{get.diskLocation}}
+Other block.operations: 
+\code{\link{get.blockID}()},
+\code{\link{get.diskLocation}()}
 }
 \author{
 Pepijn de Vries
 }
+\concept{block.operations}

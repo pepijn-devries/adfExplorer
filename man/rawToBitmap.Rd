@@ -81,11 +81,14 @@ all(bitmap.raw.new == bitmap.raw)
 ## bitmap block automatically and cleanly...
 }
 \seealso{
-Other raw.operations: \code{\link{amigaDateToRaw}},
-  \code{\link{amigaIntToRaw}},
-  \code{\link{displayRawData}},
-  \code{\link{rawToAmigaDate}}, \code{\link{rawToAmigaInt}}
+Other raw.operations: 
+\code{\link{amigaDateToRaw}()},
+\code{\link{amigaIntToRaw}()},
+\code{\link{displayRawData}()},
+\code{\link{rawToAmigaDate}()},
+\code{\link{rawToAmigaInt}()}
 }
 \author{
 Pepijn de Vries
 }
+\concept{raw.operations}
