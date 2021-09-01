@@ -2,11 +2,11 @@ setGeneric("put.adf.file", function(x, source, destination, date, comment) stand
 
 #' Put a file onto an amigaDisk object
 #'
-#' Put a file onto a virtual amiga floppy disk represented by
+#' Put a file onto a virtual Amiga floppy disk represented by
 #' an \code{\link{amigaDisk}} object.
 #'
 #' Put a file or raw data from your local system onto a virtual
-#' amiga floppy disk represented by an \code{\link{amigaDisk}}
+#' Amiga floppy disk represented by an \code{\link{amigaDisk}}
 #' object. Make sure that the virtual disk is DOS formatted.
 #' This method can only put one file at a time onto the virtual
 #' virtual disk. It is therefore not allowed to use wild cards

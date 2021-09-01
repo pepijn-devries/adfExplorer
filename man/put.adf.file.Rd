@@ -4,40 +4,27 @@
 \name{put.adf.file}
 \alias{put.adf.file}
 \alias{put.adf.file,amigaDisk,raw,character,POSIXt,character-method}
-\alias{put.adf.file}
 \alias{put.adf.file,amigaDisk,raw,character,POSIXt,missing-method}
-\alias{put.adf.file}
 \alias{put.adf.file,amigaDisk,raw,character,missing,missing-method}
-\alias{put.adf.file}
 \alias{put.adf.file,amigaDisk,character,character,POSIXt,character-method}
-\alias{put.adf.file}
 \alias{put.adf.file,amigaDisk,character,character,POSIXt,missing-method}
-\alias{put.adf.file}
 \alias{put.adf.file,amigaDisk,character,character,missing,missing-method}
-\alias{put.adf.file}
 \alias{put.adf.file,amigaDisk,character,missing,missing,missing-method}
 \title{Put a file onto an amigaDisk object}
 \usage{
-\S4method{put.adf.file}{amigaDisk,raw,character,POSIXt,character}(x, source,
-  destination, date, comment)
+\S4method{put.adf.file}{amigaDisk,raw,character,POSIXt,character}(x, source, destination, date, comment)
 
-\S4method{put.adf.file}{amigaDisk,raw,character,POSIXt,missing}(x, source,
-  destination, date, comment)
+\S4method{put.adf.file}{amigaDisk,raw,character,POSIXt,missing}(x, source, destination, date, comment)
 
-\S4method{put.adf.file}{amigaDisk,raw,character,missing,missing}(x, source,
-  destination, date, comment)
+\S4method{put.adf.file}{amigaDisk,raw,character,missing,missing}(x, source, destination, date, comment)
 
-\S4method{put.adf.file}{amigaDisk,character,character,POSIXt,character}(x,
-  source, destination, date, comment)
+\S4method{put.adf.file}{amigaDisk,character,character,POSIXt,character}(x, source, destination, date, comment)
 
-\S4method{put.adf.file}{amigaDisk,character,character,POSIXt,missing}(x, source,
-  destination, date, comment)
+\S4method{put.adf.file}{amigaDisk,character,character,POSIXt,missing}(x, source, destination, date, comment)
 
-\S4method{put.adf.file}{amigaDisk,character,character,missing,missing}(x,
-  source, destination, date, comment)
+\S4method{put.adf.file}{amigaDisk,character,character,missing,missing}(x, source, destination, date, comment)
 
-\S4method{put.adf.file}{amigaDisk,character,missing,missing,missing}(x, source,
-  destination, date, comment)
+\S4method{put.adf.file}{amigaDisk,character,missing,missing,missing}(x, source, destination, date, comment)
 }
 \arguments{
 \item{x}{An \code{\link{amigaDisk}} onto which the file should be put.}
@@ -65,12 +52,12 @@ Returns an \code{\link{amigaDisk}} object onto which the
 source file is put at the specified destination.
 }
 \description{
-Put a file onto a virtual amiga floppy disk represented by
+Put a file onto a virtual Amiga floppy disk represented by
 an \code{\link{amigaDisk}} object.
 }
 \details{
 Put a file or raw data from your local system onto a virtual
-amiga floppy disk represented by an \code{\link{amigaDisk}}
+Amiga floppy disk represented by an \code{\link{amigaDisk}}
 object. Make sure that the virtual disk is DOS formatted.
 This method can only put one file at a time onto the virtual
 virtual disk. It is therefore not allowed to use wild cards

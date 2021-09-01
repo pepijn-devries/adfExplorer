@@ -4,20 +4,15 @@
 \name{dir.create.adf}
 \alias{dir.create.adf}
 \alias{dir.create.adf,amigaDisk,character,missing,missing-method}
-\alias{dir.create.adf}
 \alias{dir.create.adf,amigaDisk,character,POSIXt,missing-method}
-\alias{dir.create.adf}
 \alias{dir.create.adf,amigaDisk,character,POSIXt,character-method}
 \title{Create a directory on an amigaDisk object}
 \usage{
-\S4method{dir.create.adf}{amigaDisk,character,missing,missing}(x, path, date,
-  comment)
+\S4method{dir.create.adf}{amigaDisk,character,missing,missing}(x, path, date, comment)
 
-\S4method{dir.create.adf}{amigaDisk,character,POSIXt,missing}(x, path, date,
-  comment)
+\S4method{dir.create.adf}{amigaDisk,character,POSIXt,missing}(x, path, date, comment)
 
-\S4method{dir.create.adf}{amigaDisk,character,POSIXt,character}(x, path, date,
-  comment)
+\S4method{dir.create.adf}{amigaDisk,character,POSIXt,character}(x, path, date, comment)
 }
 \arguments{
 \item{x}{An \code{\link{amigaDisk}} on which the directory should be created.}

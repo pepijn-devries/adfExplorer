@@ -661,7 +661,7 @@ rawToAmigaDate <- function(x, format = c("long", "short"), tz = "UTC") {
 #' As these values are always positive, only date time values on or after
 #' 1978-01-01 are allowed. The inverse of this function can be achieved
 #' with \code{\link{rawToAmigaDate}}.
-#' @param x A (\code{vector} of) \code{\link[base]{POSIXt}} object(s).
+#' @param x A (\code{vector} of) \code{\link[base:DateTimeClasses]{POSIXt}} object(s).
 #' @param format a \code{character} string indicating whether the date
 #' should be stored as \code{short} or \code{long} integers.
 #' @param tz A \code{character} string specifying the time zone to be used

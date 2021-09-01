@@ -1,8 +1,8 @@
 Package: adfExplorer
 Type: Package
 Title: Import from and Export to Amiga Disk Files
-Version: 0.1.4
-Date: 2018-03-05
+Version: 0.1.5
+Date: TODO (version number as well)
 Authors@R: c(person("Pepijn", "de Vries", role = c("aut", "cre", "dtc"),
     email = "pepijn.devries@outlook.com"))
 Author: Pepijn de Vries [aut, cre, dtc]
@@ -19,7 +19,7 @@ Depends: R (>= 2.10)
 Imports: methods
 License: GPL-3
 LazyData: True
-RoxygenNote: 6.0.1
+RoxygenNote: 7.1.1
 Suggests: knitr, rmarkdown, ProTrackR
 VignetteBuilder: knitr
 NeedsCompilation: no

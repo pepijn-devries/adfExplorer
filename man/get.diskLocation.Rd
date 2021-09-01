@@ -38,9 +38,11 @@ block identifier. The inverse of this function is achieved with the
 as.data.frame(get.diskLocation("DD", 0:19))
 }
 \seealso{
-Other block.operations: \code{\link{amigaBlock-method}},
-  \code{\link{get.blockID}}
+Other block.operations: 
+\code{\link{amigaBlock-method}},
+\code{\link{get.blockID}()}
 }
 \author{
 Pepijn de Vries
 }
+\concept{block.operations}

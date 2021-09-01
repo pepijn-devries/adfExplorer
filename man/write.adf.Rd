@@ -57,8 +57,10 @@ write.adz(adf.example, "test.3.adz")
 }
 }
 \seealso{
-Other io.operations: \code{\link{read.adf}}
+Other io.operations: 
+\code{\link{read.adf}()}
 }
 \author{
 Pepijn de Vries
 }
+\concept{io.operations}
