@@ -1,8 +1,8 @@
 Package: adfExplorer
 Type: Package
 Title: Import from and Export to Amiga Disk Files
-Version: 0.1.5
-Date: 2021-09-04
+Version: 0.1.6
+Date: 2021-09-05
 Authors@R: c(person("Pepijn", "de Vries", role = c("aut", "cre", "dtc"),
     email = "pepijn.devries@outlook.com"))
 Author: Pepijn de Vries [aut, cre, dtc]

@@ -34,7 +34,7 @@ Emulating the Commodore Amiga hardware is, as far as I can tell, legal.
 However, the Amiga had its operating system stored on a read only memory
 chip. Which is commonly referred to as the kickstart. This kickstart software
 is still protected by copyright law. Licensed copies can be bought legally
-from [AmigaForever](www.amigaforever.com). The same is true for much of the
+from [AmigaForever](https://www.amigaforever.com). The same is true for much of the
 Amiga software, which is still protected by copyright.
 
 Note that for analysing ADF files with the adfExplorer package you don't
@@ -358,6 +358,7 @@ list.adf.files(adf.example, "DF0:temp/")
 Do you regret them? Just delete them:
 
 ```{r}
-adf.example <- adf.file.remove(adf.example, "DF0:temp")
+adf.example <- 
+  adf.file.remove(adf.example, "DF0:temp")
 list.adf.files(adf.example, "DF0:")
 ```

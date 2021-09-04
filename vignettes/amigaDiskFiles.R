@@ -80,3 +80,8 @@ adf.example <- put.adf.file(adf.example,
 ## -----------------------------------------------------------------------------
 list.adf.files(adf.example, "DF0:temp/")
 
+## -----------------------------------------------------------------------------
+adf.example <- 
+  adf.file.remove(adf.example, "DF0:temp")
+list.adf.files(adf.example, "DF0:")
+

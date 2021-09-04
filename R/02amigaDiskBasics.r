@@ -118,13 +118,8 @@ setGeneric("read.adf", function(file) standardGeneric("read.adf"))
 #' @rdname read.adf
 #' @aliases read.adf,character-method
 #' @param file Either a file name or a file connection, that
-<<<<<<< HEAD
-#' allows reading binary data (see e.g., \code{\link[base]{file}} or
-#' \code{\link[base]{url}}). \code{read.adz} only accepts file names.
-=======
 #' allows reading binary data (see e.g., \code{\link[base:connections]{file}} or
 #' \code{\link[base:connections]{url}}). \code{read.adz} only accepts file names.
->>>>>>> remove-file
 #' @return Returns an \code{\link{amigaDisk}} object read from the provided Amiga disk file
 #'
 #' @examples

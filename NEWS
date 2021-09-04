@@ -1,4 +1,10 @@
 =============
+adfExplorer v0.1.6 (Release date: 2021-09-05)
+=============
+
+ * URL fix in vignette to pass CRAN checks
+
+=============
 adfExplorer v0.1.5 (Release date: 2021-09-04)
 =============
 
