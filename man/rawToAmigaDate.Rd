@@ -18,7 +18,7 @@ to retrieve the date time object. Note that the time zone is not stored
 on the Amiga. By default the Universal time zone (UTC) is assumed.}
 }
 \value{
-Returns a \code{\link[base]{POSIXct}} object based on the provided
+Returns a \code{\link[base:DateTimeClasses]{POSIXct}} object based on the provided
 raw data.
 }
 \description{

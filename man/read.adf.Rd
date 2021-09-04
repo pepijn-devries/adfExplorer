@@ -17,8 +17,8 @@
 }
 \arguments{
 \item{file}{Either a file name or a file connection, that
-allows reading binary data (see e.g., \code{\link[base]{file}} or
-\code{\link[base]{url}}). \code{read.adz} only accepts file names.}
+allows reading binary data (see e.g., \code{\link[base:connections]{file}} or
+\code{\link[base:connections]{url}}). \code{read.adz} only accepts file names.}
 }
 \value{
 Returns an \code{\link{amigaDisk}} object read from the provided Amiga disk file

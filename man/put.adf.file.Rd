@@ -41,7 +41,7 @@ into the current directory (\code{\link{current.adf.dir}}) or specified path of
 \code{x} respectively. In that case, the same file name as that
 of the source file is used. Wild cards are not allowed (see details).}
 
-\item{date}{A \code{\link{POSIXt}} object that will be used as the
+\item{date}{A \code{\link[base:DateTimeClasses]{POSIXt}} object that will be used as the
 file modification date. When missing the system time will used.}
 
 \item{comment}{An optional \code{character} string that will be included

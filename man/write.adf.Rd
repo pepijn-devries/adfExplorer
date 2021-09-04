@@ -20,7 +20,7 @@
 an ADF file.}
 
 \item{file}{either a file name to write to, or a file connection, that
-allows to write binary data (see \code{\link[base]{file}}).
+allows to write binary data (see \code{\link[base:connections]{file}}).
 \code{write.adz} only accepts a file name.}
 }
 \value{

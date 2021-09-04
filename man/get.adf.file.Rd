@@ -22,8 +22,8 @@ needs to be extracted.}
 \code{\link{current.adf.dir}} for details on these specs.}
 
 \item{destination}{either a file name or a file connection, that
-allows writing binary data (see e.g., \code{\link[base]{file}} or
-\code{\link[base]{url}}). When the destination is missing, the
+allows writing binary data (see e.g., \code{\link[base:connections]{file}} or
+\code{\link[base:connections]{url}}). When the destination is missing, the
 file content is returned as \code{raw} data.}
 }
 \value{
