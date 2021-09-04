@@ -33,3 +33,4 @@ new("amigaBlock")
 \author{
 Pepijn de Vries
 }
+\concept{blocks}

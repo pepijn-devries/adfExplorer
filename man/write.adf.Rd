@@ -20,7 +20,7 @@
 an ADF file.}
 
 \item{file}{either a file name to write to, or a file connection, that
-allows to write binary data (see \code{\link[base]{file}}).
+allows to write binary data (see \code{\link[base:connections]{file}}).
 \code{write.adz} only accepts a file name.}
 }
 \value{
@@ -57,8 +57,10 @@ write.adz(adf.example, "test.3.adz")
 }
 }
 \seealso{
-Other io.operations: \code{\link{read.adf}}
+Other io.operations: 
+\code{\link{read.adf}()}
 }
 \author{
 Pepijn de Vries
 }
+\concept{io.operations}

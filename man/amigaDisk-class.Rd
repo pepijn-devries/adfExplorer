@@ -9,7 +9,7 @@
 An S4 class representing the information from an Amiga Disk File.
 }
 \details{
-An Amiga Disk File (ADF) holds the raw data of an amiga disk
+An Amiga Disk File (ADF) holds the raw data of an Amiga disk
 in the same order as blocks (\code{\link{amigaBlock-class}})
 on the physical disks. As an Amiga
 Disk can hold any kind of information, so can this class.
@@ -54,3 +54,4 @@ new("amigaDisk")
 \author{
 Pepijn de Vries
 }
+\concept{amiga.disk.access}

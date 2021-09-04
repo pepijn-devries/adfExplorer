@@ -354,3 +354,10 @@ Look here are the files we just put onto the disk
 ```{r}
 list.adf.files(adf.example, "DF0:temp/")
 ```
+
+Do you regret them? Just delete them:
+
+```{r}
+adf.example <- adf.file.remove(adf.example, "DF0:temp")
+list.adf.files(adf.example, "DF0:")
+```

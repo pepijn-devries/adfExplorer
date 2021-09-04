@@ -18,7 +18,7 @@ to retrieve the date time object. Note that the time zone is not stored
 on the Amiga. By default the Universal time zone (UTC) is assumed.}
 }
 \value{
-Returns a \code{\link[base]{POSIXct}} object based on the provided
+Returns a \code{\link[base:DateTimeClasses]{POSIXct}} object based on the provided
 raw data.
 }
 \description{
@@ -43,11 +43,14 @@ rawToAmigaDate(raw(12))
 rawToAmigaDate(amigaIntToRaw(c(1, 1, 50), 32))
 }
 \seealso{
-Other raw.operations: \code{\link{amigaDateToRaw}},
-  \code{\link{amigaIntToRaw}},
-  \code{\link{displayRawData}},
-  \code{\link{rawToAmigaInt}}, \code{\link{rawToBitmap}}
+Other raw.operations: 
+\code{\link{amigaDateToRaw}()},
+\code{\link{amigaIntToRaw}()},
+\code{\link{displayRawData}()},
+\code{\link{rawToAmigaInt}()},
+\code{\link{rawToBitmap}()}
 }
 \author{
 Pepijn de Vries
 }
+\concept{raw.operations}

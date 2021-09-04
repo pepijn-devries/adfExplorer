@@ -2,11 +2,11 @@ setGeneric("put.adf.file", function(x, source, destination, date, comment) stand
 
 #' Put a file onto an amigaDisk object
 #'
-#' Put a file onto a virtual amiga floppy disk represented by
+#' Put a file onto a virtual Amiga floppy disk represented by
 #' an \code{\link{amigaDisk}} object.
 #'
 #' Put a file or raw data from your local system onto a virtual
-#' amiga floppy disk represented by an \code{\link{amigaDisk}}
+#' Amiga floppy disk represented by an \code{\link{amigaDisk}}
 #' object. Make sure that the virtual disk is DOS formatted.
 #' This method can only put one file at a time onto the virtual
 #' virtual disk. It is therefore not allowed to use wild cards
@@ -28,7 +28,7 @@ setGeneric("put.adf.file", function(x, source, destination, date, comment) stand
 #' into the current directory (\code{\link{current.adf.dir}}) or specified path of
 #' \code{x} respectively. In that case, the same file name as that
 #' of the source file is used. Wild cards are not allowed (see details).
-#' @param date A \code{\link{POSIXt}} object that will be used as the
+#' @param date A \code{\link[base:DateTimeClasses]{POSIXt}} object that will be used as the
 #' file modification date. When missing the system time will used.
 #' @param comment An optional \code{character} string that will be included
 #' in the file header as a comment. Should not be longer than 79 characters.
@@ -138,7 +138,7 @@ setMethod("put.adf.file", c("amigaDisk", "character", "missing", "missing", "mis
   dest.base <- substr(destination, 0, nchar(destination) - nchar(dest.split[[length(dest.split)]]))
   destination <- dest.split[[length(dest.split)]]
   if (nchar(destination) > 30 || nchar(destination) == 0) stop("Destination filename should be between 1 and 30 characters long.")
-  ## XXX Comment in cache block can only be 22 characters long...
+  ## TODO Comment in cache block can only be 22 characters long...
   if (nchar(comment) > 79) stop("Comment cannot be longer than 79 characters.")
   
   ## get the pointer to the base directory
@@ -515,10 +515,10 @@ setGeneric("dir.create.adf", function(x, path, date, comment) standardGeneric("d
 
 #' Create a directory on an amigaDisk object
 #'
-#' Create a directory on a virtual amiga floppy disk represented by
+#' Create a directory on a virtual Amiga floppy disk represented by
 #' an \code{\link{amigaDisk}} object.
 #'
-#' Create a directory on a virtual amiga floppy disk represented by
+#' Create a directory on a virtual Amiga floppy disk represented by
 #' an \code{\link{amigaDisk}} object. Make sure that the virtual disk
 #' is DOS formatted.
 #'
@@ -532,7 +532,7 @@ setGeneric("dir.create.adf", function(x, path, date, comment) standardGeneric("d
 #' (see \code{\link{current.adf.dir}} details). When no full path is specified
 #' the new directory will be created in the current directory. Note that
 #' wild cards are not allowed.
-#' @param date A \code{\link{POSIXt}} object that will be used as the
+#' @param date A \code{\link[base:DateTimeClasses]{POSIXt}} object that will be used as the
 #' directory modification date. When missing the system time will used.
 #' @param comment An optional \code{character} string that will be included
 #' in the directory header as a comment. Should not be longer than 79 characters.

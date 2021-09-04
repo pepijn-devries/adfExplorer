@@ -4,20 +4,15 @@
 \name{dir.create.adf}
 \alias{dir.create.adf}
 \alias{dir.create.adf,amigaDisk,character,missing,missing-method}
-\alias{dir.create.adf}
 \alias{dir.create.adf,amigaDisk,character,POSIXt,missing-method}
-\alias{dir.create.adf}
 \alias{dir.create.adf,amigaDisk,character,POSIXt,character-method}
 \title{Create a directory on an amigaDisk object}
 \usage{
-\S4method{dir.create.adf}{amigaDisk,character,missing,missing}(x, path, date,
-  comment)
+\S4method{dir.create.adf}{amigaDisk,character,missing,missing}(x, path, date, comment)
 
-\S4method{dir.create.adf}{amigaDisk,character,POSIXt,missing}(x, path, date,
-  comment)
+\S4method{dir.create.adf}{amigaDisk,character,POSIXt,missing}(x, path, date, comment)
 
-\S4method{dir.create.adf}{amigaDisk,character,POSIXt,character}(x, path, date,
-  comment)
+\S4method{dir.create.adf}{amigaDisk,character,POSIXt,character}(x, path, date, comment)
 }
 \arguments{
 \item{x}{An \code{\link{amigaDisk}} on which the directory should be created.}
@@ -28,7 +23,7 @@ You can specify the full path on the virtual disk conform Amiga DOS syntax
 the new directory will be created in the current directory. Note that
 wild cards are not allowed.}
 
-\item{date}{A \code{\link{POSIXt}} object that will be used as the
+\item{date}{A \code{\link[base:DateTimeClasses]{POSIXt}} object that will be used as the
 directory modification date. When missing the system time will used.}
 
 \item{comment}{An optional \code{character} string that will be included
@@ -39,11 +34,11 @@ Returns an \code{\link{amigaDisk}} object on which the
 directory is created.
 }
 \description{
-Create a directory on a virtual amiga floppy disk represented by
+Create a directory on a virtual Amiga floppy disk represented by
 an \code{\link{amigaDisk}} object.
 }
 \details{
-Create a directory on a virtual amiga floppy disk represented by
+Create a directory on a virtual Amiga floppy disk represented by
 an \code{\link{amigaDisk}} object. Make sure that the virtual disk
 is DOS formatted.
 }

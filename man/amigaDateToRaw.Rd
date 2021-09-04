@@ -7,7 +7,7 @@
 amigaDateToRaw(x, format = c("long", "short"), tz = "UTC")
 }
 \arguments{
-\item{x}{A (\code{vector} of) \code{\link[base]{POSIXt}} object(s).}
+\item{x}{A (\code{vector} of) \code{\link[base:DateTimeClasses]{POSIXt}} object(s).}
 
 \item{format}{a \code{character} string indicating whether the date
 should be stored as \code{short} or \code{long} integers.}
@@ -42,11 +42,14 @@ amigaDateToRaw(as.POSIXct("1978-01-01 13:30", tz = "UTC"))
 amigaDateToRaw(as.POSIXct("1978-01-01 13:30", tz = "CET"))
 }
 \seealso{
-Other raw.operations: \code{\link{amigaIntToRaw}},
-  \code{\link{displayRawData}},
-  \code{\link{rawToAmigaDate}},
-  \code{\link{rawToAmigaInt}}, \code{\link{rawToBitmap}}
+Other raw.operations: 
+\code{\link{amigaIntToRaw}()},
+\code{\link{displayRawData}()},
+\code{\link{rawToAmigaDate}()},
+\code{\link{rawToAmigaInt}()},
+\code{\link{rawToBitmap}()}
 }
 \author{
 Pepijn de Vries
 }
+\concept{raw.operations}

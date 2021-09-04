@@ -4,11 +4,13 @@
 \name{boot.block.code}
 \alias{boot.block.code}
 \title{Minimal executable code for a bootblock}
-\format{A data frame with two columns. The first column
+\format{
+A data frame with two columns. The first column
 contains the assembled code (as \code{raw} data). The
 second column contains the corresponding Motorola 68000
 (the main CPU of the original Commodore Amiga) assembly
-syntax.}
+syntax.
+}
 \description{
 A minimal piece of code required to boot to a command line
 interface on a Commodore Amiga.

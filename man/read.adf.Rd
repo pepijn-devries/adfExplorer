@@ -17,11 +17,11 @@
 }
 \arguments{
 \item{file}{Either a file name or a file connection, that
-allows reading binary data (see e.g., \code{\link[base]{file}} or
-\code{\link[base]{url}}). \code{read.adz} only accepts file names.}
+allows reading binary data (see e.g., \code{\link[base:connections]{file}} or
+\code{\link[base:connections]{url}}). \code{read.adz} only accepts file names.}
 }
 \value{
-Returns an \code{\link{amigaDisk}} object read from the provided amiga disk file
+Returns an \code{\link{amigaDisk}} object read from the provided Amiga disk file
 }
 \description{
 Read data from an Amiga Disk File (ADF) to an \code{\link{amigaDisk}}
@@ -69,8 +69,10 @@ print(my.disk3)
 }
 }
 \seealso{
-Other io.operations: \code{\link{write.adf}}
+Other io.operations: 
+\code{\link{write.adf}()}
 }
 \author{
 Pepijn de Vries
 }
+\concept{io.operations}

@@ -21,7 +21,7 @@ validity.amigaDisk <- function(object) {
 #'
 #' An S4 class representing the information from an Amiga Disk File.
 #'
-#' An Amiga Disk File (ADF) holds the raw data of an amiga disk
+#' An Amiga Disk File (ADF) holds the raw data of an Amiga disk
 #' in the same order as blocks (\code{\link{amigaBlock-class}})
 #' on the physical disks. As an Amiga
 #' Disk can hold any kind of information, so can this class.
@@ -75,7 +75,7 @@ setGeneric("calculate.checksum", function(x, block, chcksm.pos = 21, as.raw = T)
 ## maybe export at later stage
 setMethod("calculate.checksum", c("amigaDisk", "numeric"), function(x, block, chcksm.pos = 21, as.raw = T) {
   # This checksum routine appears to be a bit off, but returns the
-  # correct checksum. Maybe test some more XXX
+  # correct checksum. Maybe test some more TODO
   x <- amigaBlock(x, block)
   calculate.checksum(x@data, NULL, chcksm.pos, as.raw)
 })
@@ -118,9 +118,9 @@ setGeneric("read.adf", function(file) standardGeneric("read.adf"))
 #' @rdname read.adf
 #' @aliases read.adf,character-method
 #' @param file Either a file name or a file connection, that
-#' allows reading binary data (see e.g., \code{\link[base]{file}} or
-#' \code{\link[base]{url}}). \code{read.adz} only accepts file names.
-#' @return Returns an \code{\link{amigaDisk}} object read from the provided amiga disk file
+#' allows reading binary data (see e.g., \code{\link[base:connections]{file}} or
+#' \code{\link[base:connections]{url}}). \code{read.adz} only accepts file names.
+#' @return Returns an \code{\link{amigaDisk}} object read from the provided Amiga disk file
 #'
 #' @examples
 #' \dontrun{
@@ -189,7 +189,7 @@ setGeneric("read.adz", function(file) standardGeneric("read.adz"))
 #' @aliases read.adz,character-method
 #' @export
 setMethod("read.adz", "character", function(file){
-  ## get some test files to test this further... XXX
+  ## get some test files to test this further... TODO
   file <- file[[1]]
   con <- gzfile(file, "rb")
   adf <- read.adf(con)
@@ -220,7 +220,7 @@ setGeneric("write.adf", def = function(x, file){
 #' @param x An \code{\link{amigaDisk}} object that needs to be saved to
 #' an ADF file.
 #' @param file either a file name to write to, or a file connection, that
-#' allows to write binary data (see \code{\link[base]{file}}).
+#' allows to write binary data (see \code{\link[base:connections]{file}}).
 #' \code{write.adz} only accepts a file name.
 #' @return Writes to an ADF file but returns nothing.
 #'
@@ -454,23 +454,8 @@ root.info <- function(x) {
   root.id    <- get.root.id(x)
   root       <- amigaBlock(x, root.id)
   ht_length  <- BLOCK_SIZE/4 - 56
-#  r_days     <- rawToAmigaInt(root@data[ht_length*4 + 133:136], 32, F)
-#  r_mins     <- rawToAmigaInt(root@data[ht_length*4 + 137:140], 32, F)
-#  r_ticks    <- rawToAmigaInt(root@data[ht_length*4 + 141:144], 32, F)
-#  r_datetime <- r_days*24*60*60 + r_mins*60 + r_ticks/50
-#  r_datetime <- as.POSIXct(r_datetime, tz = "UTC", origin = "1978-01-01 00:00:00")
   r_datetime <- rawToAmigaDate(root@data[ht_length*4 + 133:144])
-#  v_days     <- rawToAmigaInt(root@data[ht_length*4 + 185:188], 32, F)
-#  v_mins     <- rawToAmigaInt(root@data[ht_length*4 + 189:192], 32, F)
-#  v_ticks    <- rawToAmigaInt(root@data[ht_length*4 + 193:196], 32, F)
-#  v_datetime <- v_days*24*60*60 + v_mins*60 + v_ticks/50
-#  v_datetime <- as.POSIXct(v_datetime, tz = "UTC", origin = "1978-01-01 00:00:00")
   v_datetime <- rawToAmigaDate(root@data[ht_length*4 + 185:196])
-#  c_days     <- rawToAmigaInt(root@data[ht_length*4 + 197:200], 32, F)
-#  c_mins     <- rawToAmigaInt(root@data[ht_length*4 + 203:204], 32, F)
-#  c_ticks    <- rawToAmigaInt(root@data[ht_length*4 + 205:208], 32, F)
-#  c_datetime <- c_days*24*60*60 + c_mins*60 + c_ticks/50
-#  c_datetime <- as.POSIXct(c_datetime, tz = "UTC", origin = "1978-01-01 00:00:00")
   c_datetime <- rawToAmigaDate(root@data[ht_length*4 + 197:208])
   name_len   <- rawToAmigaInt(root@data[ht_length*4 + 145], 8, F)
   name_len[name_len > 30] <- 30
@@ -531,7 +516,7 @@ header.info <- function(x, hash.table) {
       protect    = as.logical(rawToBits(hblock@data[ht_length*4 + 33:36])),
       bytesize   = rawToAmigaInt(hblock@data[ht_length*4 + 37:40], 32, F),
       comm_len   = rawToAmigaInt(hblock@data[ht_length*4 + 41], 8, F),
-      ## replace chardot with something better! XXX
+      ## replace chardot with something better! TODO
       comment    = rawToCharDot(hblock@data[ht_length*4 + 42:120]),
       unused2    = hblock@data[ht_length*4 + 121:132],
       datetime   = datetime,
@@ -586,7 +571,7 @@ setGeneric("current.adf.dir", function(x) standardGeneric("current.adf.dir"))
 #' directory names. Both upper and lowercase letters are allowed in file
 #' and directory names. The case is ignored when identifying files however.
 #' This packages will NOT follow the Amiga's full search path
-#' (\url{http://wiki.amigaos.net/wiki/AmigaOS_Manual:_AmigaDOS_Working_With_AmigaDOS#Search_Path}).
+#' (\url{https://wiki.amigaos.net/wiki/AmigaOS_Manual:_AmigaDOS_Working_With_AmigaDOS#Search_Path}).
 #'
 #' @name  current.adf.dir
 #' @rdname current.adf.dir
@@ -732,8 +717,8 @@ setGeneric("get.adf.file", function(x, source, destination) standardGeneric("get
 #' \code{\link{amigaDisk}} object, conform Amiga specs. See
 #' \code{\link{current.adf.dir}} for details on these specs.
 #' @param destination either a file name or a file connection, that
-#' allows writing binary data (see e.g., \code{\link[base]{file}} or
-#' \code{\link[base]{url}}). When the destination is missing, the
+#' allows writing binary data (see e.g., \code{\link[base:connections]{file}} or
+#' \code{\link[base:connections]{url}}). When the destination is missing, the
 #' file content is returned as \code{raw} data.
 #' @return Returns a \code{vector} of \code{raw} data when the
 #' argument \code{destination} is missing. Otherwise returns nothing.
@@ -1027,7 +1012,7 @@ setGeneric("blank.amigaDOSDisk", function(diskname,
 #' Amiga OS >2.0, the 'Startup-Sequence' file needs to be present
 #' for this, otherwise the screen will remain black on booting. See also the
 #' \code{\link{boot.block.code}} data.
-#' @param creation.date A \code{\link[base]{POSIXt}} object. Will be used
+#' @param creation.date A \code{\link[base:DateTimeClasses]{POSIXt}} object. Will be used
 #' and stored as the creation date of the virtual disk. Note that the Amiga
 #' does not store the time zone and UTC is assumed as default. The Amiga
 #' stores the date and time as positive integers, relative to 1st of
@@ -1218,8 +1203,8 @@ setGeneric("clear.amigaBlock", function(x, blocks) standardGeneric("clear.amigaB
 
 ## clear amigaBlock, also in bitmap
 setMethod("clear.amigaBlock", c("amigaDisk", "numeric"), function(x, blocks) {
-  ## XXX note that the blocks itself are not erased
-  ## XXX only the bitmap is cleared. Maybe make it optional to clear the blocks too
+  ## TODO note that the blocks itself are not erased
+  ## TODO only the bitmap is cleared. Maybe make it optional to clear the blocks too
   NUMBER_OF_SECTORS <- ifelse(x@type == "DD", NUMBER_OF_SECTORS_DD, NUMBER_OF_SECTORS_HD)
   ri <- root.info(x)
   ## first create a bitmap with all flags set.

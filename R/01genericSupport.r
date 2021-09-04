@@ -377,7 +377,7 @@ bitmap.info <- function(x) {
   root <- root.info(x)
   if (!root$bm_flag) stop("Disk does not have a valid bitmap!")
   bm_pages <- root$bm_pages[root$bm_pages != 0]
-  # XXXX check bm_extension. Should not be required for floppy disks
+  # TODO check bm_extension. Should not be required for floppy disks
   bitmap <- lapply(bm_pages, function(y) {
     # first four bytes are checksum of block
     amigaBlock(x, y)@data[-1:-4]
@@ -403,7 +403,7 @@ intl_toupper <- function(x, international = T) {
       (values >= as.raw(224) & values <=  as.raw(254) & values != as.raw(247))
   } else {
     ## This seems to be the OFS way for to_upper. Might need some more
-    ## checks XXX
+    ## checks TODO
     sel <- values >= charToRaw("a") & values <= charToRaw("z")
   }
   values[sel] <- 
@@ -456,7 +456,7 @@ dir.cache.info <- function(x, block) {
   hi <- header.info(x, block)[[1]]
   bi <- boot.info(x)
   if (!(hi$sec_type %in% c("ST_ROOT", "ST_USERDIR"))) stop("Directory cache information can only be obtained from a (root) directory.")
-  if (!bi$flag$dir.cache.mode || hi$extension == 0) stop("No pointer to direct cache block found.")
+  if (!bi$flag$dir.cache.mode || hi$extension == 0) stop("No pointer to directory cache block found.")
   dc.id <- hi$extension
   records <- list()
   while (dc.id[length(dc.id)] != 0) {
@@ -615,7 +615,7 @@ setMethod("get.blockID", c("character", "numeric", "numeric", "numeric"), functi
 #' @param tz A \code{character} string specifying the time zone to be used
 #' to retrieve the date time object. Note that the time zone is not stored
 #' on the Amiga. By default the Universal time zone (UTC) is assumed.
-#' @return Returns a \code{\link[base]{POSIXct}} object based on the provided
+#' @return Returns a \code{\link[base:DateTimeClasses]{POSIXct}} object based on the provided
 #' raw data.
 #' @examples
 #' ## all raw data is zero, so the origin date is returned:
@@ -661,7 +661,7 @@ rawToAmigaDate <- function(x, format = c("long", "short"), tz = "UTC") {
 #' As these values are always positive, only date time values on or after
 #' 1978-01-01 are allowed. The inverse of this function can be achieved
 #' with \code{\link{rawToAmigaDate}}.
-#' @param x A (\code{vector} of) \code{\link[base]{POSIXt}} object(s).
+#' @param x A (\code{vector} of) \code{\link[base:DateTimeClasses]{POSIXt}} object(s).
 #' @param format a \code{character} string indicating whether the date
 #' should be stored as \code{short} or \code{long} integers.
 #' @param tz A \code{character} string specifying the time zone to be used

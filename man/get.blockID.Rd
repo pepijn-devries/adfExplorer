@@ -6,8 +6,7 @@
 \alias{get.blockID,character,numeric,numeric,numeric-method}
 \title{Get the block ID from the physical location on the disk}
 \usage{
-\S4method{get.blockID}{character,numeric,numeric,numeric}(disktype, sector,
-  side, cylinder)
+\S4method{get.blockID}{character,numeric,numeric,numeric}(disktype, sector, side, cylinder)
 }
 \arguments{
 \item{disktype}{A \code{character} string indicating the type of disk:
@@ -48,9 +47,11 @@ get.blockID(disktype = "DD",
             cylinder = 0:3)
 }
 \seealso{
-Other block.operations: \code{\link{amigaBlock-method}},
-  \code{\link{get.diskLocation}}
+Other block.operations: 
+\code{\link{amigaBlock-method}},
+\code{\link{get.diskLocation}()}
 }
 \author{
 Pepijn de Vries
 }
+\concept{block.operations}

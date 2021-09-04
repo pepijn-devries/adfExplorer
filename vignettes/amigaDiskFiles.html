@@ -1,65 +1,300 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <meta name="author" content="Pepijn de Vries" />
 
-<meta name="date" content="2018-03-05" />
+<meta name="date" content="2021-09-04" />
 
 <title>Amiga Disk File Explorer</title>
 
 
 
 <style type="text/css">code{white-space: pre;}</style>
-<style type="text/css">
-div.sourceCode { overflow-x: auto; }
-table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
-  margin: 0; padding: 0; vertical-align: baseline; border: none; }
-table.sourceCode { width: 100%; line-height: 100%; }
-td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
-td.sourceCode { padding-left: 5px; }
-code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code > span.dt { color: #902000; } /* DataType */
-code > span.dv { color: #40a070; } /* DecVal */
-code > span.bn { color: #40a070; } /* BaseN */
-code > span.fl { color: #40a070; } /* Float */
-code > span.ch { color: #4070a0; } /* Char */
-code > span.st { color: #4070a0; } /* String */
-code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code > span.ot { color: #007020; } /* Other */
-code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code > span.fu { color: #06287e; } /* Function */
-code > span.er { color: #ff0000; font-weight: bold; } /* Error */
-code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-code > span.cn { color: #880000; } /* Constant */
-code > span.sc { color: #4070a0; } /* SpecialChar */
-code > span.vs { color: #4070a0; } /* VerbatimString */
-code > span.ss { color: #bb6688; } /* SpecialString */
-code > span.im { } /* Import */
-code > span.va { color: #19177c; } /* Variable */
-code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code > span.op { color: #666666; } /* Operator */
-code > span.bu { } /* BuiltIn */
-code > span.ex { } /* Extension */
-code > span.pp { color: #bc7a00; } /* Preprocessor */
-code > span.at { color: #7d9029; } /* Attribute */
-code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+<style type="text/css" data-origin="pandoc">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#header {
+text-align: center;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61717; background-color: #e3d2d2; } 
 </style>
 
 
 
-<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
 
 </head>
 
@@ -69,8 +304,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 
 <h1 class="title toc-ignore">Amiga Disk File Explorer</h1>
-<h4 class="author"><em>Pepijn de Vries</em></h4>
-<h4 class="date"><em>2018-03-05</em></h4>
+<h4 class="author">Pepijn de Vries</h4>
+<h4 class="date">2021-09-04</h4>
 
 
 
@@ -105,19 +340,19 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h2>Technical background</h2>
 <p>Some technical details will be presented here, as they will help you better understand some of the package functionalities. I will not discuss the ADF format in depth. A more detailed description can be found in the <a href="http://lclevy.free.fr/adflib/adf_info.html">FAQ</a> by Laurent Clévy. In fact, I used that document as the main source of information during the development of this package; it is a very accurate description of the ADF format.</p>
 <p>A physical Amiga floppy disk is divided into 80 cylinders, on 2 tracks or sides, which contain 11 (double density (DD) disk) or 22 (high density (HD) disk) sectors or blocks. So in total a disk is composed of either 1,760 or 3,520 blocks. Each block holds 512 bytes of information. An Amiga Disk File (ADF) is dump of such ordered blocks in a file. The adfExplorer package represents ADF files as <code>amigaDisk</code> objects. A completely blank disk can be created using the object constructor (<code>new</code>).</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(adfExplorer)
-blank.disk &lt;-<span class="st"> </span><span class="kw">new</span>(<span class="st">&quot;amigaDisk&quot;</span>)</code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">library</span>(adfExplorer)</span>
+<span id="cb1-2"><a href="#cb1-2"></a>blank.disk &lt;-<span class="st"> </span><span class="kw">new</span>(<span class="st">&quot;amigaDisk&quot;</span>)</span></code></pre></div>
 <p>The blocks on Amiga disks are represented by <code>amigaBlock</code> objects, which can be created with the constructor, or it can be extracted from an <code>amigaDisk</code> object.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Create with constructor:
-blank.block &lt;-<span class="st"> </span><span class="kw">new</span>(<span class="st">&quot;amigaBlock&quot;</span>)
-
-## Extract the first block from an amigaDisk object:
-blank.block &lt;-<span class="st"> </span><span class="kw">amigaBlock</span>(blank.disk, <span class="dt">block =</span> <span class="dv">0</span>)</code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="co">## Create with constructor:</span></span>
+<span id="cb2-2"><a href="#cb2-2"></a>blank.block &lt;-<span class="st"> </span><span class="kw">new</span>(<span class="st">&quot;amigaBlock&quot;</span>)</span>
+<span id="cb2-3"><a href="#cb2-3"></a></span>
+<span id="cb2-4"><a href="#cb2-4"></a><span class="co">## Extract the first block from an amigaDisk object:</span></span>
+<span id="cb2-5"><a href="#cb2-5"></a>blank.block &lt;-<span class="st"> </span><span class="kw">amigaBlock</span>(blank.disk, <span class="dt">block =</span> <span class="dv">0</span>)</span></code></pre></div>
 <p>The relationship between the physical location on the disk and the block identifier can be obtained with the <code>get.blockID</code> method.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">get.blockID</span>(<span class="dt">disktype =</span> <span class="st">&quot;DD&quot;</span>, <span class="dt">sector =</span> <span class="dv">4</span>, <span class="dt">side =</span> <span class="dv">0</span>, <span class="dt">cylinder =</span> <span class="dv">35</span>)</code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="kw">get.blockID</span>(<span class="dt">disktype =</span> <span class="st">&quot;DD&quot;</span>, <span class="dt">sector =</span> <span class="dv">4</span>, <span class="dt">side =</span> <span class="dv">0</span>, <span class="dt">cylinder =</span> <span class="dv">35</span>)</span></code></pre></div>
 <pre><code>## [1] 774</code></pre>
 <p>Note that the identifiers have a base index of zero as opposed to one used by R. The physical location can also be calculated from the block identifier with the <code>get.diskLocation</code> method.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">get.diskLocation</span>(<span class="dt">disktype =</span> <span class="st">&quot;DD&quot;</span>, <span class="dt">block =</span> <span class="dv">1231</span>)</code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="kw">get.diskLocation</span>(<span class="dt">disktype =</span> <span class="st">&quot;DD&quot;</span>, <span class="dt">block =</span> <span class="dv">1231</span>)</span></code></pre></div>
 <pre><code>## $sector
 ## [1] 10
 ## 
@@ -127,8 +362,8 @@ blank.block &lt;-<span class="st"> </span><span class="kw">amigaBlock</span>(bla
 ## $cylinder
 ## [1] 55</code></pre>
 <p>The completely <code>blank.disk</code> created earlier with the constructor can hold any kind of data. However, in order to hold files, the disk needs to be formatted with a specific file system. That way, the Amiga Disk Operating System (DOS) can access it. We can use the <code>blank.amigaDOSDisk</code> method to create a blank disk, structured such that it can hold files.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">blank.disk &lt;-<span class="st"> </span><span class="kw">blank.amigaDOSDisk</span>(<span class="dt">diskname =</span> <span class="st">&quot;empty&quot;</span>)
-<span class="kw">print</span>(blank.disk)</code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>blank.disk &lt;-<span class="st"> </span><span class="kw">blank.amigaDOSDisk</span>(<span class="dt">diskname =</span> <span class="st">&quot;empty&quot;</span>)</span>
+<span id="cb7-2"><a href="#cb7-2"></a><span class="kw">print</span>(blank.disk)</span></code></pre></div>
 <pre><code>## 
 ## Amiga (DD) Disk File:
 ##  Type:           bootable DOS
@@ -146,7 +381,7 @@ blank.block &lt;-<span class="st"> </span><span class="kw">amigaBlock</span>(bla
 <p>With Amiga OS 3.0, the ‘<a href="#dircacheblock">directory cache mode</a>’ was introduced. With the direct cache mode, one or more blocks are stored for each directory (including the root) with basic information about the files stored in that directory. In older versions, the directory <a href="#headerblock">header</a> only stored pointers to the files in that directory. This meant that in older OS versions the header of each file needed to be loaded to list all files in that directory. As with the directory cache mode all information was stored in one (or more when necessary) block, it was faster at listing directory content. On the original machine that is, as floppy disk drives were pretty slow.</p>
 <p>Information is stored in separate blocks, where each block is composed of 512 bytes. So even when a file is 10 bytes long, it will still consume at least 512 bytes of disk space. There are several different types of blocks, carnying different types of information. Some of them will be discussed below.</p>
 <p>Instead of working with a blank disk, it can be more informative to work with a disk with some data on it. From here on let’s work with the example <code>amigaDisk</code> object provided with the package.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(<span class="st">&quot;adf.example&quot;</span>)</code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="kw">data</span>(<span class="st">&quot;adf.example&quot;</span>)</span></code></pre></div>
 </div>
 <div id="bootblock" class="section level3">
 <h3>The bootblock</h3>
@@ -155,12 +390,12 @@ blank.block &lt;-<span class="st"> </span><span class="kw">amigaBlock</span>(bla
 <div id="the-root-block" class="section level3">
 <h3>The root block</h3>
 <p>The root block holds information on the files and directories in the root of the disk. It also holds information on the disk name, creation and modification date. It is usually situated at the centre of the blocks, at block 880 for DD disks.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">amigaBlock</span>(adf.example, <span class="dv">880</span>)</code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="kw">amigaBlock</span>(adf.example, <span class="dv">880</span>)</span></code></pre></div>
 </div>
 <div id="the-bitmap-block" class="section level3">
 <h3>The bitmap block</h3>
 <p>The bitmap block, contains information about which blocks on the disk are in use and which are free. The first four bytes in this block form a checksum, the following 220 bytes (for a DD disk, twice as many for a HD disk). Each byte is composed of 8 bits. When a bit is set, it represents a used block, when it is not set, it reflects a free block. The bitmap block is usually situate next to the root block, at block 881 on a DD disk.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">amigaBlock</span>(adf.example, <span class="dv">881</span>)</code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="kw">amigaBlock</span>(adf.example, <span class="dv">881</span>)</span></code></pre></div>
 <p>The bitmap is thus used to allocate free blocks on the disk to put new files. When files are removed (and blocks) are thus freed, this will also be marked in the bitmap. The bitmap is also used to calculate the free space on a disk.</p>
 </div>
 <div id="headerblock" class="section level3">
@@ -181,18 +416,18 @@ blank.block &lt;-<span class="st"> </span><span class="kw">amigaBlock</span>(bla
 <div id="examples" class="section level2">
 <h2>Examples</h2>
 <p>The package contains an example of an <code>amigaDisk</code> object, which is formatted with the old <a href="#filesystem">file system</a> and a <a href="#bootblock">bootable bootblock</a>. Files and directories in the root directory can easily be listed.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">list.adf.files</span>(adf.example)</code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="kw">list.adf.files</span>(adf.example)</span></code></pre></div>
 <pre><code>## [1] &quot;Devs&quot; &quot;S&quot;    &quot;this&quot; &quot;mods&quot;</code></pre>
 <p>The disk also contains a file called ‘Startup-Sequence’. This executable script file that is run when the disk is booted from the disk. It is comparable with the (probably better known) ‘autoexec.bat’ files on IBM PC DOS systems. Let’s have a little peek at this file.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## get the file from the amigaDisk object:
-startup &lt;-<span class="st"> </span><span class="kw">get.adf.file</span>(adf.example, <span class="st">&quot;df0:s/Startup-Sequence&quot;</span>)
-
-## the file content is returned as raw data.
-## let's convert it to text:
-startup &lt;-<span class="st"> </span><span class="kw">rawToChar</span>(startup)
-
-## let's show it
-<span class="kw">cat</span>(startup)</code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a><span class="co">## get the file from the amigaDisk object:</span></span>
+<span id="cb14-2"><a href="#cb14-2"></a>startup &lt;-<span class="st"> </span><span class="kw">get.adf.file</span>(adf.example, <span class="st">&quot;df0:s/Startup-Sequence&quot;</span>)</span>
+<span id="cb14-3"><a href="#cb14-3"></a></span>
+<span id="cb14-4"><a href="#cb14-4"></a><span class="co">## the file content is returned as raw data.</span></span>
+<span id="cb14-5"><a href="#cb14-5"></a><span class="co">## let&#39;s convert it to text:</span></span>
+<span id="cb14-6"><a href="#cb14-6"></a>startup &lt;-<span class="st"> </span><span class="kw">rawToChar</span>(startup)</span>
+<span id="cb14-7"><a href="#cb14-7"></a></span>
+<span id="cb14-8"><a href="#cb14-8"></a><span class="co">## let&#39;s show it</span></span>
+<span id="cb14-9"><a href="#cb14-9"></a><span class="kw">cat</span>(startup)</span></code></pre></div>
 <pre><code>## ; The Startup-Sequence is executed after booting
 ## ; Everything after semicolons are comments and is ignored
 ## ; By default standard commands are loaded from
@@ -205,45 +440,52 @@ startup &lt;-<span class="st"> </span><span class="kw">rawToChar</span>(startup)
 ## 
 ## Echo &quot;c[22m[32mADF Explorer Example Disk&quot; ; Note that the weird characters at the start are escape-codes to format the text
 ## Echo &quot;[0mThis disk was created as an example for the&quot;
-## Echo &quot;R package 'adfExplorer' by Pepijn de Vries.&quot;</code></pre>
+## Echo &quot;R package &#39;adfExplorer&#39; by Pepijn de Vries.&quot;</code></pre>
 <p>As you can see this startup sequence contains mostly some comments and will print (Echo) some text to the command line interface and doesn’t do more than that.</p>
 <p>There is currently little support for Amiga file types in R. An exception is the ProTracker module format, as shown in the following example.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## first get the file as raw data.
-mod.raw &lt;-<span class="st"> </span><span class="kw">get.adf.file</span>(adf.example, <span class="st">&quot;df0:mods/mod.intro&quot;</span>)
-
-## For the rest of the example we need
-## the ProTrackR package
-if (<span class="kw">requireNamespace</span>(<span class="st">&quot;ProTrackR&quot;</span>, <span class="dt">quietly =</span> <span class="ot">TRUE</span>)) {
-  con &lt;-<span class="st"> </span><span class="kw">rawConnection</span>(mod.raw, <span class="st">&quot;rb&quot;</span>)
-
-  ## and read it as a ProTracker module
-  mod &lt;-<span class="st"> </span>ProTrackR::<span class="kw">read.module</span>(con)
-  <span class="kw">close</span>(con)
-
-  ## plot the first sample from the module:
-  <span class="kw">par</span>(<span class="dt">mar =</span> <span class="kw">c</span>(<span class="dv">5</span>, <span class="dv">4</span>, <span class="dv">0</span>, <span class="dv">0</span>) +<span class="st"> </span><span class="fl">0.1</span>)
-  <span class="kw">plot</span>(ProTrackR::<span class="kw">waveform</span>(ProTrackR::<span class="kw">PTSample</span>(mod, <span class="dv">1</span>)),
-       <span class="dt">type =</span> <span class="st">&quot;l&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;Amplitude&quot;</span>)
-  
-  ## and to play it, uncomment the following line:
-  ## ProTrackR::playMod(mod)
-}</code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a><span class="co">## first get the file as raw data.</span></span>
+<span id="cb16-2"><a href="#cb16-2"></a>mod.raw &lt;-<span class="st"> </span><span class="kw">get.adf.file</span>(adf.example, <span class="st">&quot;df0:mods/mod.intro&quot;</span>)</span>
+<span id="cb16-3"><a href="#cb16-3"></a></span>
+<span id="cb16-4"><a href="#cb16-4"></a><span class="co">## For the rest of the example we need</span></span>
+<span id="cb16-5"><a href="#cb16-5"></a><span class="co">## the ProTrackR package</span></span>
+<span id="cb16-6"><a href="#cb16-6"></a><span class="cf">if</span> (<span class="kw">requireNamespace</span>(<span class="st">&quot;ProTrackR&quot;</span>, <span class="dt">quietly =</span> <span class="ot">TRUE</span>)) {</span>
+<span id="cb16-7"><a href="#cb16-7"></a>  con &lt;-<span class="st"> </span><span class="kw">rawConnection</span>(mod.raw, <span class="st">&quot;rb&quot;</span>)</span>
+<span id="cb16-8"><a href="#cb16-8"></a></span>
+<span id="cb16-9"><a href="#cb16-9"></a>  <span class="co">## and read it as a ProTracker module</span></span>
+<span id="cb16-10"><a href="#cb16-10"></a>  mod &lt;-<span class="st"> </span>ProTrackR<span class="op">::</span><span class="kw">read.module</span>(con)</span>
+<span id="cb16-11"><a href="#cb16-11"></a>  <span class="kw">close</span>(con)</span>
+<span id="cb16-12"><a href="#cb16-12"></a></span>
+<span id="cb16-13"><a href="#cb16-13"></a>  <span class="co">## plot the first sample from the module:</span></span>
+<span id="cb16-14"><a href="#cb16-14"></a>  <span class="kw">par</span>(<span class="dt">mar =</span> <span class="kw">c</span>(<span class="dv">5</span>, <span class="dv">4</span>, <span class="dv">0</span>, <span class="dv">0</span>) <span class="op">+</span><span class="st"> </span><span class="fl">0.1</span>)</span>
+<span id="cb16-15"><a href="#cb16-15"></a>  <span class="kw">plot</span>(ProTrackR<span class="op">::</span><span class="kw">waveform</span>(ProTrackR<span class="op">::</span><span class="kw">PTSample</span>(mod, <span class="dv">1</span>)),</span>
+<span id="cb16-16"><a href="#cb16-16"></a>       <span class="dt">type =</span> <span class="st">&quot;l&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;Amplitude&quot;</span>)</span>
+<span id="cb16-17"><a href="#cb16-17"></a>  </span>
+<span id="cb16-18"><a href="#cb16-18"></a>  <span class="co">## and to play it, uncomment the following line:</span></span>
+<span id="cb16-19"><a href="#cb16-19"></a>  <span class="co">## ProTrackR::playMod(mod)</span></span>
+<span id="cb16-20"><a href="#cb16-20"></a>}</span></code></pre></div>
 <p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASAAAAEgCAMAAAAjXV6yAAAAWlBMVEUAAAAAADoAAGYAOpAAZrY6AAA6ADo6AGY6kNtmAABmADpmZmZmtrZmtv+QOgCQOmaQkGaQ2/+2ZgC2Zma2/7a2///bkDrb/9vb////tmb/25D//7b//9v////AbpSmAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAKDElEQVR4nO2djXbjJhCFySbbxm3jNu7GjRL7/V+z1q9tiZkLAgGS7z1nN8SCGfiCAEljZM4+Ou1Nox8fXsXWLOOT+Whe20TVJybmtiYvQKf9gOX4/GkH5GFuDfID9L1765OVcJI9NiD2IKSj6bqQPAaF1qgweQK6nGTt0CX0HwJyMLgtrReQv6N6zp7hxm8Wq0eeyigLxZIBzancDEDN/HUz4Y8NJpJ/d0gEqEOTfZovFtDXzwbQaKF4szRPoxmeHqsHzWhtEkB1H3k598O11WAalQno3DB6epcX0gSEDaYRAUE/vp7MrMr5+jlexqB2kM58u8N4z/NJAB0v48/3rh6lCcim9n7QaX+Z4vMD8nVlzstfn/QXGIfnTwKyabijeHghIKt6LJfVEAFZ1d9zPe3zA/L0lQaQUzVSiIAc/BAQ8ENAwA0BATcEBNwQEHBDQMANAQE3BATcjH3pTzoICDSGgPSbaDNOys6mdxlgMIlszdW7iAZIqfTmAIn+ZUDq8+ANATK6fxEQ6ngbAyRWgIAIaOImHiDtzCQgrRQBPR4gda2TD1DqCLOZgCwH4ergoXoQAck1ICAzSVgOE5BYhYcHZCyp6XECEqugA1KWTwSkFCIgNPcR0CMCsteBgEAdCAjUAQCSF+AEpBQaAfremefPg/Q1FTdtGVD19H58/hS/6OSmDQOqg6CPSgy9m1ICunO2PKA6jL4GJO3K4aZcgKTeJJcYZXXvQQdxVwUXrRaQuL4cj0HD9hzztGVA7VdSn96da2k3mER5AMVQqYCM/Qga2r0BwT3Mtgqo3/ZGbbzTHmZi2aiaC2h8yKsHtY2ulEGonB2ocgA67V+an1LTzyXtYbYAIGl9ebdQrKUsFDfdgyCgvvXaQrGYPcx0QJZaRAB0aXTd+qO6EIq5h1nIc/wsgNrWB11obBxQDLmbC3I9BqS0+/6TZQFF3cNscC23Rit8ny8GIKvbu1kMLhSj7mEmAnLYdWJSciYgdGLaepB2OyjqDlQyIByGlRPQ+fAi1ivqHmbGMtR2tiDmrICULhSzB5mzHVCDGIHOCki5Jx1zD7NMgLRh2Q1Quz2QqGh7mImAuh/wy3Hn+IAsLi2zWNhKcQ4gW51zALJVPttC0VwzWwHpU30WQN9/tBdhaR77QEAqoayAkjw4vGnh/clkrEmluD3vpGwwoMN1JSM/ena4MRsTkGxrIUDWnjfpQZrEfZUUF82nQk3MfRVG5d0ByTwmH8wH5KT+vqwoCZC9M2cGhIv5z2IVePBqNTe9eDDXnwogsW7LAZr2qfaTy8rY4WreQbY21Q019qGmQSeOO+Kfb0FAk7/kwuug4e049xxuDmuApD60AUA3Lw/qfd74lgGNzRnrmWaEn6KdAgEpx8aTuTxbt4NUQkCWwbIfg5wePWNpvCVAyqlSDKBoIiAg1ZxUSwBIbq58Qk+na8sRWzEN0OLPxSQQGiDrS+IWA2Sp2vWDNq5Df7IK5QQINnh0qAxAp/2wWbSlnKuCAEmFywCU4H6QkUAUBGj0oaUHKfFBDtLH/PbodFpCgKTmhgGyuxMB9dEdS4YBGyEPACQ2NymgOGvFEEDa1fu42vafcj1i9KAoQoDu1oWjUnJZf0DiSqJwQPZlTfuJepdeePQhe10AUH+OLXnT3t6BOkCq2fyAmveJBAsBsmeBgM4FABJDfrw074wNBOS04NNSckFLlGuYZg5p9jNPtJwF0Pnrt7Av+ihOHYq5Bk3dpecAuia9Af1cfpCWi5UPCD7y0hS8h5lz2N1dOgiQ4LDIQdqlXHZAWQdpP9PGG5BCFxUsY5D2Mz0eRaxOreuC27T/Kbb0U41A5QYURw8A6PR36T3ILApoXHCU7biCUywfoPprKuV+bz43oHaQDp3qEwAyWQAdmhD6wL1xFK8RlBVQt4wuGtCAYxJHk6IHVeX3oCug8UeJBulD4WNQT8YRkBXKbXrGLFaP0+XOYgOOQEBqoWneUb6q3HVQGYAu+peAbn+J3CICAloWkBm7IKCpdUtAOgHdWicgYN65rbc0CUjKbAN0ngxl06PXXwjIUuz2l0cFJFd0e4AknzkA5d5HcRx+pQMyswCNpj+vFuXfR9EH0FkCNOmIk6OSP6ACdsGLBEgNBZgPqIB9FOMActrXweYPqIAeZNunYQ4g1cW9CZ/aFbCP4nQ0UQAp+6Q5uvCdxWLuoxhFaMZODcjLeAqtBVBwhNlsx+eSAEXdRzGOwJovB6BY+yjGEQKkX61pRfq0L6Bo+yjGUXmA7PsoWo2n0BKAbnOzB8lluqQfoHj7KEZSWYDOEfdRjKTiAHnYTiL9xsWZgAgI+yMg4I+AgD8CAv4ICPgjIOCPgIBDAgIOCQg4JCDgkIB0h8AjATkdf2BASASEZIb//Ir0SQISivRJAhKK9EkCEor0SQISivRJAhKK9EkCEor0SQKSynQpApLKdCm/ornjpGcoKaD8cdL+SgmohChXb6UEJMdJZwvBw5pTrWuBB+hBYVpfnHRirT5Oemk9wDooTAQEREBA8QFtTUv9yZ3MriITAYFMBAQyERDIREAgEwGBTAQEMhEQyERAINPWrg2ii4CACAiIgIAICIiAgAgIiICACAiIgIAICIiAgAgIaAlAlfzugCYC6/Uuk5JbVf1OxpcIlr5+/7BbaRMLAKrqzSvsNT3tL58f63YNmZTcupfnz/P3LtzS966J5Jla6RLxAbVBMgfrKyXbzXWOPz6GTFpu7CXcUvcaiKmVPhEf0ABBrtTT+5AJ5xa89C8cDLNUmdcmFmxqpU8sAKipurQDU63DxX2fCee2q/rxa9eMZhEsfdis9In4gNphQBkM6uirIRPMLehYnxn1u2GDLTWAplb6RHpAVT9GhwF66v7S6wMEunobvRd8YrRjzWWgWN8ppg+WXah18CDdgri0Io6llIO0Ot32YaDB03wbklxFWDBUqad5bcH29fN1nGnuQrEORG4aEWqpSr1QbN5FKtTz2IZt1UeHTHJuXVV/0RJoqRu1plaOS11qbEsEBERAQAQEREBABAREQEAEBERAQAQEREBABAREQEAEBERAQAQEREBABAREQEAEBERAQAQEREBABAREQEAEBERAQKsANAlJmBPtMFMEBERAQGsB9L37a2ea6Ks6KuWfLoCmjn+pY8rEl1KGaz2A6hj9y7/DhUdlul/qgKw6ikra1jGC1gPotY3ZbEIHD90HTfRT9ePXH8udcesB9NYEJg4Bc+0w1PA6GO/ARHetDdBxANTtwvZWB+MJr+aOobUBGvWgWqf9n96xv+5aG6AufLn7oNHx+b/9YpPY6gA1k9cwi7Wj9duM+HpnrQ7Q/TroAubQBEwvNkyvAlBOERAQAQEREBABAREQEAEBERAQAQEREBABAREQEAEBERAQAQEREBABAREQEAEBERAQAQEREBABAREQ0P+K1CuXutqx7AAAAABJRU5ErkJggg==" /><!-- --></p>
 <p>The examples above show how information can be retrieved from a virtual Amiga disk. It is also possible to put data onto the disk. Let’s start by creating a temporary directory:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">adf.example &lt;-<span class="st"> </span><span class="kw">dir.create.adf</span>(adf.example, <span class="st">&quot;temp&quot;</span>)</code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a>adf.example &lt;-<span class="st"> </span><span class="kw">dir.create.adf</span>(adf.example, <span class="st">&quot;temp&quot;</span>)</span></code></pre></div>
 <p>You can also put files from your local system into this newly created directory. Let’s try to put the ‘DESCRIPTION’ file from adfExplorer package on the virtual disk:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">adf.example &lt;-<span class="st"> </span><span class="kw">put.adf.file</span>(adf.example,
-                            <span class="kw">system.file</span>(<span class="st">&quot;DESCRIPTION&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;adfExplorer&quot;</span>),
-                            <span class="st">&quot;DF0:temp&quot;</span>)</code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a>adf.example &lt;-<span class="st"> </span><span class="kw">put.adf.file</span>(adf.example,</span>
+<span id="cb18-2"><a href="#cb18-2"></a>                            <span class="kw">system.file</span>(<span class="st">&quot;DESCRIPTION&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;adfExplorer&quot;</span>),</span>
+<span id="cb18-3"><a href="#cb18-3"></a>                            <span class="st">&quot;DF0:temp&quot;</span>)</span></code></pre></div>
 <p>It is also possible to write raw data to the virtual disk in a similar way:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">adf.example &lt;-<span class="st"> </span><span class="kw">put.adf.file</span>(adf.example,
-                            <span class="kw">charToRaw</span>(<span class="st">&quot;This is just some text to create some content&quot;</span>),
-                            <span class="st">&quot;DF0:temp/example.txt&quot;</span>)</code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a>adf.example &lt;-<span class="st"> </span><span class="kw">put.adf.file</span>(adf.example,</span>
+<span id="cb19-2"><a href="#cb19-2"></a>                            <span class="kw">charToRaw</span>(<span class="st">&quot;This is just some text to create some content&quot;</span>),</span>
+<span id="cb19-3"><a href="#cb19-3"></a>                            <span class="st">&quot;DF0:temp/example.txt&quot;</span>)</span></code></pre></div>
 <p>Look here are the files we just put onto the disk</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">list.adf.files</span>(adf.example, <span class="st">&quot;DF0:temp/&quot;</span>)</code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a><span class="kw">list.adf.files</span>(adf.example, <span class="st">&quot;DF0:temp/&quot;</span>)</span></code></pre></div>
 <pre><code>## [1] &quot;example.txt&quot; &quot;DESCRIPTION&quot;</code></pre>
+<p>Do you regret them? Just delete them:</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a>adf.example &lt;-<span class="st"> </span><span class="kw">adf.file.remove</span>(adf.example, <span class="st">&quot;DF0:temp&quot;</span>)</span>
+<span id="cb22-2"><a href="#cb22-2"></a><span class="kw">list.adf.files</span>(adf.example, <span class="st">&quot;DF0:&quot;</span>)</span></code></pre></div>
+<pre><code>## [1] &quot;Devs&quot; &quot;S&quot;    &quot;this&quot; &quot;mods&quot;</code></pre>
 </div>
 
+
+
+<!-- code folding -->
 
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
