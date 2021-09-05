@@ -19,6 +19,7 @@ Depends: R (>= 2.10)
 Imports: methods
 Suggests: knitr, rmarkdown, ProTrackR
 URL: https://github.com/pepijn-devries/adfExplorer
+BugReports: https://github.com/pepijn-devries/adfExplorer/issues
 License: GPL-3
 LazyData: True
 RoxygenNote: 7.1.1
