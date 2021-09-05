@@ -25,3 +25,6 @@ LazyData: True
 RoxygenNote: 7.1.1
 VignetteBuilder: knitr
 NeedsCompilation: no
+Packaged: 2021-09-05 08:41:19 UTC; vries171
+Repository: CRAN
+Date/Publication: 2021-09-05 08:50:02 UTC
