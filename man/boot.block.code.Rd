@@ -21,7 +21,7 @@ called the boot block. This block should contain information on the
 type of disk and possibly some executable code that will be run
 at boot time. This \code{data.frame} contains some minimal executable
 code that will start the Amiga command line interface. On Amiga OS
->=2.0 the screen will stay black unless a startup-sequence file is
+\>=2.0 the screen will stay black unless a startup-sequence file is
 present on the disk.
 
 The original code is from Thomas Kessler as published by Laurent

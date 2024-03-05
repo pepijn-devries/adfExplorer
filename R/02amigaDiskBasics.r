@@ -22,7 +22,7 @@ validity.amigaDisk <- function(object) {
 #' An S4 class representing the information from an Amiga Disk File.
 #'
 #' An Amiga Disk File (ADF) holds the raw data of an Amiga disk
-#' in the same order as blocks (\code{\link{amigaBlock-class}})
+#' in the same order as blocks ([`amigaBlock-class`])
 #' on the physical disks. As an Amiga
 #' Disk can hold any kind of information, so can this class.
 #'
@@ -35,23 +35,23 @@ validity.amigaDisk <- function(object) {
 #' is only useful for DOS-formatted disks (with a file structure).
 #' By default this is set to the disk's root.
 #'
-#' For more (technical) backgrounds please check this package's
-#' \href{../doc/amigaDiskFiles.html}{vignette}.
+#' For more (technical) backgrounds please check this package's vignette
+#' (`vignette("amigaDiskFiles")`)
 #' 
-#' Use the objects constructor (\code{new("amigaDisk")}) to create
+#' Use the objects constructor (`new("amigaDisk")`) to create
 #' a completely blank disk (without a filesystem). If you want to be
 #' able to transfer files from and to the virtual disk, use
-#' \code{\link{blank.amigaDOSDisk}} instead.
+#' [`blank.amigaDOSDisk`] instead.
 #' 
-#' @slot data The \code{raw} data of the virtual disk. It should be
-#' a \code{vector} of length 901,120 in case of a double density disk and
+#' @slot data The `raw` data of the virtual disk. It should be
+#' a `vector` of length 901,120 in case of a double density disk and
 #' 1,802,240 in case of a high density disk.
-#' @slot type A \code{character} indicating whether the virtual disk
-#' represents a \code{"DD"} (double density, most common) or \code{"HD"} (high density)
+#' @slot type A `character` indicating whether the virtual disk
+#' represents a `"DD"` (double density, most common) or `"HD"` (high density)
 #' disk.
-#' @slot current.dir An \code{integer}, pointing at the block address
+#' @slot current.dir An `integer`, pointing at the block address
 #' of the current directory of this virtual disk. Use
-#' \code{\link{current.adf.dir}} to get or set the current directory.
+#' [`current.adf.dir`] to get or set the current directory.
 #'
 #' @name amigaDisk-class
 #' @rdname amigaDisk-class
@@ -98,7 +98,7 @@ setGeneric("read.adf", function(file) standardGeneric("read.adf"))
 
 #' Read an Amiga Disk File
 #'
-#' Read data from an Amiga Disk File (ADF) to an \code{\link{amigaDisk}}
+#' Read data from an Amiga Disk File (ADF) to an [`amigaDisk`]
 #' object. Alternatively data can be read from an ADZ file.
 #'
 #' Amiga Disk Files usually have a .adf-extension to the file name.
@@ -118,9 +118,9 @@ setGeneric("read.adf", function(file) standardGeneric("read.adf"))
 #' @rdname read.adf
 #' @aliases read.adf,character-method
 #' @param file Either a file name or a file connection, that
-#' allows reading binary data (see e.g., \code{\link[base:connections]{file}} or
-#' \code{\link[base:connections]{url}}). \code{read.adz} only accepts file names.
-#' @return Returns an \code{\link{amigaDisk}} object read from the provided Amiga disk file
+#' allows reading binary data (see e.g., [`file`][base::connections] or
+#' [`url`][base::connections]). `read.adz` only accepts file names.
+#' @return Returns an [`amigaDisk`] object read from the provided Amiga disk file
 #'
 #' @examples
 #' \dontrun{
@@ -165,7 +165,7 @@ setMethod("read.adf", "character", function(file){
 #' @export
 setMethod("read.adf", "ANY", function(file){
   con <- file
-  if (!("connection" %in% class(con))) stop ("argument con is not a file connection!")
+  if (!inherits(con, "connection")) stop ("argument con is not a file connection!")
   con_info <- summary(con)
   if (!(con_info$text == "binary" && con_info$`can read` == "yes")) stop("Unsuitable connection provided. read.adf() requires a binary connection from which can be read.")
 
@@ -203,10 +203,10 @@ setGeneric("write.adf", def = function(x, file){
 
 #' Write an amigaDisk object to an ADF file
 #'
-#' Write an \code{\link{amigaDisk}} object to an Amiga Disk File (ADF) or
+#' Write an [`amigaDisk`] object to an Amiga Disk File (ADF) or
 #' alternatively to an ADZ file.
 #'
-#' Use this function to write \code{\link{amigaDisk}} objects as binary
+#' Use this function to write [`amigaDisk`] objects as binary
 #' data to so-called Amiga Disk Files (ADF). These files can be used as
 #' input for Amiga emulator software.
 #' 
@@ -217,11 +217,11 @@ setGeneric("write.adf", def = function(x, file){
 #' @name write.adf
 #' @rdname write.adf
 #' @aliases write.adf,amigaDisk,ANY-method
-#' @param x An \code{\link{amigaDisk}} object that needs to be saved to
+#' @param x An [`amigaDisk`] object that needs to be saved to
 #' an ADF file.
 #' @param file either a file name to write to, or a file connection, that
-#' allows to write binary data (see \code{\link[base:connections]{file}}).
-#' \code{write.adz} only accepts a file name.
+#' allows to write binary data (see [`file`][base::connections]).
+#' `write.adz` only accepts a file name.
 #' @return Writes to an ADF file but returns nothing.
 #'
 #' @examples
@@ -246,7 +246,7 @@ setGeneric("write.adf", def = function(x, file){
 #' @export
 setMethod("write.adf", c("amigaDisk", "ANY"), function(x, file) {
   con <- file
-  if (!("connection" %in% class(con))) stop ("argument con is not a file connection!")
+  if (!inherits(con, "connection")) stop ("argument con is not a file connection!")
   con_info <- summary(con)
   if (!(con_info$text == "binary" && con_info$`can write` == "yes")) stop("Unsuitable connection provided. write.module() requires a connection to which binary data can be written.")
   
@@ -291,9 +291,9 @@ setMethod("show", "amigaDisk", function(object) {
 #' @name print
 #' @aliases print,amigaDisk-method
 #'
-#' @param x Either a \code{\link{amigaDisk}} or \code{\link{amigaBlock}} object.
+#' @param x Either a [`amigaDisk`] or [`amigaBlock`] object.
 #' @param ... further arguments passed to or from other methods
-#' @return Returns nothing (\code{NULL}).
+#' @return Returns nothing (`NULL`).
 #'
 #' @examples
 #' data(adf.example)
@@ -330,7 +330,7 @@ setGeneric("is.amigaDOS", function(x) standardGeneric("is.amigaDOS"))
 #' Check if amigaDisk object is DOS formatted
 #'
 #' This method checks if there is a DOS file structure is present
-#' on the \code{\link{amigaDisk}} object.
+#' on the [`amigaDisk`] object.
 #'
 #' Not all Amiga Disk Files have a DOS file structure on them.
 #' This function checks if there is.
@@ -339,9 +339,9 @@ setGeneric("is.amigaDOS", function(x) standardGeneric("is.amigaDOS"))
 #' @name  is.amigaDOS
 #' @rdname is.amigaDOS
 #' @aliases is.amigaDOS,amigaDisk-method
-#' @param x An \code{\link{amigaDisk}} object for which
+#' @param x An [`amigaDisk`] object for which
 #' the check should be performed.
-#' @return Returns a \code{logical} value, indicating whether the
+#' @return Returns a `logical` value, indicating whether the
 #' disk is DOS formatted. When it is not, the attributes to the
 #' returned value will contain information as to why the disk is
 #' not DOS compatible.
@@ -400,10 +400,10 @@ setGeneric("is.bootable", function(x) standardGeneric("is.bootable"))
 
 #' Check if amigaDisk object is bootable
 #'
-#' This function checks if the \code{\link{amigaDisk}}
+#' This function checks if the [`amigaDisk`]
 #' object represents a bootable disk.
 #'
-#' The first two \code{\link{amigaBlock-class}} objects on a disk
+#' The first two [`amigaBlock-class`] objects on a disk
 #' are special and are called the boot block. The boot block will
 #' determine whether an Amiga can boot from the disk.
 #' 
@@ -416,9 +416,9 @@ setGeneric("is.bootable", function(x) standardGeneric("is.bootable"))
 #' @name  is.bootable
 #' @rdname is.bootable
 #' @aliases is.bootable,amigaDisk-method
-#' @param x An \code{\link{amigaDisk}} object for which
+#' @param x An [`amigaDisk`] object for which
 #' the check should be performed.
-#' @return Returns a \code{logical} value, indicating whether
+#' @return Returns a `logical` value, indicating whether
 #' the disk is bootable.
 #'
 #' @examples
@@ -462,14 +462,14 @@ root.info <- function(x) {
   name_len[name_len < 1] <- 1
   result <- list(
     type       = TYPES$type[TYPES$value == rawToAmigaInt(root@data[1:4], 32, F)],
-    headerkey  = rawToAmigaInt(root@data[5:8], 32, F),
+    header_key = rawToAmigaInt(root@data[5:8], 32, F),
     highseq    = rawToAmigaInt(root@data[9:12], 32, F),
     htsize     = rawToAmigaInt(root@data[13:16], 32, F),
     first_data = rawToAmigaInt(root@data[17:20], 32, F),
     checksum   = rawToAmigaInt(root@data[21:24], 32, F),
-    ht         = unlist(lapply(1:ht_length, function(y) rawToAmigaInt(root@data[(y*4 + 21):(y*4 + 24)], 32, F))),
+    ht         = unlist(lapply(1:ht_length, function(y) rawToAmigaInt(root@data[y*4 + 21:24], 32, F))),
     bm_flag    = all(root@data[ht_length*4 + 25:28] == as.raw(c(0xff, 0xff, 0xff, 0xff))),
-    bm_pages   = unlist(lapply(1:25, function(y) rawToAmigaInt(root@data[(ht_length*4 + y*4 + 25):(ht_length*4 + y*4 + 28)], 32, F))),
+    bm_pages   = unlist(lapply(1:25, function(y) rawToAmigaInt(root@data[(ht_length + y)*4 + 25:28], 32, F))),
     bm_ext     = rawToAmigaInt(root@data[ht_length*4 + 129:132], 32, F),
     r_datetime = r_datetime,
     name_len   = name_len,
@@ -492,11 +492,6 @@ header.info <- function(x, hash.table) {
   result <- lapply(hash.table, function(ht) {
     hblock     <- amigaBlock(x, ht)
     ht_length  <- BLOCK_SIZE/4 - 56
-    days       <- rawToAmigaInt(hblock@data[ht_length*4 + 133:136], 32, F)
-    mins       <- rawToAmigaInt(hblock@data[ht_length*4 + 137:140], 32, F)
-    ticks      <- rawToAmigaInt(hblock@data[ht_length*4 + 141:144], 32, F)
-    datetime   <- days*24*60*60 + mins*60 + ticks/50
-    datetime   <- as.POSIXct(datetime, tz = "UTC", origin = "1978-01-01 00:00:00")
     name_len   <- rawToAmigaInt(hblock@data[ht_length*4 + 145], 8, F)
     name_len[name_len > 30] <- 30
     name_len[name_len < 1] <- 1
@@ -512,14 +507,13 @@ header.info <- function(x, hash.table) {
       unused1    = rawToAmigaInt(hblock@data[ht_length*4 + 25:28], 32, F),
       UID        = rawToAmigaInt(hblock@data[ht_length*4 + 29:32], 32, F),
       GID        = rawToAmigaInt(hblock@data[ht_length*4 + 33:36], 32, F),
-      # also add names to each individual flag
-      protect    = as.logical(rawToBits(hblock@data[ht_length*4 + 33:36])),
+      protect    = as.logical(rawToBitmap(hblock@data[ht_length*4 + 33:36], F, T)),
       bytesize   = rawToAmigaInt(hblock@data[ht_length*4 + 37:40], 32, F),
       comm_len   = rawToAmigaInt(hblock@data[ht_length*4 + 41], 8, F),
       ## replace chardot with something better! TODO
       comment    = rawToCharDot(hblock@data[ht_length*4 + 42:120]),
       unused2    = hblock@data[ht_length*4 + 121:132],
-      datetime   = datetime,
+      datetime   = rawToAmigaDate(hblock@data[ht_length*4 + 133:144]),
       name_len   = name_len,
       file_name  = rawToChar(hblock@data[ht_length*4 + 146:(145 + name_len)]),
       unused3    = hblock@data[ht_length*4 + 176],
@@ -533,21 +527,9 @@ header.info <- function(x, hash.table) {
       sec_type   = SEC_TYPES$type[SEC_TYPES$value == rawToAmigaInt(hblock@data[ht_length*4 + 221:224], 32, F)]
     )
     header$file_name <- substr(header$file_name, 1, header$name_len)
-    # if (header$sec_type == "ST_USERDIR") {
-    #   res <- NULL
-    #   hash.tab.sub <- header$datablocks[header$datablocks != 0]
-    #   ## XX dit nog beveiligen tegen oneindige loops
-    #   ## loop through all hash chains
-    #   while (T) {
-    #     new.res <- header.info(x, hash.tab.sub)
-    #     res <- c(res, new.res)
-    #     hash.tab.sub <- unlist(lapply(new.res, function(x) x$hash_chain))
-    #     hash.tab.sub <- hash.tab.sub[hash.tab.sub != 0]
-    #     # When there are no more new hash.tables, break.
-    #     if (length(hash.tab.sub) == 0) break
-    #   }
-    #   header$sub.dir <- res
-    # }
+    names(header$protect) <- .protection.flags
+    ## first four flags need to be negated:
+    header$protect[1:4] <- !header$protect[1:4]
     return(header)
   })
   return(result)
@@ -558,10 +540,10 @@ setGeneric("current.adf.dir", function(x) standardGeneric("current.adf.dir"))
 
 #' Get or set the current directory of an amigaDisk object
 #'
-#' Get or set the current directory of an \code{\link{amigaDisk}} object.
+#' Get or set the current directory of an [`amigaDisk`] object.
 #'
 #' By default the disk's root is stored as the current directory
-#' for a new \code{\link{amigaDisk}} object. With this method, the
+#' for a new [`amigaDisk`] object. With this method, the
 #' current directory can be retrieved or changed.
 #' 
 #' For this purpose the path should be specified conform Amiga DOS
@@ -571,17 +553,17 @@ setGeneric("current.adf.dir", function(x) standardGeneric("current.adf.dir"))
 #' directory names. Both upper and lowercase letters are allowed in file
 #' and directory names. The case is ignored when identifying files however.
 #' This packages will NOT follow the Amiga's full search path
-#' (\url{https://wiki.amigaos.net/wiki/AmigaOS_Manual:_AmigaDOS_Working_With_AmigaDOS#Search_Path}).
+#' (<https://wiki.amigaos.net/wiki/AmigaOS_Manual:_AmigaDOS_Working_With_AmigaDOS#Search_Path>).
 #'
 #' @name  current.adf.dir
 #' @rdname current.adf.dir
 #' @aliases current.adf.dir,amigaDisk-method
-#' @param x An \code{\link{amigaDisk}} object for which the current
+#' @param x An [`amigaDisk`] object for which the current
 #' directory needs to be obtained or changed.
-#' @param value A \code{character} representation of the path, that
+#' @param value A `character` representation of the path, that
 #' needs to be set as current directory. Use Amiga DOS syntax as
 #' specified in the details
-#' @return Returns a \code{character} representation of the current
+#' @return Returns a `character` representation of the current
 #' directory.
 #'
 #' @examples
@@ -644,23 +626,23 @@ setGeneric("list.adf.files", function(x, path) standardGeneric("list.adf.files")
 #' List files in an amigaDisk directory
 #'
 #' Get a list of files in a specific directory on a virtual
-#' \code{\link{amigaDisk}}.
+#' [`amigaDisk`].
 #'
-#' As an analogue of \code{\link[base]{list.files}}, this method
+#' As an analogue of `[base::list.files]`, this method
 #' list files in a specific directory. But in this case the files
 #' are located on a virtual floppy disk represented by the
-#' \code{\link{amigaDisk}} object. This works only for DOS-formatted
-#' (\code{\link{is.amigaDOS}}) virtual disks.
+#' [`amigaDisk`] object. This works only for DOS-formatted
+#' ([`is.amigaDOS`]) virtual disks.
 #'
 #' @name  list.adf.files
 #' @rdname list.adf.files
 #' @aliases list.adf.files,amigaDisk,missing-method
-#' @param x An \code{\link{amigaDisk}} object for which the files
+#' @param x An [`amigaDisk`] object for which the files
 #' should be listed.
-#' @param path Specify the path on the \code{\link{amigaDisk}}
+#' @param path Specify the path on the [`amigaDisk`]
 #' object, conform Amiga specs, for which files should be listed.
-#' See \code{\link{current.adf.dir}} for details on these specs.
-#' @return Returns a \code{vector} of \code{character}s listing
+#' See [`current.adf.dir`] for details on these specs.
+#' @return Returns a `vector` of `character`s listing
 #' the files in the specified directory on the virtual disk.
 #'
 #' @examples
@@ -700,7 +682,7 @@ setGeneric("get.adf.file", function(x, source, destination) standardGeneric("get
 
 #' Get a file from an amigaDisk object
 #'
-#' Get files stored on virtual \code{\link{amigaDisk}}s as raw data
+#' Get files stored on virtual [`amigaDisk`]s as raw data
 #' or copy as file.
 #'
 #' Amiga DOS formatted disks can store any kind of file (as long
@@ -711,17 +693,17 @@ setGeneric("get.adf.file", function(x, source, destination) standardGeneric("get
 #' @name  get.adf.file
 #' @rdname get.adf.file
 #' @aliases get.adf.file,amigaDisk,character,missing-method
-#' @param x An \code{\link{amigaDisk}} object from which a file
+#' @param x An [`amigaDisk`] object from which a file
 #' needs to be extracted.
 #' @param source Specify the source file's path on the
-#' \code{\link{amigaDisk}} object, conform Amiga specs. See
-#' \code{\link{current.adf.dir}} for details on these specs.
+#' [`amigaDisk`] object, conform Amiga specs. See
+#' [`current.adf.dir`] for details on these specs.
 #' @param destination either a file name or a file connection, that
-#' allows writing binary data (see e.g., \code{\link[base:connections]{file}} or
-#' \code{\link[base:connections]{url}}). When the destination is missing, the
-#' file content is returned as \code{raw} data.
-#' @return Returns a \code{vector} of \code{raw} data when the
-#' argument \code{destination} is missing. Otherwise returns nothing.
+#' allows writing binary data (see e.g., [`file`][base::connections] or
+#' [`url`][base::connections]). When the destination is missing, the
+#' file content is returned as `raw` data.
+#' @return Returns a `vector` of `raw` data when the
+#' argument `destination` is missing. Otherwise returns nothing.
 #'
 #' @examples
 #' data(adf.example)
@@ -738,7 +720,7 @@ setGeneric("get.adf.file", function(x, source, destination) standardGeneric("get
 #' startup <- get.adf.file(adf.example, "DF0:S/Startup-Sequence")
 #' 
 #' ## Look, it's a text file:
-#' cat(rawToChar(startup))
+#' startup |> rawToChar() |> iconv(from = "ISO-8859-1", to = "UTF-8")
 #' 
 #' if (requireNamespace("ProTrackR", quietly = TRUE)) {
 #'   ## look there is a typical ProTracker module on
@@ -811,13 +793,13 @@ setMethod("get.adf.file", c("amigaDisk", "character", "ANY"), function(x, source
   if (missing(destination)) {
     return(dat)
   } else {
-    if (class(destination)[[1]] == "character") {
+    if (inherits(destination, "character")) {
       destination <- destination[[1]]
       con <- file(destination, "wb")
       writeBin(dat, con)
       close(con)
     } else {
-      if (!("connection" %in% class(destination))) stop ("argument destination is not a file connection!")
+      if (!inherits(destination, "connection")) stop ("argument destination is not a file connection!")
       con_info <- summary(destination)
       if (!(con_info$text == "binary" && con_info$`can write` == "yes")) stop("Unsuitable connection provided. get.adf.file() requires a binary connection to which data can be written.")
       writeBin(dat, destination)
@@ -831,22 +813,22 @@ setGeneric("adf.disk.name<-", function(x, value) standardGeneric("adf.disk.name<
 
 #' Get or set the disk name of an amigaDisk object
 #'
-#' Get or set the disk name of an \code{\link{amigaDisk}} object.
+#' Get or set the disk name of an [`amigaDisk`] object.
 #'
-#' DOS-formatted disks (\code{\link{is.amigaDOS}}) store their disk
+#' DOS-formatted disks ([`is.amigaDOS`]) store their disk
 #' name on the socalled root block of the disk. This method allows
 #' you to obtain the disk's name or change it (when it is DOS-formatted).
 #'
 #' @name  adf.disk.name
 #' @rdname adf.disk.name
 #' @aliases adf.disk.name,amigaDisk-method
-#' @param x An \code{\link{amigaDisk}} object for which the disk
+#' @param x An [`amigaDisk`] object for which the disk
 #' name needs to be obtained or changed.
-#' @param value A \code{character} representation with which the
+#' @param value A `character` representation with which the
 #' disk's name needs to be replaced. Disk name needs to be between
 #' 1 and 30 characters long and are not allowed to contain a colon
 #' or forward slash.
-#' @return Returns A \code{character} representation of the disk's
+#' @return Returns A `character` representation of the disk's
 #' name.
 #'
 #' @examples
@@ -865,9 +847,9 @@ setGeneric("adf.disk.name<-", function(x, value) standardGeneric("adf.disk.name<
 #' @author Pepijn de Vries
 #' @export
 setMethod("adf.disk.name", "amigaDisk", function(x) {
-  if (!is.amigaDOS(x)) stop("x is not a DOS formatted disk!")
-  ri <- root.info(x)
-  return(ri$diskname)
+  isDOS <- is.amigaDOS(x)
+  if (!isDOS) stop(paste("x is not a DOS formatted disk!", attributes(isDOS)$why))
+  return(root.info(x)$diskname)
 })
 
 #' @rdname adf.disk.name
@@ -975,49 +957,49 @@ setGeneric("blank.amigaDOSDisk", function(diskname,
 #'
 #' Create a virtual blank DOS formatted floppy disk with a file system on it.
 #'
-#' Creates a blank \code{\link{amigaDisk}} object. This method differs
-#' from the object constructor (\code{new("amigaDisk")}) because it also
+#' Creates a blank [`amigaDisk`] object. This method differs
+#' from the object constructor (`new("amigaDisk")`) because it also
 #' installs a file system on the disk. The blank disk can thus be used to
 #' write files onto, and is also usable in Amiga emulators. For use in
-#' emulators, the object needs to be saved with the \code{\link{write.adf}}
+#' emulators, the object needs to be saved with the [`write.adf`]
 #' method.
 #' 
 #' @name  blank.amigaDOSDisk
 #' @rdname blank.amigaDOSDisk
 #' @aliases blank.amigaDOSDisk,character-method
-#' @param diskname A \code{character} string of the desired disk name.
+#' @param diskname A `character` string of the desired disk name.
 #' Disk name should be between 1 and 30 characters long, and should
 #' not contain any colon or forward slash characters.
-#' @param disktype Either "\code{DD}" (double density, most common and
-#' therefore default) or "\code{HD}" (high denisity). The type of disk
+#' @param disktype Either "`DD`" (double density, most common and
+#' therefore default) or "`HD`" (high denisity). The type of disk
 #' the blank disk should represent.
-#' @param filesystem Either "\code{OFS}" (old file system) or "\code{FFS}"
-#' (fast file system). \code{FFS} is not compatible with Amiga OS <2.0.
+#' @param filesystem Either "`OFS`" (old file system) or "`FFS`"
+#' (fast file system). `FFS` is not compatible with Amiga OS <2.0.
 #' On the original system, the FFS was slightly faster and can requires
 #' less data for the file system. It is however less robust: on corrupt
 #' disks, file recovery is more difficult.
 #' @param international The international mode was introduced in Amiga
 #' OS 2.0. In lower versions, international characters were mistakenly
 #' not converted to uppercase when comparing file names. The international
-#' mode (set this argument to \code{TRUE}) corrects this mistake.
+#' mode (set this argument to `TRUE`) corrects this mistake.
 #' The international mode is not compatible with Amiga OS <2.0.
 #' @param dir.cache The directory cache mode (set this argument to
-#' \code{TRUE}) was introduced with Amiga OS 3.0 (and is not compatible
+#' `TRUE`) was introduced with Amiga OS 3.0 (and is not compatible
 #' with lower versions). On real machines this allowed for slightly faster
 #' directory listing (but costs disk space). The directory cache mode is
 #' always used in combination with the 'international mode'.
-#' @param bootable When this argument is set to \code{TRUE}. Minimal
+#' @param bootable When this argument is set to `TRUE`. Minimal
 #' executable code is added to the bootblock. This code will open the
 #' command line interface when the disk is used to boot the system. In
 #' Amiga OS >2.0, the 'Startup-Sequence' file needs to be present
 #' for this, otherwise the screen will remain black on booting. See also the
-#' \code{\link{boot.block.code}} data.
-#' @param creation.date A \code{\link[base:DateTimeClasses]{POSIXt}} object. Will be used
+#' [`boot.block.code`] data.
+#' @param creation.date A [`POSIXt`][base::DateTimeClasses] object. Will be used
 #' and stored as the creation date of the virtual disk. Note that the Amiga
 #' does not store the time zone and UTC is assumed as default. The Amiga
 #' stores the date and time as positive integers, relative to 1st of
 #' January in 1978. As a result, dates before that are not allowed.
-#' @return Returns a blank \code{\link{amigaDisk}} object with a file
+#' @return Returns a blank [`amigaDisk`] object with a file
 #' system installed on it.
 #' @examples
 #' ## Create a blank virtual disk compatible with
@@ -1087,7 +1069,13 @@ setMethod("blank.amigaDOSDisk", "character",
             checksum <- calculate.boot.checksum.dat(boot)
             boot[5:8] <- checksum
             boot <- methods::new("amigaBlock", data = boot)
-            disk <- methods::new("amigaDisk")
+            nblocks <- ifelse(disktype == "DD", NUMBER_OF_SECTORS_DD, NUMBER_OF_SECTORS_HD)*
+              NUMBER_OF_SIDES*NUMBER_OF_CYLINDERS
+            disk <- methods::new(
+              "amigaDisk",
+              data        = raw(BLOCK_SIZE*nblocks),
+              type        = disktype,
+              current.dir = as.integer(root.id))
             amigaBlock(disk, 0) <- boot
 
             ######################################################

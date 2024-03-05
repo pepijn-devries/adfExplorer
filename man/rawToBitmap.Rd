@@ -14,7 +14,7 @@ bitmapToRaw(x, invert.bytes = T, invert.longs = T)
 \code{rawToBitmap} is used. A \code{vector} of \code{raw},
 \code{interger} or \code{logical} values should be used in
 case of \code{bitmapToRaw}. In the latter case each value in the
-\code{vector} is interpeted as a bit and should be a mutiple of
+\code{vector} is interpreted as a bit and should be a multiple of
 8 long.}
 
 \item{invert.bytes}{A \code{logical} value. When set to \code{TRUE},

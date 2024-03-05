@@ -27,7 +27,7 @@ Get a list of files in a specific directory on a virtual
 \code{\link{amigaDisk}}.
 }
 \details{
-As an analogue of \code{\link[base]{list.files}}, this method
+As an analogue of \verb{[base::list.files]}, this method
 list files in a specific directory. But in this case the files
 are located on a virtual floppy disk represented by the
 \code{\link{amigaDisk}} object. This works only for DOS-formatted

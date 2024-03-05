@@ -59,23 +59,8 @@ and is therefore out of the scope of this package.
 
 ### Future developments
 
-The package is still maturing. The foundation of the package is solid
-and it provides the essential means to access ADF files, there is still
-room for improvement. The following improvements are planned for future
-releases of the package:
-
-* check and optimise current code;
-* include better validation routines;
-* delete files or directories from a virtual disk;
-* retrieve and or modify file and directory details;
-* optimise disk structure (when information is fragmented).
-
-The usefulness of this package will increase with better support of Amiga
-file formats. I do have plans to develop a separate package for supporting
-typical Amiga file formats. I'm not sure when the first release will be
-available, as I work on these projects in my spare time. For now the
-ProTracker module format is supported in R
-(https://cran.r-project.org/package=ProTrackR).
+For the developmental status of this package, please consult the
+[README page](https://pepijn-devries.github.io/adfExplorer/).
 
 ## Technical background
 
@@ -218,7 +203,7 @@ The bitmap block, contains information about which blocks on the disk are in use
 and which are free. The first four bytes in this block form a checksum, the
 following 220 bytes (for a DD disk, twice as many for a HD disk). Each byte
 is composed of 8 bits. When a bit is set, it represents a used block, when it
-is not set, it reflects a free block. The bitmap block is usually situate next
+is not set, it reflects a free block. The bitmap block is usually situated next
 to the root block, at block 881 on a DD disk.
 
 ```{r eval=FALSE}
@@ -285,10 +270,10 @@ startup <- get.adf.file(adf.example, "df0:s/Startup-Sequence")
 
 ## the file content is returned as raw data.
 ## let's convert it to text:
-startup <- rawToChar(startup)
+startup <- startup |> rawToChar() |> iconv(from = "ISO-8859-1", to = "UTF-8")
 
 ## let's show it
-cat(startup)
+#cat(startup)
 ```
 
 As you can see this startup sequence contains mostly some comments
@@ -355,7 +340,21 @@ Look here are the files we just put onto the disk
 list.adf.files(adf.example, "DF0:temp/")
 ```
 
-Do you regret them? Just delete them:
+We can even get more detailed information on those files with:
+
+```{r}
+adf.file.info(adf.example, paste0("DF0:temp/", list.adf.files(adf.example, "DF0:temp/")))
+```
+
+Wait, are these executable files? No, they are not, they are just labelled as such
+by default by Amiga OS. We can explicitly set the files as non-executable:
+
+```{r}
+adf.file.mode(adf.example, paste0("DF0:temp/", list.adf.files(adf.example, "DF0:temp/"))) <- c(E = F)
+adf.file.info(adf.example, paste0("DF0:temp/", list.adf.files(adf.example, "DF0:temp/")))
+```
+
+Do you regret putting these file on the virtual disk? Just delete them:
 
 ```{r}
 adf.example <- 

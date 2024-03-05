@@ -3,10 +3,10 @@ setGeneric("put.adf.file", function(x, source, destination, date, comment) stand
 #' Put a file onto an amigaDisk object
 #'
 #' Put a file onto a virtual Amiga floppy disk represented by
-#' an \code{\link{amigaDisk}} object.
+#' an [`amigaDisk`] object.
 #'
 #' Put a file or raw data from your local system onto a virtual
-#' Amiga floppy disk represented by an \code{\link{amigaDisk}}
+#' Amiga floppy disk represented by an [`amigaDisk`]
 #' object. Make sure that the virtual disk is DOS formatted.
 #' This method can only put one file at a time onto the virtual
 #' virtual disk. It is therefore not allowed to use wild cards
@@ -17,22 +17,22 @@ setGeneric("put.adf.file", function(x, source, destination, date, comment) stand
 #' @name put.adf.file
 #' @rdname put.adf.file
 #' @aliases put.adf.file,amigaDisk,raw,character,POSIXt,character-method
-#' @param x An \code{\link{amigaDisk}} onto which the file should be put.
-#' @param source Either a \code{character} string of the source
-#' file's path; or a \code{vector} of \code{raw} data that
+#' @param x An [`amigaDisk`] onto which the file should be put.
+#' @param source Either a `character` string of the source
+#' file's path; or a `vector` of `raw` data that
 #' should be written to the destination file. Wildcards are not allowed (see details)
-#' @param destination A \code{character} string of the destination
+#' @param destination A `character` string of the destination
 #' path on the virtual floppy disk where the source file should be put. The
-#' path should be conform Amiga specs (see \code{\link{current.adf.dir}}). When
+#' path should be conform Amiga specs (see [`current.adf.dir`]). When
 #' the destination is missing or only specifies a directory, the file will be put
-#' into the current directory (\code{\link{current.adf.dir}}) or specified path of
-#' \code{x} respectively. In that case, the same file name as that
+#' into the current directory ([`current.adf.dir`]) or specified path of
+#' `x` respectively. In that case, the same file name as that
 #' of the source file is used. Wild cards are not allowed (see details).
-#' @param date A \code{\link[base:DateTimeClasses]{POSIXt}} object that will be used as the
+#' @param date A [`POSIXt`][base::DateTimeClasses] object that will be used as the
 #' file modification date. When missing the system time will used.
-#' @param comment An optional \code{character} string that will be included
+#' @param comment An optional `character` string that will be included
 #' in the file header as a comment. Should not be longer than 79 characters.
-#' @return Returns an \code{\link{amigaDisk}} object onto which the
+#' @return Returns an [`amigaDisk`] object onto which the
 #' source file is put at the specified destination.
 #' @examples
 #' \dontrun{
@@ -109,7 +109,7 @@ setMethod("put.adf.file", c("amigaDisk", "character", "missing", "missing", "mis
     ## use file name from source when destination is missing
     destination <- basename(source)
   }
-  if (adf.file.exists(x, destination) && class(source) == "character") {
+  if (adf.file.exists(x, destination) && inherits(source, "character")) {
     if (substr(destination, nchar(destination), nchar(destination)) != "/")
       destination <- paste0(destination, "/")
     destination <- paste0(destination, basename(source))
@@ -119,7 +119,7 @@ setMethod("put.adf.file", c("amigaDisk", "character", "missing", "missing", "mis
   }
   
   if (type == "ST_USERDIR") source <- raw(0)
-  if (class(source) == "character") {
+  if (inherits(source, "character")) {
     con <- file(source, "rb")
     temp <- readBin(con, "raw", (NUMBER_OF_SIDES*NUMBER_OF_CYLINDERS*NUMBER_OF_SECTORS - 3)*BLOCK_SIZE)
     test.byte <- readBin(con, "raw", 1)
@@ -175,7 +175,11 @@ setMethod("put.adf.file", c("amigaDisk", "character", "missing", "missing", "mis
     record.required.length <- 2*ceiling(record.required.length/2)
     dc <- dir.cache.info(x, cur.dir)
     current.dc.blocks <- attributes(dc)$dc.blocks
-    dc <- lapply(dc, as.data.frame)
+    dc <- lapply(dc, function(rec) {
+      rec$protect[1:4] <- !rec$protect[1:4]
+      rec$protect <- rawToAmigaInt(bitmapToRaw(rec$protect, T, T), 32, F)
+      as.data.frame(rec)
+    })
     dc <- do.call(rbind, dc)
 
     ## if the dc is empty (NULL) then we don't need to create additional dc blocks
@@ -385,12 +389,13 @@ setMethod("put.adf.file", c("amigaDisk", "character", "missing", "missing", "mis
   ######################################################
   
   if (bi$flag$dir.cache.mode) {
-    dc.blocks <- c(current.dc.blocks, new.dir.cache)
+    dc.blocks   <- c(current.dc.blocks, new.dir.cache)
+    prot        <- 0L # TODO let user provide flags
     dc <- rbind(dc, data.frame(
       dir.cache   = dc.blocks[length(dc.blocks)],
       header      = header.blocks[[1]],
       size        = fsize,
-      protect     = 0,
+      protect     = prot,
       UID         = 0,
       GID         = 0,
       date        = date,
@@ -420,6 +425,7 @@ setMethod("put.adf.file", c("amigaDisk", "character", "missing", "missing", "mis
     records$type    <- as.character(records$type)
     records$header  <- lapply(apply(matrix(amigaIntToRaw(records$header, 32), 4), 2, list), unlist)
     records$size    <- lapply(apply(matrix(amigaIntToRaw(records$size, 32), 4), 2, list), unlist)
+
     records$protect <- lapply(apply(matrix(amigaIntToRaw(records$protect, 32), 4), 2, list), unlist)
     records$UID     <- lapply(apply(matrix(amigaIntToRaw(records$UID, 16), 2), 2, list), unlist)
     records$GID     <- lapply(apply(matrix(amigaIntToRaw(records$GID, 16), 2), 2, list), unlist)
@@ -437,11 +443,11 @@ setMethod("put.adf.file", c("amigaDisk", "character", "missing", "missing", "mis
     records$comment <- lapply(1:nrow(records), function(x) {
       charToRaw(as.character(records$comment[[x]]))
     })
-    records <- records[, names(records) != "dir.cache"]
+    records <- records[, names(records) != "dir.cache", drop = F]
     
     records <- apply(records, 1, unlist)
 
-    if (class(records) == "matrix") records <- as.data.frame(records)
+    if (inherits(records, "matrix")) records <- as.data.frame(records)
     records <- lapply(records, unlist)
     records <- lapply(records, function (x) if ((length(x) %% 2) == 1) c(x, raw(1)) else x)
     lengths <- lapply(records, length)
@@ -476,10 +482,10 @@ setMethod("put.adf.file", c("amigaDisk", "character", "missing", "missing", "mis
 
 setGeneric("adf.file.exists", function(x, file) standardGeneric("adf.file.exists"))
 
-#' Test file or directory existsence in an amigaDisk object
+#' Test file or directory existence in an amigaDisk object
 #'
 #' Tests whether a specific file (or directory) exists in an
-#' \code{\link{amigaDisk}} object.
+#' [`amigaDisk`] object.
 #'
 #' This method will look for a file/directory header, based on its name.
 #' If such a header exists, it is assumed that the file exists. The
@@ -487,28 +493,56 @@ setGeneric("adf.file.exists", function(x, file) standardGeneric("adf.file.exists
 #'
 #' @docType methods
 #' @name adf.file.exists
-#' @rdname adf.file.exists
+#' @rdname adf.exists
 #' @aliases adf.file.exists,amigaDisk,character-method
-#' @param x An \code{\link{amigaDisk}} object in which this method
+#' @param x An [`amigaDisk`] object in which this method
 #' will check for the file's existence.
-#' @param file A \code{character} string representing a file or directory name.
-#' Use Amiga specifications for file name (see \code{\link{current.adf.dir}}).
-#' @return Returns a \code{logical} value indicating whether the file exists
-#' or not.
+#' @param file A (`vector` of) `character` string(s) representing a file or directory name.
+#' Use Amiga specifications for file name (see [`current.adf.dir`]). Wildcards are not allowed.
+#' @return Returns a `logical` value indicating whether the file exists
+#' or not. In case of `dir.exists.adf` the path needs to exist and it needs to be a directory in order
+#' to return `TRUE`.
 #' @examples
 #' data(adf.example)
 #' 
 #' ## This file exists:
 #' adf.file.exists(adf.example, "df0:mods/mod.intro")
 #' 
-#' ## This file doesn't:
+#' ## But it doesn't exist as a directory
+#' dir.exists.adf(adf.example, "df0:mods/mod.intro")
+#' 
+#' ## This file also doesn't:
 #' adf.file.exists(adf.example, "df0:idontexist")
 #' @author Pepijn de Vries
 #' @export
 setMethod("adf.file.exists", c("amigaDisk", "character"), function(x, file){
+  res <- F
+  unlist(lapply(file, function(f) {
+    try(res <- !is.null(find.file.header(x, f)), T)
+    return(res)
+  }))
+})
+
+setGeneric("dir.exists.adf", function(x, path) standardGeneric("dir.exists.adf"))
+
+#' @param path file A (`vector` of) `character` string(s) representing a directory name.
+#' Use Amiga specifications for the path name (see [`current.adf.dir`]). Wildcards are not allowed.
+#' @name dir.exists.adf
+#' @rdname adf.exists
+#' @aliases dir.exists.adf,amigaDisk,character-method
+#' @export
+setMethod("dir.exists.adf", c("amigaDisk", "character"), function(x, path) {
   fh <- NULL
-  try(fh <- find.file.header(x, file), T)
-  return(!is.null(fh))
+  unlist(lapply(path, function(p) {
+    try(fh <- find.file.header(x, p), T)
+    if (is.null(fh)) {
+      return(F)
+    } else {
+      res <- F
+      try(res <- header.info(x, fh)[[1]]$sec_type == "ST_USERDIR", T)
+      return(res)
+    }
+  }))
 })
 
 setGeneric("dir.create.adf", function(x, path, date, comment) standardGeneric("dir.create.adf"))
@@ -516,27 +550,27 @@ setGeneric("dir.create.adf", function(x, path, date, comment) standardGeneric("d
 #' Create a directory on an amigaDisk object
 #'
 #' Create a directory on a virtual Amiga floppy disk represented by
-#' an \code{\link{amigaDisk}} object.
+#' an [`amigaDisk`] object.
 #'
 #' Create a directory on a virtual Amiga floppy disk represented by
-#' an \code{\link{amigaDisk}} object. Make sure that the virtual disk
+#' an [`amigaDisk`] object. Make sure that the virtual disk
 #' is DOS formatted.
 #'
 #' @docType methods
 #' @name dir.create.adf
 #' @rdname dir.create.adf
 #' @aliases dir.create.adf,amigaDisk,character,missing,missing-method
-#' @param x An \code{\link{amigaDisk}} on which the directory should be created.
-#' @param path Specify the directory that should be created on \code{x}.
+#' @param x An [`amigaDisk`] on which the directory should be created.
+#' @param path Specify the directory that should be created on `x`.
 #' You can specify the full path on the virtual disk conform Amiga DOS syntax
-#' (see \code{\link{current.adf.dir}} details). When no full path is specified
+#' (see [`current.adf.dir`] details). When no full path is specified
 #' the new directory will be created in the current directory. Note that
 #' wild cards are not allowed.
-#' @param date A \code{\link[base:DateTimeClasses]{POSIXt}} object that will be used as the
+#' @param date A [`POSIXt`][base::DateTimeClasses] object that will be used as the
 #' directory modification date. When missing the system time will used.
-#' @param comment An optional \code{character} string that will be included
+#' @param comment An optional `character` string that will be included
 #' in the directory header as a comment. Should not be longer than 79 characters.
-#' @return Returns an \code{\link{amigaDisk}} object on which the
+#' @return Returns an [`amigaDisk`] object on which the
 #' directory is created.
 #' @examples
 #' \dontrun{
@@ -578,4 +612,278 @@ setMethod("dir.create.adf", c("amigaDisk", "character", "POSIXt", "missing"), fu
 #' @export
 setMethod("dir.create.adf", c("amigaDisk", "character", "POSIXt", "character"), function(x, path, date, comment) {
   .put.file(x, raw(0), path, "ST_USERDIR", date, comment)
+})
+
+setGeneric("adf.file.info", function(x, path) standardGeneric("adf.file.info"))
+
+#' File information on virtual amigaDisk objects
+#' 
+#' Obtain file information of file from a virtual [`amigaDisk`] object.
+#' 
+#' Use `adf.file.mode` to obtain or set a `character` string reflecting which
+#' file mode flags are set, where:
+#' 
+#'  * `D`: deletable
+#'  * `E`: executable
+#'  * `W`: writeable
+#'  * `R`: readable
+#'  * `A`: archived
+#'  * `P`: pure command
+#'  * `S`: script
+#'  * `H`: hold
+#'  * starting without lower case: applies to user
+#'  * starting with lower case `g`: applies to group
+#'  * starting with lower case `o`: applies to other
+#' 
+#' Use `adf.file.time` to obtain or set the [base::POSIXt] properties of
+#' a file on an [`amigaDisk`].
+#' 
+#' Use `adf.file.info` to obtain a combination of the information
+#' listed above in a `data.frame`.
+#' @aliases adf.file.info,amigaDisk,character-method
+#' @param x An [`amigaDisk`] object in which this method
+#' will obtain file information.
+#' @param path A (`vector` of) `character` string(s) representing a file or directory name.
+#' Use Amiga specifications for file name (see [`current.adf.dir`]). Wildcards are not allowed.
+#' @param which Character indicating which time to obtain/modify. One of
+#' `"m"` (date modified), `"c"` (date created), or `"a"` (date root modification).
+#' This parameter works only on the disk's root and will be ignored for any
+#' other directory or file.
+#' @param value In case of `adf.file.time` an object of class [`base::POSIXt`].
+#' In case of `adf.file.mode` either a character string representing the flags,
+#' or a `vector` of named `logical` values, where the name of the `logical`
+#' represents the flag to be altered (see also details).
+#' @return In case of the replace methods, an [`amigaDisk`] class object is returned with the file
+#' information updated. Otherwise, it will return the requested file information (see also details).
+#' @docType methods
+#' @name adf.file.info
+#' @rdname file.info
+#' @examples
+#' \dontrun{
+#' data(adf.example)
+#' 
+#' adf.file.mode(adf.example,  c("mods", "mods/mod.intro"))
+#' adf.file.time(adf.example, c("mods", "mods/mod.intro"))
+#' adf.file.size(adf.example,  c("mods", "mods/mod.intro"))
+#' adf.file.info(adf.example,  c("mods", "mods/mod.intro"))
+#' 
+#' ## set the writeable flag for a group to TRUE
+#' adf.file.mode(adf.example, "mods/mod.intro") <- c(gW = T)
+#' 
+#' ## Set the modified time-stamp to the current system time
+#' adf.file.time(adf.example, "mods/mod.intro") <- Sys.time()
+#' }
+#' @author Pepijn de Vries
+#' @export
+setMethod("adf.file.info", c("amigaDisk", "character"), function(x, path) {
+  root.id <- get.root.id(x)
+  result <- do.call(rbind, lapply(path, function(p) {
+    fh <- find.file.header(x, p)
+    hi <- header.info(x, fh)
+    if (hi[[1]]$sec_type == "ST_ROOT") ri <- root.info(x)
+    prot.string <- .protect.string(hi, root.id)
+    exe         <- attributes(prot.string)$exe
+    attributes(prot.string) <- NULL
+    data.frame(name  = hi[[1]]$file_name, size = hi[[1]]$bytesize, isdir = hi[[1]]$sec_type %in% c("ST_ROOT", "ST_USERDIR"),
+               mode  = .protect.string(hi, root.id),
+               mtime = if(exists("ri")) ri$v_datetime else hi[[1]]$datetime, ## for root last modification anywhere on disk
+               ctime = if(exists("ri")) ri$c_datetime else hi[[1]]$datetime, ## for root creation date
+               atime = if(exists("ri")) ri$r_datetime else hi[[1]]$datetime, ## for root last modification to root
+               exe   = exe)
+  }))
+  row.names(result) <- result$name
+  result$name       <- NULL
+  return(result)
+})
+
+setGeneric("adf.file.mode", function(x, path) standardGeneric("adf.file.mode"))
+
+#' @name adf.file.mode
+#' @rdname file.info
+#' @aliases adf.file.mode,amigaDisk,character-method
+#' @export
+setMethod("adf.file.mode", c("amigaDisk", "character"), function(x, path) {
+  root.id <- get.root.id(x)
+  unlist(lapply(path, function(p) {
+    fh <- find.file.header(x, p)
+    .protect.string(header.info(x, fh), root.id)
+  }))
+})
+
+setGeneric("adf.file.mode<-", function(x, path, value) standardGeneric("adf.file.mode<-"))
+
+#' @name adf.file.mode<-
+#' @rdname file.info
+#' @aliases adf.file.mode<-,amigaDisk,character,character-method
+#' @export
+setMethod("adf.file.mode<-", c("amigaDisk", "character", "character"), function(x, path, value) {
+  value    <- rep_len(value, length(path))
+  fl       <- .protection.flags[!grepl("reserved|SUID", .protection.flags)]
+  nchar_fl <- cumsum(nchar(fl))
+  for (i in seq_along(path)) {
+    args     <- mapply(function(a, b){ substr(value[[i]], a, b) }, a = utils::head(c(0, nchar_fl), -1) + 1, b = nchar_fl)
+    args     <- args[args != ""]
+    not_set  <- args %in% c("-", "--")
+    set      <- args == fl[seq_along(args)]
+    if (!all(not_set | set)) stop("Unexpected characters in mode string")
+    if (!all(xor(set, not_set))) stop("Unexpected input!")
+    args     <- set & !not_set
+    names(args) <- fl[seq_along(args)]
+    adf.file.mode(x, path[[i]]) <- args
+  }
+  x
+})
+
+#' @name adf.file.mode<-
+#' @rdname file.info
+#' @aliases adf.file.mode<-,amigaDisk,character,logical-method
+#' @export
+setMethod("adf.file.mode<-", c("amigaDisk", "character", "logical"), function(x, path, value) {
+  root.id <- get.root.id(x)
+  bt      <- boot.info(x)
+  for (i in seq_along(path)) {
+    fh      <- find.file.header(x, path[[i]])
+    if (fh == root.id) stop("File mode cannot be set for the root!")
+    hi      <- header.info(x, fh)[[1]]
+    current <- hi$protect
+    if (any(duplicated(names(value))) || !any((names(value) %in% names(current)))) stop("Unknown, unnamed or duplicated mode flag in 'value'")
+    current[names(value)] <- value
+    ## first four flags are negated:
+    current[1:4]          <- !current[1:4]
+    current               <- bitmapToRaw(current, T, T)
+    ## Put updated flag on disk
+    x@data[fh*BLOCK_SIZE + (BLOCK_SIZE/4 - 56)*4 + 33:36] <- current
+    ## Update checksum
+    x@data[fh*BLOCK_SIZE + 21:24] <- calculate.checksum(x, fh)
+    if (bt$flag[["dir.cache.mode"]]) {
+      parent <- header.info(x, fh)[[1]]$parent
+      dc <- dir.cache.info(x, parent)
+      dc.cur <- attributes(dc)$dc.blocks
+      sel <- base::which(unlist(lapply(dc, function(y) y$header == fh)))
+      
+      ## update date in dir cache block (checksums are automatically updated in .make.dir.cache)
+      dc[[sel]]$protect <- rawToAmigaInt(current, 32, F)
+      x@data[as.vector(outer(1:BLOCK_SIZE, dc.cur*BLOCK_SIZE, "+"))] <-
+        unlist(
+          .make.dir.cache.block(do.call(rbind, lapply(dc, data.frame)), parent, dc.cur)
+        )
+    }
+  }
+  x
+})
+
+.protect.string <- function(header_info, root.id) {
+  if (header_info[[1]]$header_key %in% c(0, root.id)) {
+    result <- strrep("-", sum(nchar(.protection.flags[!grepl("reserved|SUID", .protection.flags)])))
+    prot   <- F
+  } else {
+    prot   <- header_info[[1]]$protect
+    result <- names(prot)
+    result[!prot] <- strrep("-", nchar(result[!prot]))
+    result <- result[!grepl("reserved|SUID", names(prot))]
+    result <- paste(result, collapse = "")
+    prot   <- any(prot[c("E", "gE", "oE")])
+  }
+  attributes(result)$exe <- prot
+  return(result)
+}
+
+setGeneric("adf.file.time", function(x, path, which) standardGeneric("adf.file.time"))
+
+#' @name adf.file.time
+#' @rdname file.info
+#' @aliases adf.file.time,amigaDisk,character,missing-method
+#' @export
+setMethod("adf.file.time", c("amigaDisk", "character", "missing"), function(x, path, which) {
+  do.call(c, lapply(path, function(p) {
+    fh <- find.file.header(x, p)
+    rawToAmigaDate(x@data[fh*BLOCK_SIZE + (BLOCK_SIZE/4 - 56)*4 + 133:144])
+  }))
+})
+
+#' @name adf.file.time
+#' @rdname file.info
+#' @aliases adf.file.time,amigaDisk,character,character-method
+#' @export
+setMethod("adf.file.time", c("amigaDisk", "character", "character"), function(x, path, which = c("m", "c", "a")) {
+  which   <- match.arg(which, c("m", "c", "a"))
+  root.id <- get.root.id(x)
+  do.call(c, lapply(path, function(p) {
+    fh <- find.file.header(x, p)
+    if (fh == root.id) {
+      pos <- root.id*BLOCK_SIZE + (BLOCK_SIZE/4 - 56)*4 + switch(which, a = 132, m = 184, c = 196) + 1:12
+    } else {
+      pos <- fh*BLOCK_SIZE + (BLOCK_SIZE/4 - 56)*4 + 133:144
+    }
+    rawToAmigaDate(x@data[pos])
+  }))
+})
+
+setGeneric("adf.file.time<-", function(x, path, which, value) standardGeneric("adf.file.time<-"))
+
+#' @name adf.file.time<-
+#' @rdname file.info
+#' @aliases adf.file.time<-,amigaDisk,character,missing,POSIXt-method
+#' @export
+setMethod("adf.file.time<-", c("amigaDisk", "character", "missing", "POSIXt"), function(x, path, which, value) {
+  .adf.file.time(x, path, value = value)
+})
+
+#' @name adf.file.time<-
+#' @rdname file.info
+#' @aliases adf.file.time<-,amigaDisk,character,character,POSIXt-method
+#' @export
+setMethod("adf.file.time<-", c("amigaDisk", "character", "character", "POSIXt"), function(x, path, which = c("m", "c", "a"), value) {
+  ## TODO test if updating file time works in emulator, also for dir cache disks...
+  .adf.file.time(x, path, which, value)
+})
+
+.adf.file.time <- function(x, path, which, value) {
+  ismissing <- missing(which)
+  if (ismissing) which <- "m"
+  which   <- match.arg(which, c("m", "c", "a"))
+  bt      <- boot.info(x)
+  root.id <- get.root.id(x)
+  which   <- rep_len(which, length(path))
+  value   <- value[rep_len(seq_along(value), length(path))]
+  for (i in seq_along(path)) {
+    fh <- find.file.header(x, path[[i]])
+    if (fh == root.id) {
+      pos     <- root.id*BLOCK_SIZE + (BLOCK_SIZE/4 - 56)*4 + switch(which[[i]], a = 132, m = 184, c = 196) + 1:12
+    } else {
+      if (!ismissing) warning("'which' is specified, but ignored since 'path' does not point to root.")
+      pos <- fh*BLOCK_SIZE + (BLOCK_SIZE/4 - 56)*4 + 133:144
+      if (bt$flag[["dir.cache.mode"]]) {
+        parent <- header.info(x, fh)[[1]]$parent
+        dc <- dir.cache.info(x, parent)
+        dc.cur <- attributes(dc)$dc.blocks
+        sel <- base::which(unlist(lapply(dc, function(y) y$header == fh)))
+        
+        ## update date in dir cache block (checksums are automatically updated in .make.dir.cache)
+        dc[[sel]]$date <- value[[i]]
+        x@data[as.vector(outer(1:BLOCK_SIZE, dc.cur*BLOCK_SIZE, "+"))] <-
+          unlist(
+            .make.dir.cache.block(do.call(rbind, lapply(dc, data.frame)), parent, dc.cur)
+          )
+      }
+    }
+    ## update date in file header:
+    x@data[pos] <- amigaDateToRaw(value[[i]])
+    ## Update file header checksum
+    x@data[fh*BLOCK_SIZE + 21:24] <- calculate.checksum(x, fh)
+  }
+  x
+}
+
+setGeneric("adf.file.size", function(x, path) standardGeneric("adf.file.size"))
+
+#' @name adf.file.size
+#' @rdname file.info
+#' @aliases adf.file.size,amigaDisk,character-method
+#' @export
+setMethod("adf.file.size", c("amigaDisk", "character"), function(x, path) {
+  unlist(lapply(path, function(p) {
+    fh <- find.file.header(x, p)
+    as.integer(header.info(x, fh)[[1]]$bytesize)
+  }))
 })

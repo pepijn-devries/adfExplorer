@@ -11,17 +11,17 @@
 #' such integers. Note that WORD and UWORD are also referred to as
 #' SHORT and USHORT respectively.
 #'
-#' @param x A vector of class \code{raw} to be converted into a \code{character}.
+#' @param x A vector of class `raw` to be converted into a `character`.
 #' @param bits Number of bits that represents the integer value. Should be 8 or a
 #' positive multitude of 8.
-#' @param signed A \code{logical} value indicating whether the integer
-#' should be signed (\code{TRUE}, default) or not (\code{FALSE}).
-#' @return A \code{numeric} value (or a \code{vector} of values),
+#' @param signed A `logical` value indicating whether the integer
+#' should be signed (`TRUE`, default) or not (`FALSE`).
+#' @return A `numeric` value (or a `vector` of values),
 #' representing the integer data represented by the provided
-#' \code{raw} data. Note that R defines \code{integer} as 32-bit
+#' `raw` data. Note that R defines `integer` as 32-bit
 #' signed integers and cannot store the 32-bit signed values.
-#' Therefore a \code{numeric} value is returned rather than an
-#' explicit \code{integer}.
+#' Therefore a `numeric` value is returned rather than an
+#' explicit `integer`.
 #' @examples
 #' ## Let's start by obtaining unsigned 8-bit integers:
 #' rawToAmigaInt(as.raw(0:255))
@@ -78,12 +78,12 @@ rawToAmigaInt <- function(x, bits = 8, signed = F) {
 #' (unsigned 32-bit integer). This function converts 
 #' such integers into raw data.
 #'
-#' @param x A vector of class \code{numeric} which needs to be converted into raw values.
+#' @param x A vector of class `numeric` which needs to be converted into raw values.
 #' @param bits Number of bits that represents the integer value. Should be 8 or a
 #' positive multitude of 8.
-#' @param signed A \code{logical} value indicating whether the numeric values
-#' is signed (\code{TRUE}, default) or not (\code{FALSE}).
-#' @return Returns (a \code{vector} of) \code{raw} data, representing
+#' @param signed A `logical` value indicating whether the numeric values
+#' is signed (`TRUE`, default) or not (`FALSE`).
+#' @return Returns (a `vector` of) `raw` data, representing
 #' the integer value(s) conform Amiga specifications.
 #' @examples
 #' ## some unsigned 8-bit integers:
@@ -149,12 +149,13 @@ rawToCharDot <- function(raw_dat) {
   raw_dat[raw_dat == as.raw(0x9d)] <- as.raw(46)
   raw_dat[raw_dat == as.raw(0xad)] <- as.raw(46)
   raw_dat[raw_dat == as.raw(0x7f)] <- as.raw(46)
-  return(rawToChar(raw_dat))
+
+  return(iconv(rawToChar(raw_dat), from = "ISO-8859-1", to = "UTF-8"))
 }
 
 #' Display raw data in a comprehensive way
 #'
-#' Cat \code{raw} data to the sink in columns with ASCII code
+#' Cat `raw` data to the sink in columns with ASCII code
 #'
 #' As binary data is hard to decipher this function will
 #' cat raw data as hexadecimal code in columns, together
@@ -165,15 +166,15 @@ rawToCharDot <- function(raw_dat) {
 #'
 #' Raw data is padded with zeros at the end to fill remaining
 #' columns...
-#' @param x A vector of class \code{raw} to be displayed.
+#' @param x A vector of class `raw` to be displayed.
 #' @param ncol Number of columns of hexadecimal code to display.
 #' @param col.wid Width of each column (in bytes) to display.
 #' @param address.len Length of the hexadecimal address
 #' (in number of hexadecimal digits) to display.
-#' @param hex.upper \code{logical} value, to specify whether hexadecimals
-#' should be displayed in uppercase (\code{TRUE}, default) or
-#' lowercase (\code{FALSE}).
-#' @return The \code{character} string send to the sink is also
+#' @param hex.upper `logical` value, to specify whether hexadecimals
+#' should be displayed in uppercase (`TRUE`, default) or
+#' lowercase (`FALSE`).
+#' @return The `character` string send to the sink is also
 #' returned by the function.
 #' @examples
 #' ## Display some raw random data:
@@ -208,7 +209,7 @@ displayRawData <- function(x, ncol = 4, col.wid = 4, address.len = 3, hex.upper 
 ## function to get the address of the root block
 ## x should be of class "amigaDisk" or character "DD" or "HD"
 get.root.id <- function(x) {
-  if (class(x) == "amigaDisk") x <- x@type
+  if (inherits(x, "amigaDisk")) x <- x@type
   x <- match.arg(x, c("DD", "HD"))
   NUMBER_OF_SECTORS <- NUMBER_OF_SECTORS_DD
   if (x == "HD") NUMBER_OF_SECTORS <- NUMBER_OF_SECTORS_HD
@@ -218,7 +219,7 @@ get.root.id <- function(x) {
 ## calculate boot blocks check sum
 ## maybe export at later stage
 calculate.boot.checksum <- function(x, as.raw = T) {
-  if (class(x) == "amigaDisk") {
+  if (inherits(x, "amigaDisk")) {
     return(calculate.boot.checksum.dat(x@data, as.raw))
   } else if (typeof(x) == "raw") {
     return(calculate.boot.checksum.dat(x, as.raw))
@@ -271,26 +272,26 @@ boot.info <-  function(x) {
 #' As the Commodore Amiga is a big-endian system (most significant
 #' bit first) using a 32 bit CPU, it may sometimes necessary to invert
 #' the bits of a byte or longs (4 bytes, 32 bits), which can be done
-#' with the arguments '\code{invert.bytes}' and '\code{invert.longs}'
+#' with the arguments '`invert.bytes`' and '`invert.longs`'
 #' respectively.
 #'
-#' @param x A \code{vector} of \code{raw} data, in case
-#' \code{rawToBitmap} is used. A \code{vector} of \code{raw},
-#' \code{interger} or \code{logical} values should be used in
-#' case of \code{bitmapToRaw}. In the latter case each value in the
-#' \code{vector} is interpeted as a bit and should be a mutiple of
+#' @param x A `vector` of `raw` data, in case
+#' `rawToBitmap` is used. A `vector` of `raw`,
+#' `interger` or `logical` values should be used in
+#' case of `bitmapToRaw`. In the latter case each value in the
+#' `vector` is interpreted as a bit and should be a multiple of
 #' 8 long.
-#' @param invert.bytes A \code{logical} value. When set to \code{TRUE},
+#' @param invert.bytes A `logical` value. When set to `TRUE`,
 #' the bit order of bytes are reversed.
-#' @param invert.longs A \code{logical} value. When set to \code{TRUE},
-#' the bit order of long values (32 bits) are reversed. When \code{x}
-#' does not have a multiple length of 32 bits or 4 bytes, \code{x} will
+#' @param invert.longs A `logical` value. When set to `TRUE`,
+#' the bit order of long values (32 bits) are reversed. When `x`
+#' does not have a multiple length of 32 bits or 4 bytes, `x` will
 #' be padded with zeros to the right, but the result will be trimmed to
-#' correspond with the length of \code{x}. Note that data might get lost
+#' correspond with the length of `x`. Note that data might get lost
 #' this way.
-#' @return Returns a \code{vector} of \code{raw} data in case of
-#' \code{bitmapToRaw}, and a \code{vector} of binary \code{raw} values
-#' in case of \code{rawToBitmap}.
+#' @return Returns a `vector` of `raw` data in case of
+#' `bitmapToRaw`, and a `vector` of binary `raw` values
+#' in case of `rawToBitmap`.
 #' @examples
 #' ## The bitmap block of the example disk is located at block
 #' ## number 882 (note that this is not true for all disks,
@@ -506,20 +507,20 @@ setGeneric("get.diskLocation", function(disktype, block) standardGeneric("get.di
 #' are physically stored on a specific cylinder and side at a specific sector.
 #' This method returns the identifiers for the physical location based on the
 #' block identifier. The inverse of this function is achieved with the
-#' \code{\link{get.blockID}} method.
+#' [`get.blockID`] method.
 #'
 #' @docType methods
 #' @name get.diskLocation
 #' @rdname get.diskLocation
 #' @aliases get.diskLocation,character,numeric-method
-#' @param disktype A \code{character} string indicating the type of disk:
-#' \code{DD} for double density disks. \code{HD} for high density disks.
-#' @param block \code{numeric} identifier of a block. Whole numbers ranging from
+#' @param disktype A `character` string indicating the type of disk:
+#' `DD` for double density disks. `HD` for high density disks.
+#' @param block `numeric` identifier of a block. Whole numbers ranging from
 #' 0 up to 1759 (for DD disks) or 3519 (for HD disks). Note that the base
 #' index is zero (for consitency with Amiga specifications and documentation)
 #' opposed to the base of one used in R.
-#' @return Returns a \code{list} with corresponding sector, side and cylinder
-#' identifiers (\code{numeric}).
+#' @return Returns a `list` with corresponding sector, side and cylinder
+#' identifiers (`numeric`).
 #' @examples
 #' ## get the physical location of the first 20 blocks on a DD disk
 #' ## and arrange as a data.frame:
@@ -554,9 +555,9 @@ setGeneric("get.blockID", function(disktype, sector, side, cylinder) standardGen
 #' are physically stored on a specific cylinder and side at a specific sector.
 #' This method returns the block identifier based on the physical location
 #' on the disk. The inverse of this function is achieved with the
-#' \code{\link{get.diskLocation}} method.
+#' [`get.diskLocation`] method.
 #' 
-#' Note that all identifiers (or indices) have a base at zero, for consitency
+#' Note that all identifiers (or indices) have a base at zero, for consistency
 #' with Amiga specifications and documentation, opposed to the base of one
 #' used in R.
 #'
@@ -564,14 +565,14 @@ setGeneric("get.blockID", function(disktype, sector, side, cylinder) standardGen
 #' @name get.blockID
 #' @rdname get.blockID
 #' @aliases get.blockID,character,numeric,numeric,numeric-method
-#' @param disktype A \code{character} string indicating the type of disk:
-#' \code{DD} for double density disks. \code{HD} for high density disks.
-#' @param sector \code{numeric} identifier for the sector on the disk, ranging
-#' from 0 up to 10 (\code{DD} disks) or 21 (\code{HD} disks).
-#' @param side \code{numeric} identifier for the side of the disk (0 or 1).
-#' @param cylinder \code{numeric} identifier for the cylinder on the disk,
+#' @param disktype A `character` string indicating the type of disk:
+#' `DD` for double density disks. `HD` for high density disks.
+#' @param sector `numeric` identifier for the sector on the disk, ranging
+#' from 0 up to 10 (`DD` disks) or 21 (`HD` disks).
+#' @param side `numeric` identifier for the side of the disk (0 or 1).
+#' @param cylinder `numeric` identifier for the cylinder on the disk,
 #' ranging from 0 up to 79.
-#' @return Returns the \code{numeric} identifier for the corresponding block.
+#' @return Returns the `numeric` identifier for the corresponding block.
 #' @examples
 #' ## Get the block identifier for sectors 0 up to 3 combined with
 #' ## cylinders 0 up to 3 on side 0 of the disk:
@@ -607,15 +608,15 @@ setMethod("get.blockID", c("character", "numeric", "numeric", "numeric"), functi
 #' 
 #' As these values are always positive, only date time values on or after
 #' 1978-01-01 are allowed. The inverse of this function can be achieved
-#' with \code{\link{amigaDateToRaw}}.
-#' @param x a \code{vector} of \code{raw} values with a length of a multitude
+#' with [`amigaDateToRaw`].
+#' @param x a `vector` of `raw` values with a length of a multitude
 #' of 6 (for the short format) or 12 (for the long format).
-#' @param format a \code{character} string indicating whether the date
-#' is stored as \code{short} or \code{long} integers.
-#' @param tz A \code{character} string specifying the time zone to be used
+#' @param format a `character` string indicating whether the date
+#' is stored as `short` or `long` integers.
+#' @param tz A `character` string specifying the time zone to be used
 #' to retrieve the date time object. Note that the time zone is not stored
 #' on the Amiga. By default the Universal time zone (UTC) is assumed.
-#' @return Returns a \code{\link[base:DateTimeClasses]{POSIXct}} object based on the provided
+#' @return Returns a [`POSIXct`][base::DateTimeClasses] object based on the provided
 #' raw data.
 #' @examples
 #' ## all raw data is zero, so the origin date is returned:
@@ -660,15 +661,15 @@ rawToAmigaDate <- function(x, format = c("long", "short"), tz = "UTC") {
 #' 
 #' As these values are always positive, only date time values on or after
 #' 1978-01-01 are allowed. The inverse of this function can be achieved
-#' with \code{\link{rawToAmigaDate}}.
-#' @param x A (\code{vector} of) \code{\link[base:DateTimeClasses]{POSIXt}} object(s).
-#' @param format a \code{character} string indicating whether the date
-#' should be stored as \code{short} or \code{long} integers.
-#' @param tz A \code{character} string specifying the time zone to be used
+#' with [`rawToAmigaDate`].
+#' @param x A (`vector` of) [`POSIXt`][base::DateTimeClasses] object(s).
+#' @param format a `character` string indicating whether the date
+#' should be stored as `short` or `long` integers.
+#' @param tz A `character` string specifying the time zone to be used
 #' to convert the date time object. Note that the time zone is not stored
 #' on the Amiga. By default the Universal time zone (UTC) is assumed.
 #' You will get a warning when you use a timezone other then UTC.
-#' @return returns \code{raw} data reflecting the date-time objects conform
+#' @return returns `raw` data reflecting the date-time objects conform
 #' the Amiga file system specifications.
 #' @examples
 #' ## Note that using the same date-time with different timezones will
@@ -680,7 +681,7 @@ rawToAmigaDate <- function(x, format = c("long", "short"), tz = "UTC") {
 #' @export
 amigaDateToRaw <- function(x, format = c("long", "short"), tz = "UTC") {
   format   <- match.arg(format, c("long", "short"))
-  if (!any(class(x) %in% "POSIXt")) stop("x should be a date-time object (POSIXt).")
+  if (!inherits(x, "POSIXt")) stop("x should be a date-time object (POSIXt).")
   if (any(x < as.POSIXct("1978-01-01", tz = tz))) stop("The date should be 1978-01-01 or later.")
   x     <- as.numeric(x) - as.numeric(as.POSIXct("1978-01-01 00:00:00", tz = tz))
   days  <- floor(x/86400)

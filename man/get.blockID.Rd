@@ -34,7 +34,7 @@ This method returns the block identifier based on the physical location
 on the disk. The inverse of this function is achieved with the
 \code{\link{get.diskLocation}} method.
 
-Note that all identifiers (or indices) have a base at zero, for consitency
+Note that all identifiers (or indices) have a base at zero, for consistency
 with Amiga specifications and documentation, opposed to the base of one
 used in R.
 }

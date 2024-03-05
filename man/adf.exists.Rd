@@ -4,20 +4,28 @@
 \name{adf.file.exists}
 \alias{adf.file.exists}
 \alias{adf.file.exists,amigaDisk,character-method}
-\title{Test file or directory existsence in an amigaDisk object}
+\alias{dir.exists.adf}
+\alias{dir.exists.adf,amigaDisk,character-method}
+\title{Test file or directory existence in an amigaDisk object}
 \usage{
 \S4method{adf.file.exists}{amigaDisk,character}(x, file)
+
+\S4method{dir.exists.adf}{amigaDisk,character}(x, path)
 }
 \arguments{
 \item{x}{An \code{\link{amigaDisk}} object in which this method
 will check for the file's existence.}
 
-\item{file}{A \code{character} string representing a file or directory name.
-Use Amiga specifications for file name (see \code{\link{current.adf.dir}}).}
+\item{file}{A (\code{vector} of) \code{character} string(s) representing a file or directory name.
+Use Amiga specifications for file name (see \code{\link{current.adf.dir}}). Wildcards are not allowed.}
+
+\item{path}{file A (\code{vector} of) \code{character} string(s) representing a directory name.
+Use Amiga specifications for the path name (see \code{\link{current.adf.dir}}). Wildcards are not allowed.}
 }
 \value{
 Returns a \code{logical} value indicating whether the file exists
-or not.
+or not. In case of \code{dir.exists.adf} the path needs to exist and it needs to be a directory in order
+to return \code{TRUE}.
 }
 \description{
 Tests whether a specific file (or directory) exists in an
@@ -34,7 +42,10 @@ data(adf.example)
 ## This file exists:
 adf.file.exists(adf.example, "df0:mods/mod.intro")
 
-## This file doesn't:
+## But it doesn't exist as a directory
+dir.exists.adf(adf.example, "df0:mods/mod.intro")
+
+## This file also doesn't:
 adf.file.exists(adf.example, "df0:idontexist")
 }
 \author{

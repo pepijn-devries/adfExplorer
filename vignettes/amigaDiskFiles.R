@@ -37,10 +37,10 @@ startup <- get.adf.file(adf.example, "df0:s/Startup-Sequence")
 
 ## the file content is returned as raw data.
 ## let's convert it to text:
-startup <- rawToChar(startup)
+startup <- startup |> rawToChar() |> iconv(from = "ISO-8859-1", to = "UTF-8")
 
 ## let's show it
-cat(startup)
+#cat(startup)
 
 ## -----------------------------------------------------------------------------
 ## first get the file as raw data.
@@ -79,6 +79,13 @@ adf.example <- put.adf.file(adf.example,
 
 ## -----------------------------------------------------------------------------
 list.adf.files(adf.example, "DF0:temp/")
+
+## -----------------------------------------------------------------------------
+adf.file.info(adf.example, paste0("DF0:temp/", list.adf.files(adf.example, "DF0:temp/")))
+
+## -----------------------------------------------------------------------------
+adf.file.mode(adf.example, paste0("DF0:temp/", list.adf.files(adf.example, "DF0:temp/"))) <- c(E = F)
+adf.file.info(adf.example, paste0("DF0:temp/", list.adf.files(adf.example, "DF0:temp/")))
 
 ## -----------------------------------------------------------------------------
 adf.example <- 
