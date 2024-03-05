@@ -1,4 +1,4 @@
-adfExplorer v0.1.7 (Release date: 2023-03-05)
+adfExplorer v0.1.8 (Release date: 2024-03-06)
 =============
 
  * added adf.file.info, adf.file.mode, adf.file.time
