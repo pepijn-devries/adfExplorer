@@ -1,10 +1,20 @@
+adfExplorer v0.1.7 (Release date: 2023-03-05)
 =============
+
+ * added adf.file.info, adf.file.mode, adf.file.time
+   and adf.file.size methods.
+
+ * added dir.exists.adf and improved adf.file.exists
+ 
+ * Corrections and updates in manual and vignettes
+ 
+ * Added `pkgdown` website
+
 adfExplorer v0.1.6 (Release date: 2021-09-05)
 =============
 
  * URL fix in vignette to pass CRAN checks
 
-=============
 adfExplorer v0.1.5 (Release date: 2021-09-04)
 =============
 
@@ -14,13 +24,11 @@ adfExplorer v0.1.5 (Release date: 2021-09-04)
 
  * Minor correction to manual
 
-=============
 adfExplorer v0.1.4 (Release date: 2018-03-05)
 =============
 
  * Fix to pass CRAN checks.
 
-=============
 adfExplorer v0.1.3 (Release date: 2018-03-04)
 =============
 
@@ -35,7 +43,6 @@ adfExplorer v0.1.3 (Release date: 2018-03-04)
  * Functions 'rawToBitmap' and 'bitmapToRaw' have been
    improved and are now exported and documented.
 
-=============
 adfExplorer v0.1.2 (Release date: 2017-11-03)
 =============
 
@@ -50,7 +57,6 @@ adfExplorer v0.1.2 (Release date: 2017-11-03)
    characters. As a quick fix the display of this output
    now is suppressed in the vignette.
 
-=============
 adfExplorer v0.1.1 (Release date: 2017-10-28)
 =============
 

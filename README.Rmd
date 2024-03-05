@@ -1,0 +1,65 @@
+---
+output: github_document
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# adfExplorer
+
+<img src="https://upload.wikimedia.org/wikipedia/commons/e/e8/Kickstart1_3.png" alt="Kickstart V1.3 splash screen" align="right" />
+
+Read and mutate virtual Commodore Amiga Disks, stored as files (a.k.a Amiga Disk Files).
+
+## Installation
+
+> Get CRAN version
+```{r eval=FALSE}
+install.packages("adfExplorer")
+```
+
+> Get development version from R-Universe
+```{r eval=FALSE}
+install.packages("adfExplorer", repos = c("https://pepijn-devries.r-universe.dev", "https://cloud.r-project.org"))
+```
+## Usage
+
+The package comes with an example disk for which files and directories can be listed:
+
+```{r init}
+library(adfExplorer)
+data("adf.example")
+
+list.adf.files(adf.example)
+```
+
+You can also pull files from the virtual disk:
+
+```{r get_file}
+## get startup-sequence file and store as a vector of raw data
+startup <- get.adf.file(adf.example, "DF0:s/startup-sequence")
+
+## As this particular file is UTF8 text we can convert it from raw:
+startup  |> rawToChar() |> iconv(from = "ISO-8859-1", to = "UTF-8") |> cat()
+```
+
+For more in depth examples see `vignette("amigaDiskFiles")`.
+
+## Developmental status
+
+It has been years since the initial release of this package. Since its release a lot has changed in R and in
+my skill set. I still have plans for this package, but this requires drastic changes. Therefore, I will only
+apply minimal maintenance to this package. Meanwhile I will work on a complete overhaul which will be released
+in due time as a new package. This new package will:
+
+ * have the same or similar features as the current package.
+ * will implement modern R features and try to adhere to tidyverse principles.
+ * implement recursive procedures in C/C++ giving the package a speed boost.
+
+But until then, please enjoy the current package as is.

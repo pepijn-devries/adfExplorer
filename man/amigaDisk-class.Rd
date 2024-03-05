@@ -10,7 +10,7 @@ An S4 class representing the information from an Amiga Disk File.
 }
 \details{
 An Amiga Disk File (ADF) holds the raw data of an Amiga disk
-in the same order as blocks (\code{\link{amigaBlock-class}})
+in the same order as blocks (\code{\linkS4class{amigaBlock}})
 on the physical disks. As an Amiga
 Disk can hold any kind of information, so can this class.
 
@@ -23,8 +23,8 @@ Finally, the current directory is stored with this class. Which
 is only useful for DOS-formatted disks (with a file structure).
 By default this is set to the disk's root.
 
-For more (technical) backgrounds please check this package's
-\href{../doc/amigaDiskFiles.html}{vignette}.
+For more (technical) backgrounds please check this package's vignette
+(\code{vignette("amigaDiskFiles")})
 
 Use the objects constructor (\code{new("amigaDisk")}) to create
 a completely blank disk (without a filesystem). If you want to be

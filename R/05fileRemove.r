@@ -3,10 +3,10 @@ setGeneric("adf.file.remove", function(x, file, full) standardGeneric("adf.file.
 #' Remove a file from an amigaDisk object
 #'
 #' Remove a file from a virtual Amiga floppy disk represented by
-#' an \code{\link{amigaDisk}} object.
+#' an [`amigaDisk`] object.
 #'
-#' Remove a file from a virtual Amiga floppy disk (represented by an \code{\link{amigaDisk}} object.
-#' Make sure that the virtual disk is DOS formatted (see \link{is.amigaDOS}). This method can only remove one file at
+#' Remove a file from a virtual Amiga floppy disk (represented by an [`amigaDisk`] object.
+#' Make sure that the virtual disk is DOS formatted (see [`is.amigaDOS`]). This method can only remove one file at
 #' a time from a virtual virtual disk, it is not allowed to use wild cards in the source or destination names.
 #' It is possible to remove an entire directory at once. Use loops to remove multiple files/directories from a virtual
 #' disk.
@@ -15,15 +15,15 @@ setGeneric("adf.file.remove", function(x, file, full) standardGeneric("adf.file.
 #' @name adf.file.remove
 #' @rdname adf.file.remove
 #' @aliases adf.file.remove,amigaDisk,character,logical-method
-#' @param x An \code{\link{amigaDisk}} onto which the file should be put.
-#' @param file A \code{character} string of the path on the virtual floppy of the file that should be removed.
-#' The path should be conform Amiga specs (see \link{current.adf.dir}). Wild cards are not allowed (see details).
+#' @param x An [`amigaDisk`] onto which the file should be put.
+#' @param file A `character` string of the path on the virtual floppy of the file that should be removed.
+#' The path should be conform Amiga specs (see [`current.adf.dir`]). Wild cards are not allowed (see details).
 #' Both files and directories can be removed from the virtual disk using this function.
-#' @param full A \code{logical} value (default is \code{FALSE}). When set to \code{TRUE} not only pointers to
-#' the \code{file} are removed, but also the data in the header and data blocks. When set to \code{FALSE},
+#' @param full A `logical` value (default is `FALSE`). When set to `TRUE` not only pointers to
+#' the `file` are removed, but also the data in the header and data blocks. When set to `FALSE`,
 #' the data is left as orphans on the disk. Technically, these files can be undeleted, unless they are overwritten.
-#' @return Returns an \code{\link{amigaDisk}} object where the
-#' specified \code{file} is removed.
+#' @return Returns an [`amigaDisk`] object where the
+#' specified `file` is removed.
 #' @examples
 #' \dontrun{
 #' ## This removes a single file from a disk
@@ -159,7 +159,6 @@ setMethod("adf.file.remove", c("amigaDisk", "character", "logical"), function(x,
       dir.cache.blocks <- c(dir.cache.blocks, utils::head(current.dc.blocks, length(current.dc.blocks) - required.blocks))
       current.dc.blocks <- utils::tail(current.dc.blocks, required.blocks)
     }
-    
     dc.bl <- .make.dir.cache.block(dc, pi[[1]]$header_key, current.dc.blocks)
     x@data[as.vector(outer(1:BLOCK_SIZE, current.dc.blocks*BLOCK_SIZE, "+"))] <-
       unlist(dc.bl)
@@ -189,6 +188,7 @@ setMethod("adf.file.remove", c("amigaDisk", "character", "logical"), function(x,
 })
 
 #' @rdname adf.file.remove
+#' @aliases adf.file.remove,amigaDisk,character,missing-method
 #' @export
 setMethod("adf.file.remove", c("amigaDisk", "character", "missing"), function(x, file) {
   adf.file.remove(x, file, F)

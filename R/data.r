@@ -1,8 +1,8 @@
 #' An example of an amigaDisk object
 #'
-#' An example of an \code{\link{amigaDisk-class}} object.
+#' An example of an [`amigaDisk-class`] object.
 #'
-#' An \code{\link{amigaDisk-class}} object that represents an
+#' An [`amigaDisk-class`] object that represents an
 #' 'Old File System' formatted and bootable disk. It is used in
 #' multiple examples of this package. It contains a directory
 #' structure and some files that can be accessed using this package.
@@ -10,7 +10,7 @@
 #'
 #' @docType data
 #' @name adf.example
-#' @format An S4 \code{\link{amigaDisk-class}} object.
+#' @format An S4 [`amigaDisk-class`] object.
 #' @examples
 #' data("adf.example")
 NULL
@@ -20,22 +20,22 @@ NULL
 #' A minimal piece of code required to boot to a command line
 #' interface on a Commodore Amiga.
 #'
-#' The first two blocks (\code{\link{amigaDisk}}) are special and are
+#' The first two blocks ([`amigaDisk`]) are special and are
 #' called the boot block. This block should contain information on the
 #' type of disk and possibly some executable code that will be run
-#' at boot time. This \code{data.frame} contains some minimal executable
+#' at boot time. This `data.frame` contains some minimal executable
 #' code that will start the Amiga command line interface. On Amiga OS
-#' >=2.0 the screen will stay black unless a startup-sequence file is
+#' \>=2.0 the screen will stay black unless a startup-sequence file is
 #' present on the disk.
 #' 
 #' The original code is from Thomas Kessler as published by Laurent
 #' Cl\ifelse{latex}{\out{{\'{e}}}}{\ifelse{html}{\out{&eacute;}}{e}}vy
-#' (\url{http://lclevy.free.fr/adflib/adf_info.html}).
+#' (<http://lclevy.free.fr/adflib/adf_info.html>).
 #'
 #' @docType data
 #' @name boot.block.code
 #' @format A data frame with two columns. The first column
-#' contains the assembled code (as \code{raw} data). The
+#' contains the assembled code (as `raw` data). The
 #' second column contains the corresponding Motorola 68000
 #' (the main CPU of the original Commodore Amiga) assembly
 #' syntax.

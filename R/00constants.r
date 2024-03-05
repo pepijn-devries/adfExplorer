@@ -16,3 +16,5 @@ TYPES     <- data.frame(type = c("T_HEADER", "T_DATA", "T_LIST", "DIRCACHE"),
 # Secondary (header) block types on a Amiga DOS-formatted disk:
 SEC_TYPES <- data.frame(type = c("ST_ROOT", "ST_FILE", "ST_USERDIR", "ST_LINKFILE", "ST_LINKDIR", "ST_SOFTLINK"),
                         value = c(1, 0x100000000-3, 2, 0x100000000-4, 4, 3))
+
+.protection.flags <- c("D", "E", "W", "R", "A", "P", "S", "H", "gD", "gE", "gW", "gR", "oD", "oE", "oW", "oR", sprintf("reserved%02i", 1:15), "SUID")

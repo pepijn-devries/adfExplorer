@@ -13,13 +13,13 @@ validity.amigaBlock <- function(object) {
 #' (used for booting the Amiga system), the root block (containing information
 #' on the disk and the root directory), header blocks (indicating where to
 #' find file data) and data blocks (containing the actual file data). See
-#' this package's \href{../doc/amigaDiskFiles.html}{vignette} for more
-#' details. use the \code{\link{amigaBlock-method}} to extract a specific
-#' block from an \code{\link{amigaDisk}} object.
+#' this package's vignette (`vignette("amigaDiskFiles")`) for more
+#' details. use the [`amigaBlock-method`] to extract a specific
+#' block from an [`amigaDisk`] object.
 #' 
-#' @slot data The \code{raw} data of a 'block' of data on
+#' @slot data The `raw` data of a 'block' of data on
 #' an Amiga disk file. Each block holds 512 bytes of information.
-#' This slot is therefore a \code{vector} of the same length.
+#' This slot is therefore a `vector` of the same length.
 #'
 #' @name amigaBlock-class
 #' @rdname amigaBlock-class
@@ -40,27 +40,27 @@ setGeneric("amigaBlock<-", function(x, block, value) standardGeneric("amigaBlock
 
 #' Extract block from or replace a block on an amigaDisk object
 #'
-#' Extract an \code{\link{amigaBlock}} from an \code{\link{amigaDisk}} object,
+#' Extract an [`amigaBlock`] from an [`amigaDisk`] object,
 #' or replace it on the disk.
 #'
 #' Information is stored in 512 byte blocks on floppy disks. This method
-#' extracts a specific block at a \code{numeric} identifier (whole numbers
+#' extracts a specific block at a `numeric` identifier (whole numbers
 #' ranging from 0 up to 1759 (DD disk) or 3519 (HD disk)) from an
-#' \code{\link{amigaDisk}} object.
+#' [`amigaDisk`] object.
 #'
 #' @docType methods
 #' @name amigaBlock-method
 #' @rdname amigaBlock-method
 #' @aliases amigaBlock,amigaDisk,numeric-method
-#' @param x An \code{\link{amigaDisk}} object from which the block needs to
+#' @param x An [`amigaDisk`] object from which the block needs to
 #' be extracted or on which the block needs to be replaced.
-#' @param block A \code{numeric} identifier (whole numbers
+#' @param block A `numeric` identifier (whole numbers
 #' ranging from 0 up to 1759 (DD disk) or 3519 (HD disk)).
-#' @param value An \code{\link{amigaBlock}} object with which the block
+#' @param value An [`amigaBlock`] object with which the block
 #' at the specified location on the disk needs to be replaced.
-#' @return The \code{\link{amigaBlock}} object at the specified location
-#' is returned. In case of the replace method, an \code{\link{amigaDisk}}
-#' object with a replaced \code{\link{amigaBlock}} is returned.
+#' @return The [`amigaBlock`] object at the specified location
+#' is returned. In case of the replace method, an [`amigaDisk`]
+#' object with a replaced [`amigaBlock`] is returned.
 #' @examples
 #' ## get the root block from the example adf:
 #' amigaBlock(adf.example, 880)

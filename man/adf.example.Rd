@@ -5,13 +5,13 @@
 \alias{adf.example}
 \title{An example of an amigaDisk object}
 \format{
-An S4 \code{\link{amigaDisk-class}} object.
+An S4 \code{\linkS4class{amigaDisk}} object.
 }
 \description{
-An example of an \code{\link{amigaDisk-class}} object.
+An example of an \code{\linkS4class{amigaDisk}} object.
 }
 \details{
-An \code{\link{amigaDisk-class}} object that represents an
+An \code{\linkS4class{amigaDisk}} object that represents an
 'Old File System' formatted and bootable disk. It is used in
 multiple examples of this package. It contains a directory
 structure and some files that can be accessed using this package.

@@ -28,7 +28,7 @@ The Commodore Amiga has specified the following data formats
 to represent integer data: BYTE (signed 8-bit integer), UBYTE
 (unsigned 8-bit integer), WORD (signed 16-bit integer), UWORD
 (unsigned 16-bit integer), LONG (signed 32-bit integer), ULONG,
-(unsigned 32-bit integer). This function converts 
+(unsigned 32-bit integer). This function converts
 such integers into raw data.
 }
 \examples{

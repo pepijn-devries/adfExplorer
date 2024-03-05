@@ -21,7 +21,7 @@ This function checks if the \code{\link{amigaDisk}}
 object represents a bootable disk.
 }
 \details{
-The first two \code{\link{amigaBlock-class}} objects on a disk
+The first two \code{\linkS4class{amigaBlock}} objects on a disk
 are special and are called the boot block. The boot block will
 determine whether an Amiga can boot from the disk.
 

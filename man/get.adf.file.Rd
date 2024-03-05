@@ -55,7 +55,7 @@ get.adf.file(adf.example, "DF0:S/Startup-Sequence", "startup.txt")
 startup <- get.adf.file(adf.example, "DF0:S/Startup-Sequence")
 
 ## Look, it's a text file:
-cat(rawToChar(startup))
+startup |> rawToChar() |> iconv(from = "ISO-8859-1", to = "UTF-8")
 
 if (requireNamespace("ProTrackR", quietly = TRUE)) {
   ## look there is a typical ProTracker module on

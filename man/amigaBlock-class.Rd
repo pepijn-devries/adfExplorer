@@ -14,7 +14,7 @@ There are several types of blocks. Most important are the boot block
 (used for booting the Amiga system), the root block (containing information
 on the disk and the root directory), header blocks (indicating where to
 find file data) and data blocks (containing the actual file data). See
-this package's \href{../doc/amigaDiskFiles.html}{vignette} for more
+this package's vignette (\code{vignette("amigaDiskFiles")}) for more
 details. use the \code{\link{amigaBlock-method}} to extract a specific
 block from an \code{\link{amigaDisk}} object.
 }

@@ -15,7 +15,7 @@
 \item{x}{An \code{\link{amigaDisk}} onto which the file should be put.}
 
 \item{file}{A \code{character} string of the path on the virtual floppy of the file that should be removed.
-The path should be conform Amiga specs (see \link{current.adf.dir}). Wild cards are not allowed (see details).
+The path should be conform Amiga specs (see \code{\link{current.adf.dir}}). Wild cards are not allowed (see details).
 Both files and directories can be removed from the virtual disk using this function.}
 
 \item{full}{A \code{logical} value (default is \code{FALSE}). When set to \code{TRUE} not only pointers to
@@ -32,7 +32,7 @@ an \code{\link{amigaDisk}} object.
 }
 \details{
 Remove a file from a virtual Amiga floppy disk (represented by an \code{\link{amigaDisk}} object.
-Make sure that the virtual disk is DOS formatted (see \link{is.amigaDOS}). This method can only remove one file at
+Make sure that the virtual disk is DOS formatted (see \code{\link{is.amigaDOS}}). This method can only remove one file at
 a time from a virtual virtual disk, it is not allowed to use wild cards in the source or destination names.
 It is possible to remove an entire directory at once. Use loops to remove multiple files/directories from a virtual
 disk.
