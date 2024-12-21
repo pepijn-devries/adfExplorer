@@ -1,0 +1,15 @@
+#!/bin/sh
+# Find compiler
+CC=`${R_HOME}/bin/R CMD config CC`
+CFLAGS=`${R_HOME}/bin/R CMD config CFLAGS`
+CPPFLAGS=`${R_HOME}/bin/R CMD config CPPFLAGS`
+
+# Find source files
+ADF_CFILES="$(cd src/ && ls adflib/*.c | tr '\n' ' ')"
+ADF_CPPFILES="$(cd src/ && ls *.cpp | tr '\n' ' ')"
+
+# Write to Makevars
+sed -e "s|@ADF_CFILES@|$ADF_CFILES|" -e "s|@ADF_CPPFILES@|$ADF_CPPFILES|" src/Makevars.in > src/Makevars
+
+# Success
+exit 0
