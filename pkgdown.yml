@@ -2,8 +2,11 @@ pandoc: 3.1.11
 pkgdown: 2.1.1
 pkgdown_sha: ~
 articles:
-  amigaDiskFiles: amigaDiskFiles.html
-last_built: 2024-12-16T14:17Z
+  adf_objects: adf_objects.html
+  file_system_modes: file_system_modes.html
+  version2: version2.html
+  virtual_paths: virtual_paths.html
+last_built: 2024-12-23T16:59Z
 urls:
   reference: https://pepijn-devries.github.io/adfExplorer/reference
   article: https://pepijn-devries.github.io/adfExplorer/articles
