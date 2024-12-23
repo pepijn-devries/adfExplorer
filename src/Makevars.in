@@ -1,0 +1,11 @@
+CFILES = @ADF_CFILES@
+CPPFILES = @ADF_CPPFILES@
+
+SOURCES = $(CFILES) $(CPPFILES)
+
+OBJECTS = $(CFILES:.c=.o) $(CPPFILES:.cpp=.o)
+
+PKG_CFLAGS = -Iadflib
+PKG_CXXFLAGS = -Iadflib
+
+all: $(SHLIB)

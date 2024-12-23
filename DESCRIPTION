@@ -1,29 +1,57 @@
 Package: adfExplorer
-Type: Package
-Title: Import from and Export to Amiga Disk Files
-Version: 0.1.8
-Date: 2024-03-06
-Authors@R: c(person("Pepijn", "de Vries", role = c("aut", "cre", "dtc"),
-    email = "pepijn.devries@outlook.com"))
-Author: Pepijn de Vries [aut, cre, dtc]
+Title: Access and Manipulate Amiga Disk Files
+Version: 2.0.0
+Authors@R:
+    c(
+    person("Pepijn", "de Vries", role = c("aut", "cre"),
+    email = "pepijn.devries@outlook.com",
+    comment = c(ORCID = "0000-0002-7961-6646")),
+    person("Laurent", "Clévy", role = c("aut", "cph"),
+    comment = c("Creator of the original ADFlib library"))
+    )
 Maintainer: Pepijn de Vries <pepijn.devries@outlook.com>
 Description: Amiga Disk Files (ADF) are virtual
     representations of 3.5 inch floppy disks for the
     Commodore Amiga. Most disk drives from other systems
     (including modern drives) are not able to read these
-    disks. To be able to emulate this system, the ADF
-    format was created. This package enables you to read
-    ADF files and import and export files from and to such
-    virtual DOS-formatted disks.
-Depends: R (>= 2.10)
-Imports: methods
-Suggests: knitr, rmarkdown, ProTrackR
-URL: https://github.com/pepijn-devries/adfExplorer, https://pepijn-devries.github.io/adfExplorer/
-BugReports: https://github.com/pepijn-devries/adfExplorer/issues
+    disks. The 'adfExplorer' package enables you to
+    establish R connections to files on such
+    virtual DOS-formatted disks, which can be use to
+    read from and write to those files.
 License: GPL (>= 3)
-LazyData: True
-RoxygenNote: 7.2.3
-VignetteBuilder: knitr
-NeedsCompilation: no
-Roxygen: list(markdown = TRUE)
 Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3
+LinkingTo: 
+    cpp11
+Collate: 
+    'adfExplorer-package.R'
+    'blocks.R'
+    'compress.R'
+    'cpp11.R'
+    'connect_adf.R'
+    'deprecated.R'
+    'move.R'
+    'device_info.R'
+    'device_create.R'
+    'helpers.R'
+    'directory.R'
+    'entry_info.R'
+    'remove.R'
+    's3_conn.R'
+    's3_methods.R'
+    'virtual_path.R'
+Depends:
+    R (>= 3.5.0)
+Imports:
+    methods,
+    vctrs
+Suggests:
+    adfExplorer,
+    knitr,
+    rmarkdown,
+    testthat (>= 3.0.0)
+VignetteBuilder: knitr
+URL: https://pepijn-devries.github.io/adfExplorer/
+BugReports: https://github.com/pepijn-devries/adfExplorer/issues
+Config/testthat/edition: 3
