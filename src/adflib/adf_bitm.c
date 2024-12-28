@@ -540,14 +540,14 @@ static RETCODE adfBitmapAllocate ( struct AdfVolume * const vol )
         return RC_MALLOC;
     }
 
-    vol->bitmapBlocks = (SECTNUM*) malloc ( sizeof(SECTNUM) * vol->bitmapSize );
+    vol->bitmapBlocks = (SECTNUM*) malloc ( sizeof(SECTNUM) * vol->bitmapSize ); /*TODO valgrind: definitely losing two blocks here */
     if ( vol->bitmapBlocks == NULL ) {
         free ( vol->bitmapTable );
         // adfEnv.eFct("adfBitmapAllocate : malloc, vol->bitmapBlocks");
         return RC_MALLOC;
     }
 
-    vol->bitmapBlocksChg = (BOOL*) malloc ( sizeof(BOOL) * vol->bitmapSize );
+    vol->bitmapBlocksChg = (BOOL*) malloc ( sizeof(BOOL) * vol->bitmapSize );  /*TODO valgrind: definitely losing two blocks here */
     if ( vol->bitmapBlocksChg == NULL ) {
         free ( vol->bitmapTable );
         free ( vol->bitmapBlocks );
