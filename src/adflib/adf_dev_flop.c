@@ -61,7 +61,7 @@ RETCODE adfMountFlop ( struct AdfDevice * const dev )
         //(*adfEnv.eFct)("adfMount : malloc"); /* Edit PdV*/
         return RC_ERROR;
     }
-    
+
     vol->mounted = TRUE;
     vol->firstBlock = 0;
     vol->lastBlock = (int32_t) ( dev->cylinders * dev->heads * dev->sectors - 1 );
@@ -115,6 +115,7 @@ RETCODE adfCreateFlop ( struct AdfDevice * const dev,
         // (*adfEnv.eFct)("adfCreateFlop : malloc");
         return RC_ERROR;
     }
+    Rprintf("TODO allocated vollist 2 adf.c\n");
     dev->volList[0] = adfCreateVol( dev, 0L, 80L, volName, volType );
     if (dev->volList[0]==NULL) {
         free(dev->volList);

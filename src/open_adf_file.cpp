@@ -180,8 +180,10 @@ void close_adf(SEXP extptr) {
         openfiles.erase(openfiles.begin() + i);
       }
     }
-    for (int i = 0; i < dev->nVol; i++) {
-      adfUnMount(dev->volList[i]); // This frees memory reserved for the bitmap blocks
+    if (dev->nVol > 0) {
+      for (int i = 0; i < dev->nVol; i++) {
+        adfUnMount(dev->volList[i]); // This frees memory reserved for the bitmap blocks
+      }
     }
     adfCloseDev(dev); // This closes the adf file and frees all allocated mem for dev
   }

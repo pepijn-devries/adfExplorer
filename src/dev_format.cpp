@@ -31,8 +31,10 @@ SEXP adf_dev_format(
 
   if (dev->devType == DEVTYPE_FLOPDD || dev->devType == DEVTYPE_FLOPHD) {
     
-    if (adfMountFlop(dev) != RC_OK ) Rf_error("Failed to mount floppy");
     set_adf_vol(extptr, 0);
+    if (adfMountFlop(dev) != RC_OK ) Rf_error("Failed to mount floppy");
+    free(vol->volName);
+    free(vol);
 
   } else {
 
