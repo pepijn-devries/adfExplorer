@@ -169,6 +169,7 @@ make_adf_dir.adf_device.virtual_path <- function(x, path, ...) {
 #' list_adf_entries(my_device)
 #' ## List all entries on the disk:
 #' list_adf_entries(my_device, recursive = TRUE)
+#' list_adf_entries(my_device, recursive = TRUE, nested = TRUE)
 #'
 #' close(my_device)
 #' @rdname list_adf_entries

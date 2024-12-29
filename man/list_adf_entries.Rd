@@ -53,6 +53,7 @@ my_device <- connect_adf(adz_file)
 list_adf_entries(my_device)
 ## List all entries on the disk:
 list_adf_entries(my_device, recursive = TRUE)
+list_adf_entries(my_device, recursive = TRUE, nested = TRUE)
 
 close(my_device)
 }

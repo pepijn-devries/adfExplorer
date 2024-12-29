@@ -48,10 +48,11 @@ SEXP adf_get_current_dir(SEXP extptr) {
 list list_adf_entries3_(SEXP extptr, AdfVolume * vol,
                         SECTNUM sector, int vol_num, bool recursive) {
   writable::list result;
-  auto alist = new AdfList;
-  auto entry = new AdfEntry;
+  AdfEntry * entry;
   
-  alist = adfGetRDirEnt ( vol, sector, FALSE );
+  AdfList * root;
+  AdfList * alist = adfGetRDirEnt ( vol, sector, FALSE );
+  root = alist;
   while ( alist ) {
     entry = (AdfEntry *)alist->content;
     
@@ -66,9 +67,7 @@ list list_adf_entries3_(SEXP extptr, AdfVolume * vol,
     }
     
   }
-  adfFreeDirList(alist);
-  delete alist;
-  delete entry;
+  adfFreeDirList(root);
   return result;
 }
 
@@ -77,7 +76,9 @@ list list_adf_entries2_(SEXP extptr, AdfVolume * vol,
   writable::list result;
   AdfEntry * entry;
   
+  AdfList * root;
   AdfList * alist = adfGetRDirEnt ( vol, sector, FALSE );
+  root = alist;
   while ( alist ) {
     entry = (AdfEntry *)alist->content;
     
@@ -94,7 +95,7 @@ list list_adf_entries2_(SEXP extptr, AdfVolume * vol,
     }
     
   }
-  adfFreeDirList(alist);
+  adfFreeDirList(root);
   return result;
 }
 

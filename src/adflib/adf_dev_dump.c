@@ -148,7 +148,6 @@ RETCODE adfCreateHdFile ( struct AdfDevice * const dev,
         return RC_ERROR;
     }
     dev->volList = (struct AdfVolume **) malloc (sizeof(struct Volume *));
-    Rprintf("TODO allic vollist 1 add.c\n");
     if (!dev->volList) { 
                 // (*adfEnv.eFct)("adfCreateHdFile : unknown device type");
         return RC_ERROR;
