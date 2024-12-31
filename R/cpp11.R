@@ -148,12 +148,12 @@ open_adf_ <- function(filename, write_protected) {
   .Call(`_adfExplorer_open_adf_`, filename, write_protected)
 }
 
-seek_adf <- function(extptr, where, origin) {
-  .Call(`_adfExplorer_seek_adf`, extptr, where, origin)
+adf_close_file_con <- function(extptr) {
+  invisible(.Call(`_adfExplorer_adf_close_file_con`, extptr))
 }
 
-adf_close_file_con <- function(extptr) {
-  .Call(`_adfExplorer_adf_close_file_con`, extptr)
+seek_adf <- function(extptr, where, origin) {
+  .Call(`_adfExplorer_seek_adf`, extptr, where, origin)
 }
 
 adf_file_con_ <- function(extptr, filename, writable) {

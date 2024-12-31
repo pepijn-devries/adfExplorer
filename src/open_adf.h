@@ -11,4 +11,7 @@ struct AdfContainer {
   bool isopen;
 };
 
+bool check_adf_volume_state(AdfVolume * vol);
+bool check_adf_device_state(AdfDevice * dev);
+
 #endif /* __OPEN_ADF__ */

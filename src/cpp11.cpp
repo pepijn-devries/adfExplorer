@@ -265,17 +265,18 @@ extern "C" SEXP _adfExplorer_open_adf_(SEXP filename, SEXP write_protected) {
   END_CPP11
 }
 // open_adf_file.cpp
+void adf_close_file_con(SEXP extptr);
+extern "C" SEXP _adfExplorer_adf_close_file_con(SEXP extptr) {
+  BEGIN_CPP11
+    adf_close_file_con(cpp11::as_cpp<cpp11::decay_t<SEXP>>(extptr));
+    return R_NilValue;
+  END_CPP11
+}
+// open_adf_file.cpp
 double seek_adf(SEXP extptr, double where, int origin);
 extern "C" SEXP _adfExplorer_seek_adf(SEXP extptr, SEXP where, SEXP origin) {
   BEGIN_CPP11
     return cpp11::as_sexp(seek_adf(cpp11::as_cpp<cpp11::decay_t<SEXP>>(extptr), cpp11::as_cpp<cpp11::decay_t<double>>(where), cpp11::as_cpp<cpp11::decay_t<int>>(origin)));
-  END_CPP11
-}
-// open_adf_file.cpp
-SEXP adf_close_file_con(SEXP extptr);
-extern "C" SEXP _adfExplorer_adf_close_file_con(SEXP extptr) {
-  BEGIN_CPP11
-    return cpp11::as_sexp(adf_close_file_con(cpp11::as_cpp<cpp11::decay_t<SEXP>>(extptr)));
   END_CPP11
 }
 // open_adf_file.cpp

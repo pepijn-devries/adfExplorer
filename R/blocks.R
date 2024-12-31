@@ -13,6 +13,18 @@
 #' @param ... Ignored
 #' @returns In case of `write_adf_block` `NULL` is returned invisibly. In case of `read_adf_block`
 #' the `raw` data is returned as a `adf_block` class object.
+#' @examples
+#' my_device <- demo_adf(write_protected = FALSE)
+#' 
+#' info <- adf_entry_info(my_device, "S/startup-sequence")
+#' 
+#' filedata_block <- read_adf_block(my_device, rev(info[[1]]$dataBlocks)[[1]])
+#' filedata_block
+#' 
+#' ## Write some random data to block 5 on the device
+#' ## Note that this could break the file system on the virtual device!
+#' write_adf_block(my_device, 5, as.raw(runif(512, 0, 255)))
+#' close(my_device)
 #' @author Pepijn de Vries
 #' @rdname adf_block
 #' @export

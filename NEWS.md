@@ -1,5 +1,10 @@
-adfExplorer 2.0.0.0001
+adfExplorer 2.0.1
 -------------
+
+  * Plugged memory leaks and fixed undefined behaviour
+  * Added `demo_adf()`
+  * Improved test coverage
+  * Fixed several minor bugs
 
 adfExplorer 2.0.0
 -------------

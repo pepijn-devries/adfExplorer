@@ -98,15 +98,8 @@ any volume (file system) available on the device. See examples for usage and
 results.
 }
 \examples{
-## ADZ files can only be opened in 'write protected' mode
-## extract it to a temporary file to allow writing to the virtual disk
-adf_file <- tempfile(fileext = ".adf")
-decompress_adz(
-  system.file("example.adz", package = "adfExplorer"),
-  adf_file)
-
 ## Open virtual device to demonstrate methods
-my_device <- connect_adf(adf_file, write_protected = FALSE)
+my_device <- demo_adf(write_protected = FALSE)
 
 device_type(my_device)
 

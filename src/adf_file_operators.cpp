@@ -253,8 +253,6 @@ SEXP adf_set_entry_name_(SEXP extptr, std::string path, std::string replacement)
 
 [[cpp11::register]]
 SEXP move_adf_internal(SEXP extptr, std::string source, std::string destination) {
-  if (source.size() != 1 && destination.size() != 1)
-    Rf_error("`move_adf_internal` can only handle length 1 arguments");
   int mode = ADF_FI_THROW_ERROR | ADF_FI_EXPECT_EXIST |
     ADF_FI_EXPECT_VALID_CHECKSUM;
   

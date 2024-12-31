@@ -5,25 +5,49 @@
 #include "open_adf_file.h"
 using namespace cpp11;
 
-std::vector<AdfFile *> openfiles;
+std::vector<AdfFileContainer *> openfiles;
 
-AdfFile * get_adffile(SEXP extptr) {
+void closeAdfFileInternal(AdfFileContainer * afc) {
+  if (afc->isopen) {
+    AdfFile * f = afc->f;
+    adfFileFlush(f);
+    adfFileClose(f); // This closes the adf file and frees all allocated mem for f
+    afc->isopen = false;
+    for (long unsigned i = 0; i < openfiles.size(); i++) {// it = openfiles.begin(); it != openfiles.end(); ++it) {
+      AdfFileContainer * afc = openfiles.at(i);
+      if (afc->f == f) {
+        openfiles.erase(openfiles.begin() + i);
+        break;
+      }
+    }
+  }
+}
+
+[[cpp11::register]]
+void adf_close_file_con(SEXP extptr) {
+  AdfFileContainer * afc = get_adffilecontainer(extptr);
+  closeAdfFileInternal(afc);
+}
+
+void freeAdfFileContainer(AdfFileContainer * afc) {
+  closeAdfFileInternal(afc);
+  delete afc;
+  return;
+}
+
+AdfFileContainer * get_adffilecontainer(SEXP extptr) {
   bool success = TYPEOF(extptr) == EXTPTRSXP && Rf_inherits(extptr, "adf_file_con");
   if (success) {
-    AdfFile * af = reinterpret_cast<AdfFile *>(R_ExternalPtrAddr(extptr));
-    if (af->fileHdr->headerKey != 0) return af;
+    AdfFileContainer * afc = reinterpret_cast<AdfFileContainer *>(R_ExternalPtrAddr(extptr));
+    if (afc->isopen) return afc;
   }
   Rf_error("Object should be an external pointer and inherit 'adf_file_con'.");
   return NULL;
 }
 
-void flush_adffile_internal(AdfFile * af) {
-  adfFileFlush(af);
-  af->fileHdr->headerKey = 0; // Is invalid and indicates the connection is closed;
-  // Prevent reading and writing to file after it is closed.
-  // This also prevents it from being flushed more than once.
-  af->modeWrite = FALSE;
-  af->modeRead = FALSE;
+AdfFile * get_adffile(SEXP extptr) {
+  AdfFileContainer * afc = get_adffilecontainer(extptr);
+  return afc->f;
 }
 
 static double adf_seek_internal(AdfFile * af, double where, int origin) {
@@ -54,44 +78,51 @@ double seek_adf(SEXP extptr, double where, int origin) {
   return adf_seek_internal(af, where, origin);
 }
 
-int get_adf_file_volnum(AdfFile * adf_file) {
-  AdfVolume * vol = adf_file->volume;
-  AdfDevice * dev = vol->dev;
-  if (dev->nVol <= 0) return -1;
-  int result = -1;
-  for (int i = 0; i < dev->nVol; i++) {
-    AdfVolume * test_vol = dev->volList[i];
-    
-    if (test_vol == vol) {
-      result = i;
-      break;
-    }
-  }
-  return result;
-}
-
-bool adf_check_file_state(AdfDevice *dev, int vol, SECTNUM sect) {
-  for (long unsigned i = 0; i < openfiles.size(); i++) {// it = openfiles.begin(); it != openfiles.end(); ++it) {
-    AdfFile * af = openfiles.at(i);
-    int testvol = get_adf_file_volnum(af);
-    if (dev == af->volume->dev && testvol == vol && af->fileHdr->headerKey == sect)
-      return true;
+bool check_adf_file_state(AdfFile * adf_file) {
+  for(const AdfFileContainer * afc : openfiles) {
+    if (afc->f == adf_file) return true;
   }
   return false;
 }
 
-[[cpp11::register]]
-SEXP adf_close_file_con(SEXP extptr) {
-  AdfFile * af = get_adffile(extptr);
-  for (long unsigned i = 0; i < openfiles.size(); i++) {// it = openfiles.begin(); it != openfiles.end(); ++it) {
-    AdfFile * af2 = openfiles.at(i);
-    if (af2 == af) {
-      openfiles.erase(openfiles.begin() + i);
-      break;
+int get_adf_file_volnum(AdfFile * adf_file) {
+  bool success = check_adf_file_state(adf_file);
+  AdfDevice * dev = nullptr;
+  AdfVolume * vol = nullptr;
+  if (success) {
+    vol = adf_file->volume;
+    success = check_adf_volume_state(vol);
+    if (success) {
+      dev = vol->dev;
+      success = check_adf_device_state(dev);
     }
   }
-  flush_adffile_internal(af);
-  return R_NilValue;
+  if (success) {
+    if (dev->nVol <= 0) return -1;
+    int result = -1;
+    for (int i = 0; i < dev->nVol; i++) {
+      AdfVolume * test_vol = dev->volList[i];
+      
+      if (test_vol == vol) {
+        result = i;
+        break;
+      }
+    }
+    return result;
+  } else {
+    Rf_error("Virtual device is no longer available!");
+  }
+  return -1;
+}
+
+bool adf_check_file_state(AdfDevice *dev, int vol, SECTNUM sect) {
+  for (long unsigned i = 0; i < openfiles.size(); i++) {// it = openfiles.begin(); it != openfiles.end(); ++it) {
+    AdfFileContainer * afc = openfiles.at(i);
+    int testvol = get_adf_file_volnum(afc->f);
+    if (dev == afc->f->volume->dev && testvol == vol && afc->f->fileHdr->headerKey == sect)
+      return true;
+  }
+  return false;
 }
 
 [[cpp11::register]]
@@ -111,7 +142,7 @@ SEXP adf_file_con_(SEXP extptr, std::string filename, bool writable) {
   bool file_check = adf_check_file_state(dev, vol_num, sect);
   if (file_check)
     Rf_error("Can only open 1 connection per file on a virtual device");
-  
+
   auto vol = dev->volList[vol_num];
   int vol_old = get_adf_vol(extptr);
   SECTNUM cur_dir = vol->curDirPtr;
@@ -139,9 +170,12 @@ SEXP adf_file_con_(SEXP extptr, std::string filename, bool writable) {
   
   if (!adf_file) Rf_error("Failed to open file connection");
   
-  openfiles.push_back(adf_file);
-
-  external_pointer<AdfFile, adfFileClose>adfptr(adf_file);
+  AdfFileContainer * afc = (AdfFileContainer *)new AdfFileContainer;
+  afc->f      = adf_file;
+  afc->isopen = true;
+  openfiles.push_back(afc);
+  
+  external_pointer<AdfFileContainer, freeAdfFileContainer>adfptr(afc);
   sexp result = as_sexp(adfptr);
   result.attr("class") = strings({"adf_file_con", "connection"});
   
@@ -173,12 +207,9 @@ void close_adf(SEXP extptr) {
     AdfDevice * dev = ac->dev;
     for (long i = openfiles.size() - 1; i>= 0; i--) {
       if (i < 0) break;
-      AdfFile * af = openfiles.at(i);
-      if (af->fileHdr->headerKey != 0 && af->volume->dev == dev) {
-
-        flush_adffile_internal(af);
-        openfiles.erase(openfiles.begin() + i);
-      }
+      AdfFileContainer * afc = openfiles.at(i);
+      if (afc->isopen && afc->f->volume->dev == dev)
+        closeAdfFileInternal(afc);
     }
     if (dev->nVol > 0) {
       for (int i = 0; i < dev->nVol; i++) {
