@@ -3,6 +3,7 @@
 using namespace cpp11;
 
 std::vector<AdfContainer *> opendevices;
+void close_adf_internal(AdfContainer * ac); // defined in open_adf_file.cpp
 
 void freeAdfContainer(AdfContainer * ac) {
   for (long unsigned i = 0; i < opendevices.size(); i++) {
@@ -65,4 +66,14 @@ bool check_adf_volume_state(AdfVolume * vol) {
     }
   }
   return false;
+}
+
+[[cpp11::register]]
+void close_all_devices_() {
+  if (opendevices.size() == 0) return;
+  for (long i = opendevices.size() - 1; i>= 0; i--) {
+    auto ac = opendevices.at(i);
+    close_adf_internal(ac);
+    opendevices.erase(opendevices.begin() + i);
+  }
 }

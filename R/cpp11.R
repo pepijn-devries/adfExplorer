@@ -148,6 +148,10 @@ open_adf_ <- function(filename, write_protected) {
   .Call(`_adfExplorer_open_adf_`, filename, write_protected)
 }
 
+close_all_devices_ <- function() {
+  invisible(.Call(`_adfExplorer_close_all_devices_`))
+}
+
 adf_close_file_con <- function(extptr) {
   invisible(.Call(`_adfExplorer_adf_close_file_con`, extptr))
 }

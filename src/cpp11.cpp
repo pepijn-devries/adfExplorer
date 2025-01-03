@@ -264,6 +264,14 @@ extern "C" SEXP _adfExplorer_open_adf_(SEXP filename, SEXP write_protected) {
     return cpp11::as_sexp(open_adf_(cpp11::as_cpp<cpp11::decay_t<std::string>>(filename), cpp11::as_cpp<cpp11::decay_t<bool>>(write_protected)));
   END_CPP11
 }
+// open_adf.cpp
+void close_all_devices_();
+extern "C" SEXP _adfExplorer_close_all_devices_() {
+  BEGIN_CPP11
+    close_all_devices_();
+    return R_NilValue;
+  END_CPP11
+}
 // open_adf_file.cpp
 void adf_close_file_con(SEXP extptr);
 extern "C" SEXP _adfExplorer_adf_close_file_con(SEXP extptr) {
@@ -337,6 +345,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_adfExplorer_adf_writebin",           (DL_FUNC) &_adfExplorer_adf_writebin,           5},
     {"_adfExplorer_adf_writelines",         (DL_FUNC) &_adfExplorer_adf_writelines,         4},
     {"_adfExplorer_close_adf",              (DL_FUNC) &_adfExplorer_close_adf,              1},
+    {"_adfExplorer_close_all_devices_",     (DL_FUNC) &_adfExplorer_close_all_devices_,     0},
     {"_adfExplorer_interpret_dir_header",   (DL_FUNC) &_adfExplorer_interpret_dir_header,   3},
     {"_adfExplorer_interpret_file_header",  (DL_FUNC) &_adfExplorer_interpret_file_header,  3},
     {"_adfExplorer_interpret_root_header",  (DL_FUNC) &_adfExplorer_interpret_root_header,  2},

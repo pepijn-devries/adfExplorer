@@ -2,7 +2,9 @@ test_that("Virtual path can be tested for existence", {
   expect_false({
     my_device <- demo_adf()
     vp <- virtual_path(my_device, "idontexist")
-    adf_file_exists(my_device, vp)
+    result <- adf_file_exists(my_device, vp)
+    close(my_device)
+    result
   })
 })
 
@@ -11,6 +13,7 @@ test_that("Virtual paths can be tested for existence", {
     my_device <- demo_adf()
     vp <- virtual_path(my_device, c("s", "idontexist"))
     adf_file_exists(my_device, vp)
+    close(my_device)
   })
 })
 
@@ -19,6 +22,7 @@ test_that("Virtual paths can be tested for dir existence", {
     my_device <- demo_adf()
     vp <- virtual_path(my_device, c("s", "idontexist"))
     adf_dir_exists(my_device, vp)
+    close(my_device)
   })
 })
 
@@ -27,6 +31,7 @@ test_that("Virtual paths can produce information", {
     my_device <- demo_adf()
     vp <- virtual_path(my_device, c("s", "devs"))
     adf_entry_info(my_device, vp)
+    close(my_device)
   })
 })
 
@@ -34,6 +39,7 @@ test_that("Multiple paths can produce information", {
   expect_no_error({
     my_device <- demo_adf()
     adf_entry_info(my_device, c("s", "devs"))
+    close(my_device)
   })
 })
 
@@ -43,6 +49,7 @@ test_that("Virtual paths can produce information directly", {
     vp <- virtual_path(my_device, c("s", "devs"))
     adf_entry_info(vp)
     adf_entry_info(vp[[1]])
+    close(my_device)
   })
 })
 
@@ -52,6 +59,7 @@ test_that("File connections can produce information", {
     con <- adf_file_con(virtual_path(my_device, "s/startup-sequence"))
     adf_entry_info(con)
     close(con)
+    close(my_device)
   })
 })
 

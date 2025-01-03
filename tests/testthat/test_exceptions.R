@@ -1,3 +1,9 @@
+test_that("Blocks cannot have sizes other than 512", {
+  expect_error({
+    as_adf_block(raw(1))
+  })
+})
+
 test_that("A writable connection to an ADZ file will produce a warning", {
   expect_warning({
     my_device <- system.file("example.adz", package = "adfExplorer") |>
@@ -28,11 +34,19 @@ test_that("Setting volume name to NA fails", {
   })
 })
 
-test_that("Cannot make multiple directories at once", {
+test_that("Cannot make multiple directories at once 1", {
   expect_error({
     my_device <- demo_adf(write_protected = FALSE)
     vp <- virtual_path(my_device, c("a", "b"))
     make_adf_dir(my_device, vp)
+  })
+})
+
+test_that("Cannot make multiple directories at once 2", {
+  expect_error({
+    my_device <- demo_adf(write_protected = FALSE)
+    vp <- virtual_path(my_device, c("a", "b"))
+    make_adf_dir(vp)
   })
 })
 
@@ -61,6 +75,13 @@ test_that("Cannot `list_adf_entries` for multiple directories 2", {
   expect_error({
     my_device <- demo_adf()
     list_adf_entries(virtual_path(my_device, c("s", "devs")))
+  })
+})
+
+test_that("Cannot `list_adf_entries` for multiple directories 3", {
+  expect_error({
+    my_device <- demo_adf()
+    list_adf_entries(my_device, virtual_path(my_device, c("s", "devs")))
   })
 })
 
@@ -147,5 +168,12 @@ test_that("Cannot overwrite existing file with move", {
       "startup-sequence"
     move_adf_entry(virtual_path(my_device, "devs/startup-sequence"),
                    virtual_path(my_device, "s"))
+  })
+})
+
+test_that("Path argument should be missing when calling `remove_adf_entry` with virtual path", {
+  expect_error({
+    my_device <- demo_adf(write_protected = FALSE)
+    remove_adf_entry(virtual_path(my_device, c("a")), "a")
   })
 })

@@ -141,20 +141,16 @@ move_adf_entry.virtual_path.character <- function(source, destination, ...) {
 
 .read_data <- function(con) {
   data <- NULL
-  tryCatch({
-    repeat {
-      chunk <- readBin(con, "raw", 1024)
-      if (length(chunk) == 0) break else data <- c(data, chunk)
-    }
-  }, finally = {close(con)})
+  repeat {
+    chunk <- readBin(con, "raw", 1024)
+    if (length(chunk) == 0) break else data <- c(data, chunk)
+  }
   data
 }
 
 .write_data <- function(con, data) {
   if (length(data) == 0) return()
-  tryCatch({
-    writeBin(data, con)
-  }, finally = {close(con)})
+  writeBin(data, con)
 }
 
 .write_to_virtual <- function(source, destination, data) {
@@ -169,7 +165,11 @@ move_adf_entry.virtual_path.character <- function(source, destination, ...) {
   if (adf_file_exists(destination))
     stop("'destination' file already exists, cannot overwrite.")
   con_out <- adf_file_con(destination, writable = TRUE) |> suppressWarnings()
-  .write_data(con_out, data)
+  tryCatch({
+    .write_data(con_out, data)
+  }, finally = {
+    close(con_out)
+  })
 }
 
 .sanitise_name_nonamiga <- function(x) {
@@ -216,8 +216,12 @@ move_adf_entry.virtual_path.character <- function(source, destination, ...) {
       if (!.is_file(source))
         stop("'source' path does not point to a file!")
       con_in  <- file(source, "rb")
-      data    <- .read_data(con_in)
-      .write_to_virtual(source, destination, data)
+      tryCatch({
+        data    <- .read_data(con_in)
+        .write_to_virtual(source, destination, data)
+      }, finally = {
+        close(con_in)
+      })
       if (delete) unlink(source)
     }
   }
@@ -250,8 +254,12 @@ move_adf_entry.virtual_path.character <- function(source, destination, ...) {
     source_path <- as.character(source)
     
     con_in  <- adf_file_con(source)
-    data    <- .read_data(con_in)
-    .write_to_virtual(source_path, destination, data)
+    tryCatch({
+      data    <- .read_data(con_in)
+      .write_to_virtual(source_path, destination, data)
+    }, finally = {
+      close(con_in)
+    })
   }
   if (delete && !endsWith(as.character(source), ":")) remove_adf_entry(source)
 }
@@ -285,7 +293,12 @@ move_adf_entry.virtual_path.character <- function(source, destination, ...) {
       if (file.exists(destination)) stop("Path already exists, cannot overwrite")
       
       con_out <- file(destination, "wb")
-      .write_data(con_out, data)
+      tryCatch({
+        .write_data(con_out, data)
+      }, finally = {
+        close(con_out)
+      })
+      close(con_in)
     }
     if (delete && !endsWith(as.character(source), ":")) remove_adf_entry(source)
   }

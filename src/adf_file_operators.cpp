@@ -586,7 +586,7 @@ SEXP adf_readlines(SEXP extptr, int n_, bool ok, bool warn, std::string encoding
               (long long)nread + 1);
     if(c == R_EOF) goto no_more_lines;
   }
-  
+  free(buf);
   return result;
   no_more_lines:
     if(nbuf > 0) { /* incomplete last line */

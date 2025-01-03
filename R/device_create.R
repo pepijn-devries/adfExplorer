@@ -54,8 +54,11 @@ create_adf_device <- function(destination, type = "DD", ..., connect = TRUE) {
     DD = 1760L*512L,
     HD = 1760L*512L*2L)
   con <- file(destination, "w+b")
-  writeBin(raw(size), con)
-  close(con)
+  tryCatch({
+    writeBin(raw(size), con)
+  }, finally = {
+    close(con)
+  })
   if (connect) connect_adf(destination, ...) else invisible(NULL)
 }
 

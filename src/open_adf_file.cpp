@@ -199,9 +199,7 @@ std::string adf_file_con_info(SEXP extptr) {
   return result;
 }
 
-[[cpp11::register]]
-void close_adf(SEXP extptr) {
-  auto ac = getAC(extptr);
+void close_adf_internal(AdfContainer * ac) {
   if (ac->isopen) {
     ac->isopen = false;
     AdfDevice * dev = ac->dev;
@@ -213,11 +211,17 @@ void close_adf(SEXP extptr) {
     }
     if (dev->nVol > 0) {
       for (int i = 0; i < dev->nVol; i++) {
-        adfUnMount(dev->volList[i]); // This frees memory reserved for the bitmap blocks
+        adfUnMount(dev->volList[i]); // This frees memory reserved for the bitmaps
       }
     }
     adfCloseDev(dev); // This closes the adf file and frees all allocated mem for dev
   }
+  return;
+}
 
+[[cpp11::register]]
+void close_adf(SEXP extptr) {
+  auto ac = getAC(extptr);
+  close_adf_internal(ac);
   return;
 }
