@@ -27,9 +27,12 @@ connect_adf <- function(filename, write_protected = TRUE) {
     
     ## Get file size of gzip'd adf:
     con <- file(filename, "rb", raw = TRUE)
-    seek(con, -4L, "end")
-    gz_size <- readBin(con, "integer", 1)
-    close(con)
+    tryCatch({
+      seek(con, -4L, "end")
+      gz_size <- readBin(con, "integer", 1)
+    }, finally = {
+      close(con)
+    })
     
     ## decompress gzip file to temp file
     f <- tempfile(fileext = ".adf")

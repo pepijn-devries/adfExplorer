@@ -177,3 +177,55 @@ test_that("Path argument should be missing when calling `remove_adf_entry` with 
     remove_adf_entry(virtual_path(my_device, c("a")), "a")
   })
 })
+
+test_that("Invalid endianess throws error for readBin", {
+  expect_error({
+    my_device <- demo_adf()
+    con <- adf_file_con(my_device, "devs/system-configuration")
+    foo <- readBin(con, "integer", endian = "bar")
+  })
+})
+
+test_that("Invalid endianess throws error for writeBin", {
+  expect_error({
+    my_device <- demo_adf(write_protected = FALSE)
+    con <- adf_file_con(my_device, "foobar", writable = TRUE)
+    foo <- writeBin(1L, con, endian = "bar")
+  })
+})
+
+test_that("Non-vector objects in call throws error for writeBin", {
+  expect_error({
+    my_device <- demo_adf(write_protected = FALSE)
+    con <- adf_file_con(my_device, "foobar", writable = TRUE)
+    writeBin(NULL, con)
+  })
+})
+
+test_that("`writeLines` cannot be called on anything other than characters", {
+  expect_error({
+    my_device <- demo_adf(write_protected = FALSE)
+    con <- adf_file_con(my_device, "foobar", writable = TRUE)
+    writeLines(1L, con)
+  })
+})
+
+test_that("`dev` in `virtual_path` should be of class `adf_device`", {
+  expect_error({
+    virtual_path(1L, "DF0:")
+  })
+})
+
+test_that("`path` in `virtual_path` should be of type `character`", {
+  expect_error({
+    my_device <- demo_adf()
+    virtual_path(my_device, 1L)
+  })
+})
+
+test_that("`path` in `virtual_path` should not be `NA`", {
+  expect_error({
+    my_device <- demo_adf()
+    virtual_path(my_device, NA_character_)
+  })
+})
