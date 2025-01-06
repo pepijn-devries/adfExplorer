@@ -45,14 +45,8 @@ this function only removes a single entry per call, and in case the entry is a d
 the directory needs to be empty before it can be removed.
 }
 \examples{
-## We first need a writable connection to an ADF device.
-## For this purpose we decompress the ADZ file that comes
-## with this package and open a connection
-
-adz_file <- system.file("example.adz", package = "adfExplorer")
-adf_file <- tempfile(fileext = ".adf")
-decompress_adz(adz_file, adf_file)
-my_device <- connect_adf(adf_file, write_protected = FALSE)
+# Open a connection to a virtual device:
+my_device <- demo_adf(write_protected = FALSE)
 
 ## List files in directory 'Devs':
 list_adf_entries(my_device, "Devs")

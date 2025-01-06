@@ -40,8 +40,7 @@ Test if an entry (file or directory) exists on a virtual ADF device.
 }
 \examples{
 ## First setup a connection to a virtual device
-adz_file <- system.file("example.adz", package = "adfExplorer")
-my_device <- connect_adf(adz_file)
+my_device <- demo_adf()
 
 adf_file_exists(my_device, "s/startup-sequence")
 adf_dir_exists(my_device, "s/startup-sequence")

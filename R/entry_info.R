@@ -11,8 +11,7 @@
 #' `adf_dir_exists()` returns `TRUE` when the path exists and is a directory, `FALSE` otherwise.
 #' @examples
 #' ## First setup a connection to a virtual device
-#' adz_file <- system.file("example.adz", package = "adfExplorer")
-#' my_device <- connect_adf(adz_file)
+#' my_device <- demo_adf()
 #' 
 #' adf_file_exists(my_device, "s/startup-sequence")
 #' adf_dir_exists(my_device, "s/startup-sequence")
@@ -89,8 +88,7 @@ adf_dir_exists.virtual_path <- function(x, path,...) {
 #' depend on the type of entry (root, directory or file).
 #' @examples
 #' ## First setup a connection to a virtual device
-#' adz_file <- system.file("example.adz", package = "adfExplorer")
-#' my_device <- connect_adf(adz_file)
+#' my_device <- demo_adf()
 #' 
 #' adf_entry_info(my_device, "DF0:")
 #' adf_entry_info(my_device, "s")
@@ -167,15 +165,8 @@ adf_entry_info.adf_file_con <- function(x, path, ...) {
 #' @returns Returns the entry name of the requested path or in case of an assign
 #' operation (`<-`) an updated version of `x`.
 #' @examples
-#' ## ADZ files can only be opened in 'write protected' mode
-#' ## extract it to a temporary file to allow writing to the virtual disk
-#' adf_file <- tempfile(fileext = ".adf")
-#' decompress_adz(
-#'   system.file("example.adz", package = "adfExplorer"),
-#'   adf_file)
-#'
 #' ## Open virtual device to demonstrate methods
-#' my_device <- connect_adf(adf_file, write_protected = FALSE)
+#' my_device <- demo_adf(write_protected = FALSE)
 #' 
 #' ## rename a specific entry
 #' adf_entry_name(my_device, "DF0:mods/mod.intro") <- "mod.music"
@@ -237,6 +228,7 @@ adf_entry_name <- function(x, path, ...) {
   if (length(path) > 1) {
     path <- virtual_path(x, path)
     adf_entry_name(path) <- value
+    x
   } else
     adf_set_entry_name_(x, path, .sanitise_name_nonamiga2(value))
 }
@@ -244,11 +236,8 @@ adf_entry_name <- function(x, path, ...) {
 #' @rdname name
 #' @export
 `adf_entry_name<-.adf_device.virtual_path` <- function(x, path, ..., value) {
-  if (!missing(path))
-    stop("'path' argument should be omitted when 'x' is already a 'virtual_path'.")
-  if (length(x) > 1) lapply(x, adf_file_exists) |> unlist() else {
-    .check_dev(x, path)
-    path <- unclass(path)$path
-    adf_entry_name(x, path) <- value
-  }
+  .check_dev(x, path)
+  path <- unclass(path)$path
+  adf_entry_name(x, path) <- value
+  x
 }

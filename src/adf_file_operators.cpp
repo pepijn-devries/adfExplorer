@@ -1,4 +1,5 @@
 #include "adf_file_info.h"
+#include "open_adf_file.h"
 
 static size_t adf_file_read(AdfFile * af, size_t req_size, void *target) {
   int filesize = af->fileHdr->byteSize;
@@ -6,6 +7,16 @@ static size_t adf_file_read(AdfFile * af, size_t req_size, void *target) {
   size_t get_size = min(filesize - pos, (int)req_size);
   adfFileRead(af, get_size, (uint8_t *)target);
   return get_size;
+}
+
+[[cpp11::register]]
+raws adf_file_read_ext(SEXP extptr, int req_size) {
+  writable::raws result((R_xlen_t)req_size);
+  uint8_t *p = (uint8_t *)(RAW(as_sexp(result)));
+  AdfFile *af = get_adffile(extptr);
+  size_t r = adf_file_read(af, req_size, p);
+  result.resize(r);
+  return result;
 }
 
 static int adf_getc(AdfFile * af) {
@@ -48,10 +59,11 @@ SEXP adf_get_current_dir(SEXP extptr) {
 list list_adf_entries3_(SEXP extptr, AdfVolume * vol,
                         SECTNUM sector, int vol_num, bool recursive) {
   writable::list result;
-  auto alist = new AdfList;
-  auto entry = new AdfEntry;
+  AdfEntry * entry;
   
-  alist = adfGetRDirEnt ( vol, sector, FALSE );
+  AdfList * root;
+  AdfList * alist = adfGetRDirEnt ( vol, sector, FALSE );
+  root = alist;
   while ( alist ) {
     entry = (AdfEntry *)alist->content;
     
@@ -66,19 +78,18 @@ list list_adf_entries3_(SEXP extptr, AdfVolume * vol,
     }
     
   }
-  adfFreeDirList(alist);
-  delete alist;
-  delete entry;
+  adfFreeDirList(root);
   return result;
 }
 
 list list_adf_entries2_(SEXP extptr, AdfVolume * vol,
                         SECTNUM sector, int vol_num, bool recursive) {
   writable::list result;
-  auto alist = new AdfList;
-  auto entry = new AdfEntry;
+  AdfEntry * entry;
   
-  alist = adfGetRDirEnt ( vol, sector, FALSE );
+  AdfList * root;
+  AdfList * alist = adfGetRDirEnt ( vol, sector, FALSE );
+  root = alist;
   while ( alist ) {
     entry = (AdfEntry *)alist->content;
     
@@ -95,9 +106,7 @@ list list_adf_entries2_(SEXP extptr, AdfVolume * vol,
     }
     
   }
-  adfFreeDirList(alist);
-  delete alist;
-  delete entry;
+  adfFreeDirList(root);
   return result;
 }
 
@@ -113,7 +122,7 @@ list list_adf_entries_(SEXP extptr, std::string filename, bool recursive, bool n
   SECTNUM sect = integers(entry_pos["sector"]).at(0);
   
   if (vol_num < 0 || sect < (SECTNUM)0)
-    Rf_error("Path does not exist");
+    cpp11::stop("Path does not exist");
   
   AdfVolume * vol = dev->volList[vol_num];
   if (nested) {
@@ -133,16 +142,16 @@ SEXP adf_mkdir(SEXP extptr, std::string path) {
   int vol_num = integers(entry["volume"]).at(0);
   int sectype = integers(entry["header_sectype"]).at(0);
   if (sectype != ST_ROOT && sectype != ST_DIR)
-    Rf_error("Parent of a new directory needs to be the root or another directory.");
+    cpp11::stop("Parent of a new directory needs to be the root or another directory.");
   check_volume_number(dev, vol_num);
   AdfVolume * vol = dev->volList[vol_num];
   
   int parent = integers(entry["parent"]).at(0);
-  if (parent < vol->firstBlock || parent > vol->lastBlock) Rf_error("Invalid path");
+  if (parent < vol->firstBlock || parent > vol->lastBlock) cpp11::stop("Invalid path");
   
   check_adf_name(remainder);
   RETCODE rc = adfCreateDir(vol, parent, remainder.c_str());
-  if (rc != RC_OK) Rf_error("Failed to create directory '%s'.", remainder.c_str());
+  if (rc != RC_OK) cpp11::stop("Failed to create directory '%s'.", remainder.c_str());
   return extptr;
 }
 
@@ -155,14 +164,14 @@ SEXP adf_remove_entry(SEXP extptr, std::string path, bool flush) {
   
   list entry    = adf_path_to_entry(extptr, path, mode);
   int sectype   = integers(entry["header_sectype"]).at(0);
-  if (sectype == ST_ROOT) Rf_error("Cannot remove a device's root");
+  if (sectype == ST_ROOT) cpp11::stop("Cannot remove a device's root");
   
   int vol_num   = integers(entry["volume"]).at(0);
   SECTNUM psect = integers(entry["parent"]).at(0);
   
   bool file_state = adf_check_file_state(dev, vol_num, integers(entry["sector"]).at(0));
   if (file_state)
-    Rf_error("Cannot remove files with open connection. Close file first then try again.");
+    cpp11::stop("Cannot remove files with open connection. Close file first then try again.");
   
   check_volume_number(dev, vol_num);
   AdfVolume * vol = dev->volList[vol_num];
@@ -183,9 +192,9 @@ SEXP adf_remove_entry(SEXP extptr, std::string path, bool flush) {
   
   RETCODE rc = adfRemoveEntry(vol, psect, name);
   
-  if (rc == RC_DIR_NOT_EMPTY) Rf_error("Can remove directory only when it is empty.");
+  if (rc == RC_DIR_NOT_EMPTY) cpp11::stop("Can remove directory only when it is empty.");
   
-  if (rc != RC_OK) Rf_error("Failed to remove entry from device.");
+  if (rc != RC_OK) cpp11::stop("Failed to remove entry from device.");
   
   writable::raws empty((R_xlen_t)512);
   for (i = 0; i < 512; i++) empty[i] = 0;
@@ -211,7 +220,7 @@ SEXP adf_set_entry_name_(SEXP extptr, std::string path, std::string replacement)
   RETCODE rc = RC_OK;
   if (Rf_inherits(extptr, "adf_device")) {
     AdfDevice * dev = get_adf_dev(extptr);
-    if (dev->readOnly) Rf_error("Cannot change entry name on 'readonly' device.");
+    if (dev->readOnly) cpp11::stop("Cannot change entry name on 'readonly' device.");
     
     list entry = adf_path_to_entry(extptr, path, 0);
     vol_num = integers(entry["volume"]).at(0);
@@ -246,17 +255,15 @@ SEXP adf_set_entry_name_(SEXP extptr, std::string path, std::string replacement)
     }
     
   } else {
-    Rf_error("External pointer should by of class `adf_device` or `adf_file_con`.");
+    cpp11::stop("External pointer should by of class `adf_device` or `adf_file_con`.");
   }
-  if (rc != RC_OK) Rf_error("Failed to rename entry.");
+  if (rc != RC_OK) cpp11::stop("Failed to rename entry.");
   
   return extptr;
 }
 
 [[cpp11::register]]
 SEXP move_adf_internal(SEXP extptr, std::string source, std::string destination) {
-  if (source.size() != 1 && destination.size() != 1)
-    Rf_error("`move_adf_internal` can only handle length 1 arguments");
   int mode = ADF_FI_THROW_ERROR | ADF_FI_EXPECT_EXIST |
     ADF_FI_EXPECT_VALID_CHECKSUM;
   
@@ -267,9 +274,9 @@ SEXP move_adf_internal(SEXP extptr, std::string source, std::string destination)
   int sec_type_src = integers(entry_src["header_sectype"]).at(0);
   int sec_type_dst = integers(entry_dst["header_sectype"]).at(0);
   if (sec_type_src == ST_ROOT)
-    Rf_error("Cannot move the root to elsewhere on the device.");
+    cpp11::stop("Cannot move the root to elsewhere on the device.");
   if (sec_type_dst != ST_DIR && sec_type_dst != ST_ROOT)
-    Rf_error("'destination' does not point at a directory.");
+    cpp11::stop("'destination' does not point at a directory.");
   
   int dst_check = integers(entry_dst["sector"]).at(0);
   int dst_parent = integers(entry_dst["parent"]).at(0);
@@ -288,13 +295,13 @@ SEXP move_adf_internal(SEXP extptr, std::string source, std::string destination)
   int failsafe = 0L;
   while (sec_type_dst != ST_ROOT) {
     RETCODE rc = adfReadEntryBlock ( vol, dst_parent, entry );
-    if (rc != RC_OK) Rf_error("Failed to check destination path");
+    if (rc != RC_OK) cpp11::stop("Failed to check destination path");
     dst_parent = (int)entry->parent;
     sec_type_dst = (int)entry->secType;
     if (test || dst_parent == src_check)
-      Rf_error("'source' is already in `destination` path, cannot move.");
+      cpp11::stop("'source' is already in `destination` path, cannot move.");
     failsafe++;
-    if (failsafe > 1000L) Rf_error("Unexpectedly deep path");
+    if (failsafe > 1000L) cpp11::stop("Unexpectedly deep path");
   }
   
   // Currently this function only checks if the move is allowed
@@ -302,10 +309,7 @@ SEXP move_adf_internal(SEXP extptr, std::string source, std::string destination)
   return R_NilValue;
 }
 
-/*================================== */
-
-static void swapb(void *result, int size)
-{
+static void swapb(void *result, int size) {
   int i;
   char *p = (char *)result, tmp;
   
@@ -317,74 +321,14 @@ static void swapb(void *result, int size)
   }
 }
 
-static SEXP readOneString(AdfFile * af)
-{
-  char buf[10001], *p;
-  int pos, m;
-  
-  for(pos = 0; pos < 10000; pos++) {
-    p = buf + pos;
-    m = (int) adf_file_read(af, sizeof(char), (uint8_t *)p);
-    if (m < 0) Rf_error("error reading from the connection");
-    if(!m) {
-      if(pos > 0)
-        Rf_warning("incomplete string at end of file has been discarded");
-      return R_NilValue;
-    }
-    if(*p == '\0') break;
-  }
-  if(pos == 10000)
-    Rf_warning("null terminator not found: breaking string at 10000 bytes");
-  return strings(r_string(std::string(buf)));
-}
-
 [[cpp11::register]]
-SEXP adf_readbin(SEXP extptr, int what, int n, int sz, bool sgn, bool swap) {
-  size_t block = 8096;
-  int sizedef= 4, mode = 1;
-  
-  SEXP ans = R_NilValue;
-  R_xlen_t i, m = 0, size = sz;
-  void *p = NULL;
-  AdfFile * af = get_adffile(extptr);
-  if (what == 7) { // =========================character
-    writable::strings res((R_xlen_t)0);
-    res.reserve(n);
-    SEXP onechar;
-    for(i = 0, m = 0; i < n; i++) {
-      onechar = readOneString(af);
-      if (onechar == R_NilValue) break;
-      res.push_back(r_string(onechar));
-    }
-    return res;
-  } else if (what == 5) { // ==================complex
+int adf_readbin_size(int what, int sz) {
+  int sizedef = 4;
+  R_xlen_t size = sz;
+  if (what == 6) { // ==================complex
     if(size == NA_INTEGER) size = sizeof(Rcomplex);
-    if(size != sizeof(Rcomplex))
-      Rf_error("size changing is not supported for complex vectors");
-    PROTECT(ans = Rf_allocVector(CPLXSXP, n));
-    p = (void *) COMPLEX(ans);
-    uint8_t *pp = (uint8_t *)p;
-    R_xlen_t m0, n0 = n;
-    m = 0;
-    while(n0) {
-      size_t n1 = (n0 < (R_xlen_t)block) ? n0 : block;
-      m0 = (int) adf_file_read(af, n1 * size, pp);
-      if (m0 < 0) Rf_error("error reading from the connection");
-      m += m0;
-      if ((uint32_t)m0 < n1) break;
-      n0 -= n1;
-      pp += n1 * size;
-    }
-    if(swap) {
-      for(i = 0; i < m; i++) {
-        swapb(&(COMPLEX(ans)[i].r), sizeof(double));
-        swapb(&(COMPLEX(ans)[i].i), sizeof(double));
-      }
-    }
-    UNPROTECT(1);
-    return ans;
   } else if (what == 3 || what == 4) { // =========integer or int
-    sizedef = sizeof(int); mode = 1;
+    sizedef = sizeof(int);
     
 #if (SIZEOF_LONG == 8) && (SIZEOF_LONG > SIZEOF_INT)
 #  define CASE_LONG_ETC case sizeof(long):
@@ -394,40 +338,27 @@ SEXP adf_readbin(SEXP extptr, int what, int n, int sz, bool sgn, bool swap) {
 #  define CASE_LONG_ETC
 #endif
     
-#define CHECK_INT_SIZES(SIZE, DEF) do {					                        \
-    if(SIZE == NA_INTEGER) SIZE = DEF;				                          \
-    switch (SIZE) {						                                          \
-    case sizeof(signed char):					                                  \
-    case sizeof(short):						                                      \
-    case sizeof(int):						                                        \
-      CASE_LONG_ETC						                                          \
-      break;							                                              \
-    default:							                                              \
-      Rf_error("size %d is unknown on this machine", (int)SIZE);	      \
-    }								                                                    \
+#define CHECK_INT_SIZES(SIZE, DEF) do {					                             \
+    if(SIZE == NA_INTEGER) SIZE = DEF;				                               \
+    switch (SIZE) {						                                                \
+    case sizeof(signed char):					                                       \
+    case sizeof(short):						                                            \
+    case sizeof(int):						                                              \
+      CASE_LONG_ETC						                                                \
+      break;							                                                      \
+    default:							                                                      \
+      cpp11::stop("size %d is unknown on this machine", (int)SIZE);	        \
+    }								                                                            \
 } while(0)
 
 CHECK_INT_SIZES(size, sizedef);
-PROTECT(ans = Rf_allocVector(INTSXP, n));
-p = (void *) INTEGER(ans);
-  }  else if (what == 5) { // =======================logical
-    sizedef = sizeof(int); mode = 1;
-    CHECK_INT_SIZES(size, sizedef);
-    PROTECT(ans = Rf_allocVector(LGLSXP, n));
-    p = (void *) LOGICAL(ans);
-  } else if (what == 8) { // =========================raw
-    sizedef = 1; mode = 1;
+  } else if (what == 5) { // =======================logical
+    size = sizeof(int);
+  }  else if (what == 8) { // =========================raw
+    sizedef = 1;
     if(size == NA_INTEGER) size = sizedef;
-    switch (size) {
-    case 1:
-      break;
-    default:
-      Rf_error("raw is always of size 1");
-    }
-    PROTECT(ans = Rf_allocVector(RAWSXP, n));
-    p = (void *) RAW(ans);
-  } else if (what == 2 || what == 3) { //===============double or integer
-    sizedef = sizeof(double); mode = 2;
+  } else if (what == 1 || what == 2) { //=============== numeric or double
+    sizedef = sizeof(double);
     if(size == NA_INTEGER) size = sizedef;
     switch (size) {
     case sizeof(double):
@@ -437,109 +368,11 @@ p = (void *) INTEGER(ans);
 #endif
       break;
     default:
-      Rf_error("size %d is unknown on this machine", (int)size);
+      cpp11::stop("size %d is unknown on this machine", (int)size);
     }
-    PROTECT(ans = Rf_allocVector(REALSXP, n));
-    p = (void *) REAL(ans);
-  } else
-    Rf_error("invalid 'what' argument");
-  
-  if(!sgn && (mode != 1 || size > 2))
-    warning("'signed = FALSE' is only valid for integers of sizes 1 and 2");
-  
-  if (size == sizedef) {
-    
-    /* Do this in blocks to avoid large buffers in the connection */
-    char *pp = (char *)p;
-    R_xlen_t m0, n0 = n;
-    m = 0;
-    while(n0) {
-      size_t n1 = (n0 < (R_xlen_t)block) ? n0 : block;
-      m0 = (int) adf_file_read(af, size*n1, (uint8_t *)pp);
-      if (m0 < 0) Rf_error("error reading from the connection");
-      m += m0;
-      if ((uint32_t)m0 < n1) break;
-      n0 -= n1;
-      pp += n1 * size;
-    }
-    if(swap && size > 1)
-      for(i = 0; i < m; i++) swapb((char *)p+i*size, size);
-  } else {
-    R_xlen_t s;
-    union {
-      signed char sch;
-      unsigned char uch;
-      signed short ssh;
-      unsigned short ush;
-      long l;
-      long long ll;
-      float f;
-#if HAVE_LONG_DOUBLE
-      long double ld;
-#endif
-    } u;
-    if (size > (R_xlen_t)sizeof u)
-      Rf_error("size %d is unknown on this machine", (int)size);
-    if(mode == 1) { /* integer result */
-    for(i = 0, m = 0; i < n; i++) {
-      s = (int) adf_file_read(af, size, (uint8_t *)&u);
-      if (s < 0) Rf_error("error reading from the connection");
-      if(s) m++; else break;
-      if(swap && size > 1) swapb((char *) &u, size);
-      switch(size) {
-      case sizeof(signed char):
-        if(sgn)
-          INTEGER(ans)[i] = u.sch;
-        else
-          INTEGER(ans)[i] = u.uch;
-        break;
-      case sizeof(short):
-        if(sgn)
-          INTEGER(ans)[i] = u.ssh;
-        else
-          INTEGER(ans)[i] = u.ush;
-        break;
-#if SIZEOF_LONG == 8
-      case sizeof(long):
-        INTEGER(ans)[i] = (int) u.l;
-        break;
-#elif SIZEOF_LONG_LONG == 8
-      case sizeof(_lli_t):
-        INTEGER(ans)[i] = (int) u.ll;
-        break;
-#endif
-      default:
-        Rf_error("size %d is unknown on this machine", (int)size);
-      }
-    }
-    } else if (mode == 2) { /* double result */
-    for(i = 0, m = 0; i < n; i++) {
-      s = (int) adf_file_read(af, size, (uint8_t *)&u);
-      if (s < 0) Rf_error("error reading from the connection");
-      if(s) m++; else break;
-      if(swap && size > 1) swapb((char *) &u, size);
-      switch(size) {
-      case sizeof(float):
-        REAL(ans)[i] = u.f;
-        break;
-#if HAVE_LONG_DOUBLE && (SIZEOF_LONG_DOUBLE > SIZEOF_DOUBLE)
-      case sizeof(long double):
-        REAL(ans)[i] = (double) u.ld;
-        break;
-#endif
-      default:
-        Rf_error("size %d is unknown on this machine", (int)size);
-      }
-    }
-    }
-    
-  }
-  if(m < n)
-    ans = Rf_xlengthgets(ans, m);
-  UNPROTECT(1);
-  return ans;
+  } 
+  return size;
 }
-
 
 [[cpp11::register]]
 SEXP adf_readlines(SEXP extptr, int n_, bool ok, bool warn, std::string encoding, bool skipNul) {
@@ -552,7 +385,7 @@ SEXP adf_readlines(SEXP extptr, int n_, bool ok, bool warn, std::string encoding
   
   char *buf = (char *) malloc(buf_size);
   if(!buf)
-    Rf_error("cannot allocate buffer in readLines");
+    cpp11::stop("cannot allocate buffer in readLines");
   
   R_xlen_t n = n_, nnn, nread;
   AdfFile * af = get_adffile(extptr);
@@ -564,11 +397,11 @@ SEXP adf_readlines(SEXP extptr, int n_, bool ok, bool warn, std::string encoding
     nbuf = 0;
     while((c = adf_getc(af)) != R_EOF) {
       if(nbuf == buf_size-1) {  /* need space for the terminator */
-        buf_size *= 2;
+      buf_size *= 2;
         char *tmp = (char *) realloc(buf, buf_size);
         if(!tmp) {
           free(buf);
-          Rf_error("cannot allocate buffer in readLines");
+          cpp11::stop("cannot allocate buffer in readLines");
         } else buf = tmp;
       }
       if(skipNul && c == '\0') continue;
@@ -584,31 +417,31 @@ SEXP adf_readlines(SEXP extptr, int n_, bool ok, bool warn, std::string encoding
     // avoid valgrind warning if < 3 bytes
     if (nread == 0 && utf8locale && strlen(buf) >= 3 &&
         !memcmp(buf, "\xef\xbb\xbf", 3)) qbuf = buf + 3;
-    result.push_back(r_string(Rf_mkCharCE(qbuf, (cetype_t)oenc)));
-    if (warn && strlen(buf) < nbuf)
-      Rf_warning("line %lld appears to contain an embedded nul",
-              (long long)nread + 1);
-    if(c == R_EOF) goto no_more_lines;
+        result.push_back(r_string(Rf_mkCharCE(qbuf, (cetype_t)oenc)));
+        if (warn && strlen(buf) < nbuf)
+          Rf_warning("line %lld appears to contain an embedded nul",
+                     (long long)nread + 1);
+        if(c == R_EOF) goto no_more_lines;
   }
-  
+  free(buf);
   return result;
   no_more_lines:
     if(nbuf > 0) { /* incomplete last line */
-      nread++;
+    nread++;
       if(warn)
         Rf_warning("incomplete final line found on connection");
     }
     free(buf);
     if(nread < nnn && !ok)
-      Rf_error("too few lines read in readLines");
-
+      cpp11::stop("too few lines read in readLines");
+    
     return result;
     
 }
 
 const char *translateChar0(SEXP x) {
   if (TYPEOF(x) != CHARSXP)
-    Rf_error("`translateChar0` in `adf_writebin` was not called with CHARSXP as expected");
+    cpp11::stop("`translateChar0` in `adf_writebin` was not called with CHARSXP as expected");
   int ct = Rf_getCharCE(x);
   if (ct == CE_BYTES) return CHAR(x);
   return Rf_translateChar(x);
@@ -618,18 +451,18 @@ const char *translateChar0(SEXP x) {
 SEXP adf_writebin(SEXP object, SEXP extptr, int size, bool swap, bool useBytes) {
   AdfFile * af = get_adffile(extptr);
   if (!af->modeWrite)
-    Rf_error("cannot write to this connection");
+    cpp11::stop("cannot write to this connection");
   
-  if(swap == NA_LOGICAL) Rf_error("invalid 'swap' argument");
-  if(useBytes == NA_LOGICAL) Rf_error("invalid 'useBytes' argument");
+  if(swap == NA_LOGICAL) cpp11::stop("invalid 'swap' argument");
+  if(useBytes == NA_LOGICAL) cpp11::stop("invalid 'useBytes' argument");
   R_xlen_t i, len = XLENGTH(object);
   
   if (len == 0) return R_NilValue;
-
+  
 #ifndef LONG_VECTOR_SUPPORT
   /* without long vectors RAW vectors are limited to 2^31 - 1 bytes */
   if(len * (double)size > INT_MAX)
-      Rf_error("only 2^31-1 bytes can be written in a single writeBin() call");
+    cpp11::stop("only 2^31-1 bytes can be written in a single writeBin() call");
 #endif
   SEXP ans = R_NilValue;
   if(TYPEOF(object) == STRSXP) {
@@ -662,21 +495,21 @@ SEXP adf_writebin(SEXP object, SEXP extptr, int size, bool swap, bool useBytes) 
 #endif
         break;
       default:
-        Rf_error("size %d is unknown on this machine", size);
+        cpp11::stop("size %d is unknown on this machine", size);
       }
       break;
     case CPLXSXP:
       if(size == NA_INTEGER) size = sizeof(Rcomplex);
       if(size != sizeof(Rcomplex))
-        Rf_error("size changing is not supported for complex vectors");
+        cpp11::stop("size changing is not supported for complex vectors");
       break;
     case RAWSXP:
       if(size == NA_INTEGER) size = 1;
       if(size != 1)
-        Rf_error("size changing is not supported for raw vectors");
+        cpp11::stop("size changing is not supported for raw vectors");
       break;
     default:
-      Rf_error("writBin is not implemented for the provided object");
+      cpp11::stop("writBin is not implemented for the provided object");
     }
     char *buf = (char *)malloc(len * size);
     R_xlen_t j;
@@ -720,7 +553,7 @@ SEXP adf_writebin(SEXP object, SEXP extptr, int size, bool swap, bool useBytes) 
           buf[i] = (signed char) INTEGER(object)[i];
         break;
       default:
-        Rf_error("size %d is unknown on this machine", size);
+        cpp11::stop("size %d is unknown on this machine", size);
       }
       break;
     case REALSXP:
@@ -751,7 +584,7 @@ SEXP adf_writebin(SEXP object, SEXP extptr, int size, bool swap, bool useBytes) 
 }
 #endif
       default:
-        Rf_error("size %d is unknown on this machine", size);
+        cpp11::stop("size %d is unknown on this machine", size);
       }
       break;
     case CPLXSXP:
@@ -787,10 +620,10 @@ SEXP adf_writelines(strings text, SEXP extptr, std::string sep, bool useBytes) {
   const char *ssep;
   
   if (!af->modeWrite)
-    Rf_error("cannot write to this connection");
-  if(!Rf_isString(text)) Rf_error("invalid 'text' argument");
+    cpp11::stop("cannot write to this connection");
+  if(!Rf_isString(text)) cpp11::stop("invalid 'text' argument");
   if(useBytes == NA_LOGICAL)
-    Rf_error("invalid 'useBytes' argument");
+    cpp11::stop("invalid 'useBytes' argument");
   
   if(useBytes)
     ssep = R_CHAR(r_string(sep));
@@ -802,6 +635,6 @@ SEXP adf_writelines(strings text, SEXP extptr, std::string sep, bool useBytes) {
     adfFileWrite(af, sizeof(char) * strlen(t), (uint8_t *)t);
     adfFileWrite(af, sizeof(char) * strlen(ssep), (uint8_t *)ssep);
   }
-
+  
   return R_NilValue;
 }

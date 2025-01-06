@@ -72,7 +72,7 @@ list adf_path_to_entry(SEXP extptr, std::string filename, int mode) {
     std::getline(ss, vol_name, ':');
     if (!adf_check_volume(dev, vol_name, cur_vol, cur_pos)) {
       const char* message = "Could not find the specified volume on device";
-      if ((mode & ADF_FI_THROW_ERROR) != 0) Rf_error("%s", message); else {
+      if ((mode & ADF_FI_THROW_ERROR) != 0) cpp11::stop("%s", message); else {
         if ((mode & ADF_FI_WARN) != 0) Rf_warning("%s", message);
         return result;
       }
@@ -89,7 +89,7 @@ list adf_path_to_entry(SEXP extptr, std::string filename, int mode) {
   const char* message1 = "No entry block for current dir.";
   RETCODE rc = adfReadEntryBlock ( vol, cur_pos, entry );
   if (rc != RC_OK) {
-    if ((mode & ADF_FI_THROW_ERROR) != 0) Rf_error("%s", message1); else {
+    if ((mode & ADF_FI_THROW_ERROR) != 0) cpp11::stop("%s", message1); else {
       if ((mode & ADF_FI_WARN) != 0) Rf_warning("%s", message1);
       return result;
     }
@@ -97,7 +97,7 @@ list adf_path_to_entry(SEXP extptr, std::string filename, int mode) {
   while (std::getline(ss, path_chunk, '/')) {
     RETCODE rc = adfReadEntryBlock ( vol, cur_pos, entry );
     if (rc != RC_OK) {
-      if ((mode & ADF_FI_THROW_ERROR) != 0) Rf_error("%s", message1); else {
+      if ((mode & ADF_FI_THROW_ERROR) != 0) cpp11::stop("%s", message1); else {
         if ((mode & ADF_FI_WARN) != 0) Rf_warning("%s", message1);
         return result;
       }
@@ -107,7 +107,7 @@ list adf_path_to_entry(SEXP extptr, std::string filename, int mode) {
     if (cur_pos < vol->firstBlock || cur_pos > vol->lastBlock) {
       const char* message = "Path not found.";
       if ((mode & (ADF_FI_EXPECT_EXIST | ADF_FI_THROW_ERROR)) != 0) {
-        Rf_error("%s", message);
+        cpp11::stop("%s", message);
       } else {
         if ((mode & ADF_FI_WARN) != 0) Rf_warning("%s", message);
         result["remainder"] = writable::strings(r_string(path_chunk));
@@ -133,14 +133,14 @@ list adf_path_to_entry(SEXP extptr, std::string filename, int mode) {
       entry_sectype != ST_FILE) {
     const char * message = "Path does not point to a file";
     if ((mode & ADF_FI_THROW_ERROR) != 0)
-      Rf_error("%s", message); else if (mode & ADF_FI_WARN)
+      cpp11::stop("%s", message); else if (mode & ADF_FI_WARN)
         Rf_warning("%s", message);
   }
   if (((mode & ADF_FI_EXPECT_DIR) != 0) &&
       entry_sectype != ST_DIR && entry_sectype != ST_ROOT) {
     const char * message = "Path does not point to a directory";
     if ((mode & ADF_FI_THROW_ERROR) != 0)
-      Rf_error("%s", message); else if (mode & ADF_FI_WARN)
+      cpp11::stop("%s", message); else if (mode & ADF_FI_WARN)
         Rf_warning("%s", message);
   }
 
@@ -157,7 +157,7 @@ void adf_change_dir_internal(SEXP extptr, SECTNUM sector, int volume) {
 void check_adf_name(std::string name) {
   if (name.find(':') != std::string::npos ||
       name.find('/') != std::string::npos)
-    Rf_error("File, directory or volume names cannot contain `/` or `:`.");
+    cpp11::stop("File, directory or volume names cannot contain `/` or `:`.");
 }
 
 [[cpp11::register]]
@@ -199,7 +199,7 @@ list adf_entry_info_(SEXP extptr, std::string path) {
     if (sectype == ST_DIR)  result = interpret_dir_header_internal(dev, vol_num, sector);
     if (sectype == ST_FILE) result = interpret_file_header_internal(dev, vol_num, sector);
   } else {
-    Rf_error("External pointer should by of class `adf_device` or `adf_file_con`.");
+    cpp11::stop("External pointer should by of class `adf_device` or `adf_file_con`.");
   }
   
   return result;
@@ -217,7 +217,7 @@ std::string adf_entry_to_path_internal(AdfDevice * dev, int vol_num, int sectnum
   int sn = sectnum;
   do {
     RETCODE rc = adfReadEntryBlock(vol, sn, entry);
-    if (rc != RC_OK) Rf_error("Failed to read entry block");
+    if (rc != RC_OK) cpp11::stop("Failed to read entry block");
     
     uint8_t namelen = entry->nameLen;
     if (namelen > MAXNAMELEN) {
@@ -233,7 +233,7 @@ std::string adf_entry_to_path_internal(AdfDevice * dev, int vol_num, int sectnum
     fail_safe++;
     sn = entry->parent;
   } while (entry->secType != ST_ROOT && full && fail_safe < 1000);
-  if (fail_safe == 1000) Rf_error("Unrealistically deep path");
+  if (fail_safe == 1000) cpp11::stop("Unrealistically deep path");
   return result;
 }
 

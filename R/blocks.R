@@ -13,6 +13,24 @@
 #' @param ... Ignored
 #' @returns In case of `write_adf_block` `NULL` is returned invisibly. In case of `read_adf_block`
 #' the `raw` data is returned as a `adf_block` class object.
+#' @examples
+#' my_device <- demo_adf(write_protected = FALSE)
+#' 
+#' info <- adf_entry_info(my_device, "S/startup-sequence")
+#' 
+#' filedata_block <- read_adf_block(my_device, rev(info[[1]]$dataBlocks)[[1]])
+#' filedata_block
+#' 
+#' empty_block <- new_adf_block()
+#' empty_block <- as_adf_block(raw(512L))
+#' 
+#' ## Write some random data to block 5 on the device
+#' ## Note that this could break the file system on the virtual device!
+#' write_adf_block(my_device, 5, as.raw(runif(512, 0, 255)))
+#' ## converting the data to an adf block object first
+#' ## is optional:
+#' write_adf_block(my_device, 6, as_adf_block(as.raw(runif(512, 0, 255))))
+#' close(my_device)
 #' @author Pepijn de Vries
 #' @rdname adf_block
 #' @export
@@ -63,7 +81,7 @@ write_adf_block.adf_device.default <- function(dev, sector, data, ...) {
 #' @rdname adf_block
 #' @export
 as_adf_block <- function(data, ...) {
-  if (typeof(data) != "raw" && length(data) != 512)
+  if (typeof(data) != "raw" || length(data) != 512L)
     stop("`data` should be a raw vector with length 512")
   class(data) <- union("adf_block", class(data))
   data

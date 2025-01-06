@@ -7,6 +7,7 @@
 [![adfExplorer status
 badge](https://pepijn-devries.r-universe.dev/badges/adfExplorer)](https://pepijn-devries.r-universe.dev/adfExplorer)
 [![version](https://www.r-pkg.org/badges/version/adfExplorer)](https://CRAN.R-project.org/package=adfExplorer)
+[![codecov](https://codecov.io/gh/pepijn-devries/adfExplorer/graph/badge.svg?token=COQ0P9CFWV)](https://codecov.io/gh/pepijn-devries/adfExplorer)
 ![cranlogs](https://cranlogs.r-pkg.org/badges/adfExplorer)
 <!-- badges: end -->
 
@@ -105,7 +106,7 @@ close(my_device)
 
 The `adfExplorer` package is an R interface around the [`ADFlib`
 library](https://github.com/lclevy/ADFlib). The package would not have
-been possible without the work of Laurent Clévy, Tomasz Wolak) and many
+been possible without the work of Laurent Clévy, Tomasz Wolak and many
 other
 [contributors](https://github.com/lclevy/ADFlib/blob/master/AUTHORS) of
 ADFlib.

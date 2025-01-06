@@ -27,18 +27,29 @@ connect_adf <- function(filename, write_protected = TRUE) {
     
     ## Get file size of gzip'd adf:
     con <- file(filename, "rb", raw = TRUE)
-    seek(con, -4L, "end")
-    gz_size <- readBin(con, "integer", 1)
-    close(con)
+    tryCatch({
+      seek(con, -4L, "end")
+      gz_size <- readBin(con, "integer", 1)
+    }, finally = {
+      close(con)
+    })
     
     ## decompress gzip file to temp file
     f <- tempfile(fileext = ".adf")
     con_in  <- gzfile(filename, "rb")
-    con_out <- file(f, "wb")
-    readBin(con_in, "raw", n = gz_size) |>
-      writeBin(con_out)
-    close(con_in)
-    close(con_out)
+    tryCatch({
+      con_out <- file(f, "wb")
+    }, error = function(e) {
+      close(con_in)
+      stop(e$message)
+    })
+    tryCatch({
+      readBin(con_in, "raw", n = gz_size) |>
+        writeBin(con_out)
+    }, finally = {
+      close(con_in)
+      close(con_out)
+    })
     filename <- f
     
     ## open the temp file
@@ -115,4 +126,14 @@ adf_file_con.virtual_path <- function(x, ..., writable = FALSE) {
   if (length(x) != 1) stop("'virtual_path' should be of length 1.")
   x <- unclass(x)
   adf_file_con_(x$device[[1]], x$path[[1]], writable)
+}
+
+#' Close all virtual devices
+#' 
+#' Close all virtual devices that are currently open. This function is useful
+#' when you have multiple devices opened at the same time.
+#' @returns Returns `NULL` invisibly.
+#' @export
+close_all_devices <- function() {
+  close_all_devices_()
 }

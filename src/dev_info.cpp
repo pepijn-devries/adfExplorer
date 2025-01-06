@@ -1,20 +1,20 @@
 #include "dev_info.h"
 
 void check_volume_number(AdfDevice *dev, int vol_num) {
-  if (dev->nVol < 1) Rf_error("No volumes on device");
-  if (vol_num < 0 || vol_num >= dev->nVol) Rf_error("Invalid volume number");
+  if (dev->nVol < 1) cpp11::stop("No volumes on device");
+  if (vol_num < 0 || vol_num >= dev->nVol) cpp11::stop("Invalid volume number");
   return;
 }
 
 void check_adf_ptr (SEXP extptr) {
   if (TYPEOF(extptr) != EXTPTRSXP || !Rf_inherits(extptr, "adf_device"))
-    Rf_error("Object should be an external pointer and inherit 'adf_device'.");
+    cpp11::stop("Object should be an external pointer and inherit 'adf_device'.");
 }
 
 AdfContainer * getAC(SEXP extptr) {
   check_adf_ptr(extptr);
   AdfContainer *ac = reinterpret_cast<AdfContainer *>(R_ExternalPtrAddr(extptr));
-  if (!ac || !ac->isopen) Rf_error("Device is closed.");
+  if (!ac || !ac->isopen) cpp11::stop("Device is closed.");
   return ac;
 }
 
@@ -151,7 +151,7 @@ bool adf_is_bootable(SEXP exptr, int vol_num) {
     if (rc == RC_OK)
       rc = adfReadBlock (vol, 1, buf + LOGICAL_BLOCK_SIZE);
   }
-  if (rc != RC_OK) Rf_error("Could not retrieve boot blocks");
+  if (rc != RC_OK) cpp11::stop("Could not retrieve boot blocks");
   bBootBlock * boot = (bBootBlock *)buf;
   BOOL isdos =
     boot->dosType[0] == 'D' &&
@@ -173,16 +173,16 @@ bool adf_is_bootable(SEXP exptr, int vol_num) {
 bool adf_set_dev_name(SEXP extptr, int vol_num, std::string new_name) {
   int size = new_name.length();
   if (size > MAXNAMELEN) size = MAXNAMELEN;
-  if (size == 0) Rf_error("New name should be at least 1 character long");
+  if (size == 0) cpp11::stop("New name should be at least 1 character long");
   AdfDevice * dev = get_adf_dev(extptr);
-  if (dev->readOnly) Rf_error("Virtual device is read-only!");
+  if (dev->readOnly) cpp11::stop("Virtual device is read-only!");
   check_volume_number(dev, vol_num);
   AdfVolume * vol = dev->volList[vol_num];
   
   uint8_t buf_root[512] = {0};
   bRootBlock * root = (bRootBlock *) buf_root;
   RETCODE rc = adfReadRootBlock(vol, vol->rootBlock, root);
-  if (rc != RC_OK) Rf_error("Failed to read root block.");
+  if (rc != RC_OK) cpp11::stop("Failed to read root block.");
   
   memset(root->diskName, 0, MAXNAMELEN);
   memcpy(root->diskName, new_name.c_str(), size);
@@ -196,7 +196,7 @@ bool adf_set_dev_name(SEXP extptr, int vol_num, std::string new_name) {
     free(vol->volName);
     vol->volName = new_nm;
   } else {
-    Rf_error("Failed to change virtual device name.");
+    cpp11::stop("Failed to change virtual device name.");
   }
   return rc == RC_OK;
 }

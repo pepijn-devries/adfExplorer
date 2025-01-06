@@ -54,6 +54,25 @@ can be used to transform raw data from and to virtual devices (created with
 a disk could corrupt the file system on the device. So it is generally not
 advised unless you know what you are doing.
 }
+\examples{
+my_device <- demo_adf(write_protected = FALSE)
+
+info <- adf_entry_info(my_device, "S/startup-sequence")
+
+filedata_block <- read_adf_block(my_device, rev(info[[1]]$dataBlocks)[[1]])
+filedata_block
+
+empty_block <- new_adf_block()
+empty_block <- as_adf_block(raw(512L))
+
+## Write some random data to block 5 on the device
+## Note that this could break the file system on the virtual device!
+write_adf_block(my_device, 5, as.raw(runif(512, 0, 255)))
+## converting the data to an adf block object first
+## is optional:
+write_adf_block(my_device, 6, as_adf_block(as.raw(runif(512, 0, 255))))
+close(my_device)
+}
 \author{
 Pepijn de Vries
 }

@@ -80,7 +80,7 @@ static inline uint16_t Short ( const uint8_t * const p ) {
 }
 
 static inline uint32_t Long ( const uint8_t * const p ) {
-    return (uint32_t) ( Short( p ) << 16 |
+    return (uint32_t) ( (uint32_t)Short( p ) << 16 |
                         Short( p + 2 ) );
 }
 

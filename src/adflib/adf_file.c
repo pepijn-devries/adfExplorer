@@ -795,6 +795,7 @@ struct AdfFile * adfFileOpen ( struct AdfVolume * const vol,
         free ( file );
         return NULL;
     }
+    memset(file->currentData, 0, 512 * sizeof(uint8_t));
 
     file->volume = vol;
     file->pos = 0;
@@ -1157,6 +1158,7 @@ RETCODE adfFileCreateNextBlock ( struct AdfFile * const file )
                     // (*adfEnv.eFct)("adfCreateNextFileBlock : malloc");
                     return RC_MALLOC;
                 }
+                memset ( file->currentExt, 0, sizeof(struct bFileExtBlock) );
                 file->fileHdr->extension = extSect;
             }
 

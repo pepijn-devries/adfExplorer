@@ -26,10 +26,8 @@ or writable connection to a file, or obtain information about a file or director
 See also \code{vignette("virtual_paths")}
 }
 \examples{
-adz_file <- system.file("example.adz", package = "adfExplorer")
-
 # Open a connection to a virtual device:
-my_device <- connect_adf(adz_file)
+my_device <- demo_adf()
 
 # specify a virtual path:
 my_path <- virtual_path(my_device, "DF0:s/startup-sequence")

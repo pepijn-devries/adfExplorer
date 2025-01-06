@@ -40,8 +40,7 @@ Get information like entry name, modification date, file size etc.
 }
 \examples{
 ## First setup a connection to a virtual device
-adz_file <- system.file("example.adz", package = "adfExplorer")
-my_device <- connect_adf(adz_file)
+my_device <- demo_adf()
 
 adf_entry_info(my_device, "DF0:")
 adf_entry_info(my_device, "s")

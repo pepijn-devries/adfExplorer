@@ -21,15 +21,8 @@
 #' @returns `make_adf_dir()` returns the device connection. `adf_directory()` returns
 #' the current directory as a `virtual_path` class object.
 #' @examples
-#' ## ADZ files can only be opened in 'write protected' mode
-#' ## extract it to a temporary file to allow writing to the virtual disk
-#' adf_file <- tempfile(fileext = ".adf")
-#' decompress_adz(
-#'   system.file("example.adz", package = "adfExplorer"),
-#'   adf_file)
-#'
 #' ## Open virtual device to demonstrate methods
-#' my_device <- connect_adf(adf_file, write_protected = FALSE)
+#' my_device <- demo_adf(write_protected = FALSE)
 #' 
 #' ## Show the current directory
 #' adf_directory(my_device)
@@ -91,7 +84,8 @@ adf_directory.adf_device <- function(dev, ...) {
 #' @export
 `adf_directory<-.adf_device.virtual_path` <- function(dev, ..., value) {
   .check_dev(dev, value)
-  adf_change_dir(dev, value$path)
+  value <- unclass(value)
+  adf_directory(dev, ...) <- value$path
   dev
 }
 
@@ -138,8 +132,9 @@ make_adf_dir.adf_device.character <- function(x, path, ...) {
 #' @method make_adf_dir.adf_device virtual_path
 #' @export
 make_adf_dir.adf_device.virtual_path <- function(x, path, ...) {
-  .check_dev(x, virtual_path())
-  make_adf_dir(x, virtual_path$path, ...)
+  .check_dev(x, path)
+  path <- unclass(path)
+  make_adf_dir(x, path$path, ...)
 }
 
 #' List entries in a directory of a virtual ADF device
@@ -162,13 +157,16 @@ make_adf_dir.adf_device.virtual_path <- function(x, path, ...) {
 #' case `nested` is `TRUE`.
 #' @examples
 #' ## First setup a connection to a virtual device
-#' adz_file <- system.file("example.adz", package = "adfExplorer")
-#' my_device <- connect_adf(adz_file)
+#' my_device <- demo_adf()
 #' 
 #' ## List all entries in the disk's root:
 #' list_adf_entries(my_device)
-#' ## List all entries on the disk:
+#' 
+#' ## List all entries on the disk as a vector of `virtual paths`:
 #' list_adf_entries(my_device, recursive = TRUE)
+#' 
+#' ##  List all entries on the disk as a nested list:
+#' list_adf_entries(my_device, recursive = TRUE, nested = TRUE)
 #'
 #' close(my_device)
 #' @rdname list_adf_entries

@@ -40,3 +40,22 @@
 \description{
 Format and print methods for all S3 class objects created with \code{adfExplorer}
 }
+\examples{
+my_device <- demo_adf()
+vp        <- list_adf_entries(my_device, recursive = TRUE)
+con       <- adf_file_con(my_device, "s/startup-sequence")
+block     <- read_adf_block(my_device, 0L)
+
+format(my_device)
+format(vp)
+format(con)
+format(block)
+
+print(my_device)
+print(vp)
+print(con)
+print(block)
+
+close(con)
+close(my_device)
+}

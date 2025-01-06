@@ -71,15 +71,8 @@ relative path name to specify the new directory name.
 See \code{vignette("virtual_paths")} for a note on file and directory names on the Amiga.
 }
 \examples{
-## ADZ files can only be opened in 'write protected' mode
-## extract it to a temporary file to allow writing to the virtual disk
-adf_file <- tempfile(fileext = ".adf")
-decompress_adz(
-  system.file("example.adz", package = "adfExplorer"),
-  adf_file)
-
 ## Open virtual device to demonstrate methods
-my_device <- connect_adf(adf_file, write_protected = FALSE)
+my_device <- demo_adf(write_protected = FALSE)
 
 ## Show the current directory
 adf_directory(my_device)

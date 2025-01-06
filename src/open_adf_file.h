@@ -25,8 +25,15 @@
 #endif
 #endif
 
+struct AdfFileContainer {
+  AdfFile * f;
+  bool isopen;
+};
+
 AdfFile * get_adffile(SEXP extptr);
+AdfFileContainer * get_adffilecontainer(SEXP extptr);
 int get_adf_file_volnum(AdfFile * adf_file);
 bool adf_check_file_state(AdfDevice *dev, int vol, SECTNUM sect);
+void freeAdfFileContainer(AdfFileContainer * afc);
 
 #endif /* __OPEN_ADF_FILE__ */

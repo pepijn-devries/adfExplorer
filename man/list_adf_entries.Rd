@@ -46,13 +46,16 @@ directory.
 }
 \examples{
 ## First setup a connection to a virtual device
-adz_file <- system.file("example.adz", package = "adfExplorer")
-my_device <- connect_adf(adz_file)
+my_device <- demo_adf()
 
 ## List all entries in the disk's root:
 list_adf_entries(my_device)
-## List all entries on the disk:
+
+## List all entries on the disk as a vector of `virtual paths`:
 list_adf_entries(my_device, recursive = TRUE)
+
+##  List all entries on the disk as a nested list:
+list_adf_entries(my_device, recursive = TRUE, nested = TRUE)
 
 close(my_device)
 }

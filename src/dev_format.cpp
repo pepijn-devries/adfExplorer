@@ -7,7 +7,7 @@ SEXP adf_dev_format(
     bool ffs, bool intl, bool dircache,
     bool bootable) {
   AdfDevice * dev = get_adf_dev(extptr);
-  if (dev->readOnly) Rf_error("Cannot format 'read-only' device.");
+  if (dev->readOnly) cpp11::stop("Cannot format 'read-only' device.");
   uint8_t boot_code[1024] = {0};
   uint8_t vol_type = 0;
   
@@ -21,23 +21,25 @@ SEXP adf_dev_format(
   if (intl && !dircache) vol_type |= FSMASK_INTL;
   if (dircache) vol_type |= FSMASK_DIRCACHE;
   
-  if (dev->readOnly) Rf_error("Cannot format a write protected device");
-  if (dev->nVol > 0) Rf_error("Cannot format a device with existing volumes");
+  if (dev->readOnly) cpp11::stop("Cannot format a write protected device");
+  if (dev->nVol > 0) cpp11::stop("Cannot format a device with existing volumes");
   check_adf_name(name);
   const char * name_c = name.c_str();
   
   AdfVolume * vol = adfCreateVol(dev, 0, dev->cylinders, name_c, vol_type);
-  if (!vol) Rf_error("Failed to format device");
+  if (!vol) cpp11::stop("Failed to format device");
 
   if (dev->devType == DEVTYPE_FLOPDD || dev->devType == DEVTYPE_FLOPHD) {
     
-    if (adfMountFlop(dev) != RC_OK ) Rf_error("Failed to mount floppy");
     set_adf_vol(extptr, 0);
+    if (adfMountFlop(dev) != RC_OK ) cpp11::stop("Failed to mount floppy");
+    free(vol->volName);
+    free(vol);
 
   } else {
 
     if (adfMountHdFile(dev) != RC_OK)
-      Rf_error("Failed to mount harddisk");
+      cpp11::stop("Failed to mount harddisk");
     set_adf_vol(extptr, 0);
 
   }
@@ -52,7 +54,7 @@ SEXP adf_dev_format(
     AdfVolume * vol = adfMount(dev, i, dev->readOnly);
     rc = adfInstallBootBlock(vol, boot_code);
     rc = updateBootSum(vol);
-    if (rc != RC_OK) Rf_error("Failed to install boot block");
+    if (rc != RC_OK) cpp11::stop("Failed to install boot block");
   }
 
   return R_NilValue;
