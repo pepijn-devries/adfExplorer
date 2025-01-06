@@ -17,7 +17,7 @@ advised unless you know what you are doing."><meta property="og:image" content="
 
     <a class="navbar-brand me-2" href="../index.html">adfExplorer</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -117,6 +117,59 @@ the <code>raw</code> data is returned as a <code>adf_block</code> class object.<
     <p>Pepijn de Vries</p>
     </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">my_device</span> <span class="op">&lt;-</span> <span class="fu"><a href="demo_adf.html">demo_adf</a></span><span class="op">(</span>write_protected <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">info</span> <span class="op">&lt;-</span> <span class="fu"><a href="entry_info.html">adf_entry_info</a></span><span class="op">(</span><span class="va">my_device</span>, <span class="st">"S/startup-sequence"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">filedata_block</span> <span class="op">&lt;-</span> <span class="fu">read_adf_block</span><span class="op">(</span><span class="va">my_device</span>, <span class="fu"><a href="https://rdrr.io/r/base/rev.html" class="external-link">rev</a></span><span class="op">(</span><span class="va">info</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">dataBlocks</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">filedata_block</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0x000  00000008 00000393 00000001 000001E8  ..............è</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0x010  00000395 5161C69B 3B205468 65205374  ...QaÆ; The St</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0x020  61727475 702D5365 7175656E 63652069  artup-Sequence i</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0x030  73206578 65637574 65642061 66746572  s executed after</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0x040  20626F6F 74696E67 0A3B2045 76657279   booting.; Every</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0x050  7468696E 67206166 74657220 73656D69  thing after semi</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0x060  636F6C6F 6E732061 72652063 6F6D6D65  colons are comme</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0x070  6E747320 616E6420 69732069 676E6F72  nts and is ignor</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0x080  65640A3B 20427920 64656661 756C7420  ed.; By default </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0x090  7374616E 64617264 20636F6D 6D616E64  standard command</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0x0A0  73206172 65206C6F 61646564 2066726F  s are loaded fro</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0x0B0  6D0A3B20 74686520 524F4D20 6B69636B  m.; the ROM kick</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0x0C0  73746172 742E2041 64646974 696F6E61  start. Additiona</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0x0D0  6C20636F 6D6D616E 64732073 686F756C  l commands shoul</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0x0E0  64206265 0A3B2073 746F7265 64206F6E  d be.; stored on</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0x0F0  20746865 20646973 6B20696E 20746865   the disk in the</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0x100  20535953 3A432064 69726563 746F7279   SYS:C directory</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0x110  2E0A3B20 466F7220 64656D6F 6E737472  ..; For demonstr</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0x120  6174696F 6E207075 72706F73 65732077  ation purposes w</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0x130  65206F6E 6C792065 63686F20 736F6D65  e only echo some</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0x140  0A3B2074 65787420 746F2074 68652073  .; text to the s</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0x150  63726565 6E2E2E2E 204E6F74 65207468  creen... Note th</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0x160  61742074 68697320 77696C6C 206E6F74  at this will not</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0x170  0A3B2077 6F726B20 6F6E2041 6D696761  .; work on Amiga</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0x180  204F5320 3C322E30 20617320 22456368   OS &lt;2.0 as .Ech</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0x190  6F222069 73206E6F 74206176 61696C61  o. is not availa</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0x1A0  626C650A 3B20696E 206F6C64 65722052  ble.; in older R</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0x1B0  4F4D206B 69636B73 74617274 20766572  OM kickstart ver</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0x1C0  73696F6E 732E0A0A 4563686F 20221B63  sions...Echo ..c</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0x1D0  1B5B3232 6D1B5B33 326D4144 46204578  .[22m.[32mADF Ex</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0x1E0  706C6F72 65722045 78616D70 6C652044  plorer Example D</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0x1F0  69736B22 203B204E 6F746520 74686174  isk. ; Note that</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">empty_block</span> <span class="op">&lt;-</span> <span class="fu">new_adf_block</span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">empty_block</span> <span class="op">&lt;-</span> <span class="fu">as_adf_block</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/raw.html" class="external-link">raw</a></span><span class="op">(</span><span class="fl">512L</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## Write some random data to block 5 on the device</span></span></span>
+<span class="r-in"><span><span class="co">## Note that this could break the file system on the virtual device!</span></span></span>
+<span class="r-in"><span><span class="fu">write_adf_block</span><span class="op">(</span><span class="va">my_device</span>, <span class="fl">5</span>, <span class="fu"><a href="https://rdrr.io/r/base/raw.html" class="external-link">as.raw</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fl">512</span>, <span class="fl">0</span>, <span class="fl">255</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co">## converting the data to an adf block object first</span></span></span>
+<span class="r-in"><span><span class="co">## is optional:</span></span></span>
+<span class="r-in"><span><span class="fu">write_adf_block</span><span class="op">(</span><span class="va">my_device</span>, <span class="fl">6</span>, <span class="fu">as_adf_block</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/raw.html" class="external-link">as.raw</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fl">512</span>, <span class="fl">0</span>, <span class="fl">255</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/connections.html" class="external-link">close</a></span><span class="op">(</span><span class="va">my_device</span><span class="op">)</span></span></span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 

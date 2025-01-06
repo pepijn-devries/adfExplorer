@@ -9,7 +9,7 @@ directory."><meta property="og:image" content="https://pepijn-devries.github.io/
 
     <a class="navbar-brand me-2" href="../index.html">adfExplorer</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -107,8 +107,7 @@ case <code>nested</code> is <code>TRUE</code>.</p>
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">## First setup a connection to a virtual device</span></span></span>
-<span class="r-in"><span><span class="va">adz_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"example.adz"</span>, package <span class="op">=</span> <span class="st">"adfExplorer"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">my_device</span> <span class="op">&lt;-</span> <span class="fu"><a href="connect_adf.html">connect_adf</a></span><span class="op">(</span><span class="va">adz_file</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">my_device</span> <span class="op">&lt;-</span> <span class="fu"><a href="demo_adf.html">demo_adf</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## List all entries in the disk's root:</span></span></span>
 <span class="r-in"><span><span class="fu">list_adf_entries</span><span class="op">(</span><span class="va">my_device</span><span class="op">)</span></span></span>
@@ -116,7 +115,8 @@ case <code>nested</code> is <code>TRUE</code>.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> DIR  DEWR...        S</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> DIR  DEWR...     this</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> DIR  DEWR...     mods</span>
-<span class="r-in"><span><span class="co">## List all entries on the disk:</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## List all entries on the disk as a vector of `virtual paths`:</span></span></span>
 <span class="r-in"><span><span class="fu">list_adf_entries</span><span class="op">(</span><span class="va">my_device</span>, recursive <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> DIR  DEWR...     Devs</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> FILE DEWR...iguration</span>
@@ -129,6 +129,35 @@ case <code>nested</code> is <code>TRUE</code>.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> DIR  DEWR...     path</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> DIR  DEWR...     mods</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> FILE DEWR...mod.intro</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">##  List all entries on the disk as a nested list:</span></span></span>
+<span class="r-in"><span><span class="fu">list_adf_entries</span><span class="op">(</span><span class="va">my_device</span>, recursive <span class="op">=</span> <span class="cn">TRUE</span>, nested <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $Devs</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $Devs$`system-configuration`</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $S</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $S$`Startup-Sequence`</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $this</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $this$is</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $this$is$a</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $this$is$a$deep</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $this$is$a$deep$path</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> list()</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mods</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mods$mod.intro</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/connections.html" class="external-link">close</a></span><span class="op">(</span><span class="va">my_device</span><span class="op">)</span></span></span>
 </code></pre></div>

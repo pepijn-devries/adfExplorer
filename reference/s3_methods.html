@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">adfExplorer</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -90,6 +90,80 @@
 
 </dl></div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">my_device</span> <span class="op">&lt;-</span> <span class="fu"><a href="demo_adf.html">demo_adf</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">vp</span>        <span class="op">&lt;-</span> <span class="fu"><a href="list_adf_entries.html">list_adf_entries</a></span><span class="op">(</span><span class="va">my_device</span>, recursive <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">con</span>       <span class="op">&lt;-</span> <span class="fu"><a href="adf_file_con.html">adf_file_con</a></span><span class="op">(</span><span class="va">my_device</span>, <span class="st">"s/startup-sequence"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">block</span>     <span class="op">&lt;-</span> <span class="fu"><a href="adf_block.html">read_adf_block</a></span><span class="op">(</span><span class="va">my_device</span>, <span class="fl">0L</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="va">my_device</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Bootable write protected DOS Floppy DD\n  Volume 0 [---]: adfExampleOFS (2.1%)"</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="va">vp</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "DIR  DEWR...     Devs" "FILE DEWR...iguration" "DIR  DEWR...        S"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [4] "FILE DEWR...-Sequence" "DIR  DEWR...     this" "DIR  DEWR...       is"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] "DIR  DEWR...        a" "DIR  DEWR...     deep" "DIR  DEWR...     path"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [10] "DIR  DEWR...     mods" "FILE DEWR...mod.intro"</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="va">con</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "A read only connection to virtual file:\nadfExampleOFS:S/Startup-Sequence"</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="va">block</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">my_device</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Bootable write protected DOS Floppy DD</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Volume 0 [---]: adfExampleOFS (2.1%)</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">vp</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> DIR  DEWR...     Devs</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> FILE DEWR...iguration</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> DIR  DEWR...        S</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> FILE DEWR...-Sequence</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> DIR  DEWR...     this</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> DIR  DEWR...       is</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> DIR  DEWR...        a</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> DIR  DEWR...     deep</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> DIR  DEWR...     path</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> DIR  DEWR...     mods</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> FILE DEWR...mod.intro</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">con</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> A read only connection to virtual file:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> adfExampleOFS:S/Startup-Sequence</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">block</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0x000  444F5300 E33D0E73 00000370 43FA003E  DOS.ã=.s...pCú.&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0x010  70254EAE FDD84A80 670C2240 08E90006  p.N®ýØJg..@.é..</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0x020  00224EAE FE6243FA 00184EAE FFA04A80  ..N®þbCú..N®ÿ J</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0x030  670A2040 20680016 70004E75 70FF4E75  g. @ h..p.NupÿNu</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0x040  646F732E 6C696272 61727900 65787061  dos.library.expa</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0x050  6E73696F 6E2E6C69 62726172 79000000  nsion.library...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0x060  00000000 00000000 00000000 00000000  ................</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0x070  00000000 00000000 00000000 00000000  ................</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0x080  00000000 00000000 00000000 00000000  ................</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0x090  00000000 00000000 00000000 00000000  ................</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0x0A0  00000000 00000000 00000000 00000000  ................</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0x0B0  00000000 00000000 00000000 00000000  ................</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0x0C0  00000000 00000000 00000000 00000000  ................</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0x0D0  00000000 00000000 00000000 00000000  ................</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0x0E0  00000000 00000000 00000000 00000000  ................</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0x0F0  00000000 00000000 00000000 00000000  ................</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0x100  00000000 00000000 00000000 00000000  ................</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0x110  00000000 00000000 00000000 00000000  ................</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0x120  00000000 00000000 00000000 00000000  ................</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0x130  00000000 00000000 00000000 00000000  ................</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0x140  00000000 00000000 00000000 00000000  ................</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0x150  00000000 00000000 00000000 00000000  ................</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0x160  00000000 00000000 00000000 00000000  ................</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0x170  00000000 00000000 00000000 00000000  ................</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0x180  00000000 00000000 00000000 00000000  ................</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0x190  00000000 00000000 00000000 00000000  ................</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0x1A0  00000000 00000000 00000000 00000000  ................</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0x1B0  00000000 00000000 00000000 00000000  ................</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0x1C0  00000000 00000000 00000000 00000000  ................</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0x1D0  00000000 00000000 00000000 00000000  ................</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0x1E0  00000000 00000000 00000000 00000000  ................</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0x1F0  00000000 00000000 00000000 00000000  ................</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/connections.html" class="external-link">close</a></span><span class="op">(</span><span class="va">con</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/connections.html" class="external-link">close</a></span><span class="op">(</span><span class="va">my_device</span><span class="op">)</span></span></span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 

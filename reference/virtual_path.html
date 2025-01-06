@@ -15,7 +15,7 @@ See also vignette("virtual_paths")'><meta property="og:image" content="https://p
 
     <a class="navbar-brand me-2" href="../index.html">adfExplorer</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -87,10 +87,8 @@ on the virtual device.</p></dd>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">adz_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"example.adz"</span>, package <span class="op">=</span> <span class="st">"adfExplorer"</span><span class="op">)</span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Open a connection to a virtual device:</span></span></span>
-<span class="r-in"><span><span class="va">my_device</span> <span class="op">&lt;-</span> <span class="fu"><a href="connect_adf.html">connect_adf</a></span><span class="op">(</span><span class="va">adz_file</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Open a connection to a virtual device:</span></span></span>
+<span class="r-in"><span><span class="va">my_device</span> <span class="op">&lt;-</span> <span class="fu"><a href="demo_adf.html">demo_adf</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># specify a virtual path:</span></span></span>
 <span class="r-in"><span><span class="va">my_path</span> <span class="op">&lt;-</span> <span class="fu">virtual_path</span><span class="op">(</span><span class="va">my_device</span>, <span class="st">"DF0:s/startup-sequence"</span><span class="op">)</span></span></span>
