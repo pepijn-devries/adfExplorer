@@ -61,14 +61,12 @@ readBin.adf_file_con <-
     w <- c("numeric", "double", "integer", "int", "logical",
            "complex", "character", "raw")
     if(!is.character(what) || is.na(what) ||
-       length(what) != 1L || ## hence length(what) == 1:
+       length(what) != 1L ||
        !any(what == w))
       what <- typeof(what)
-    what <- pmatch(what, w)
-    if (!endian %in% c("big", "little", "swap"))
-      stop("invalid 'endian' argument")
-    swap <- endian != .Platform$endian
-    adf_readbin(con, what, as.integer(n), as.integer(size), as.logical(signed), swap)
+    sz  <- adf_readbin_size(pmatch(what, w), size)
+    dat <- adf_file_read_ext(con, ifelse(is.na(sz), 1L, sz) * n)
+    readBin.default(dat, what, n, size, signed, endian)
   }
 
 #' @rdname read_write

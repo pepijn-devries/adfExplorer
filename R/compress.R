@@ -19,29 +19,28 @@
 #' @rdname compress
 #' @export
 compress_adf <- function(source, destination) {
-  .convert_adf(source, destination, function(x) x, gzcon)
+  .convert_adf(source, destination, file, gzfile)
 }
 
 #' @rdname compress
 #' @export
 decompress_adz <- function(source, destination) {
-  .convert_adf(source, destination, gzcon, function(x) x)
+  .convert_adf(source, destination, gzfile, file)
 }
 
 .convert_adf <- function(source, destination, s_fun, d_fun) {
-  con_in  <- s_fun(file(source, "rb"))
-  con_out <- d_fun(file(destination, "wb"))
-  chunk_size <- 1024*1024
-  tryCatch({
-    repeat {
-      dat <- readBin(con_in, "raw", chunk_size)
-      if (length(dat) < 1) break else {
-        writeBin(dat, con_out)
-      }
-    }
-  }, finally = {
-    close(con_in)
-    close(con_out)
+  on.exit({
+    tryCatch({close(con_in)}, error = \(x) NULL)
+    tryCatch({close(con_out)}, error = \(x) NULL)
   })
+  con_in  <- s_fun(source, "rb")
+  con_out <- d_fun(destination, "wb")
+  chunk_size <- 1024*1024
+  repeat {
+    dat <- readBin(con_in, "raw", chunk_size)
+    if (length(dat) < 1) break else {
+      writeBin(dat, con_out)
+    }
+  }
   invisible(NULL)
 }

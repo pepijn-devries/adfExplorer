@@ -28,7 +28,7 @@ SEXP open_adf_(std::string filename, bool write_protected) {
   dev = adfMountDev(filename.c_str(), write_protected);
   if (!dev) {
     dev = adfOpenDev(filename.c_str(), write_protected);
-    if (! dev) Rf_error("Could not mount virtual device");
+    if (! dev) cpp11::stop("Could not mount virtual device");
   }
   
   if (dev->nVol > 0) {

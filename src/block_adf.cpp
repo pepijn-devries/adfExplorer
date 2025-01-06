@@ -7,7 +7,7 @@ SEXP read_adf_block_(SEXP extptr, int sector) {
   AdfDevice * dev = get_adf_dev(extptr);
   uint8_t buf[512] = {0};
   RETCODE rc = adfReadBlockDev(dev, sector, 512, buf);
-  if (rc != RC_OK) Rf_error("Failed to read block");
+  if (rc != RC_OK) cpp11::stop("Failed to read block");
   writable::raws result_raw((R_xlen_t)512);
   for (int i = 0; i < result_raw.size(); i++)
     result_raw.at(i) = buf[i];
@@ -22,14 +22,14 @@ SEXP read_adf_block_(SEXP extptr, int sector) {
 [[cpp11::register]]
 SEXP write_adf_block_(SEXP extptr, int sector, raws block) {
   AdfDevice * dev = get_adf_dev(extptr);
-  if (block.size() != 512) Rf_error("Unexpected block size");
-  if (dev->readOnly) Rf_error("Cannot write to read only device");
+  if (block.size() != 512) cpp11::stop("Unexpected block size");
+  if (dev->readOnly) cpp11::stop("Cannot write to read only device");
   uint8_t buf[512];
   for (int i = 0; i < 512; i++) {
     buf[i] = block.at(i);
   }
   RETCODE rc = adfWriteBlockDev(dev, sector, 512, buf);
-  if (rc != RC_OK) Rf_error("Failed to write block");
+  if (rc != RC_OK) cpp11::stop("Failed to write block");
   return R_NilValue;
 }
 
@@ -39,7 +39,7 @@ list interpret_file_header_internal(AdfDevice *dev, int vol_num, int sectnum) {
   uint8_t buf[512] = {0};
   bEntryBlock * entry = (bEntryBlock *) buf;
   RETCODE rc = adfReadEntryBlock(vol, sectnum, entry);
-  if (rc != RC_OK) Rf_error("Failed to read entry block");
+  if (rc != RC_OK) cpp11::stop("Failed to read entry block");
   bFileHeaderBlock * fheader = (bFileHeaderBlock *) entry;
   
   writable::integers datab(MAX_DATABLK);
@@ -95,7 +95,7 @@ list interpret_dir_header_internal(AdfDevice *dev, int vol_num, int sectnum) {
   uint8_t buf[512] = {0};
   bEntryBlock * entry = (bEntryBlock *) buf;
   RETCODE rc = adfReadEntryBlock(vol, sectnum, entry);
-  if (rc != RC_OK) Rf_error("Failed to read entry block");
+  if (rc != RC_OK) cpp11::stop("Failed to read entry block");
   bDirBlock * dheader = (bDirBlock *) entry;
   
   writable::integers hashtab(HT_SIZE);
@@ -148,7 +148,7 @@ list interpret_root_header_internal(AdfDevice *dev, int vol_num) {
   uint8_t buf_root[512] = {0};
   bRootBlock * root = (bRootBlock *) buf_root;
   RETCODE rc = adfReadRootBlock(vol, vol->rootBlock, root);
-  if (rc != RC_OK) Rf_error("Failed to read root block");
+  if (rc != RC_OK) cpp11::stop("Failed to read root block");
   
   uint8_t namelen = root->nameLen;
   if (namelen > MAXNAMELEN) {

@@ -41,7 +41,7 @@ AdfFileContainer * get_adffilecontainer(SEXP extptr) {
     AdfFileContainer * afc = reinterpret_cast<AdfFileContainer *>(R_ExternalPtrAddr(extptr));
     if (afc->isopen) return afc;
   }
-  Rf_error("Object should be an external pointer and inherit 'adf_file_con'.");
+  cpp11::stop("Object should be an external pointer and inherit 'adf_file_con'.");
   return NULL;
 }
 
@@ -110,7 +110,7 @@ int get_adf_file_volnum(AdfFile * adf_file) {
     }
     return result;
   } else {
-    Rf_error("Virtual device is no longer available!");
+    cpp11::stop("Virtual device is no longer available!");
   }
   return -1;
 }
@@ -129,7 +129,7 @@ bool adf_check_file_state(AdfDevice *dev, int vol, SECTNUM sect) {
 SEXP adf_file_con_(SEXP extptr, std::string filename, bool writable) {
   AdfDevice * dev = get_adf_dev(extptr);
   if (dev->readOnly && writable)
-    Rf_error("Cannot open a writable connection from a write-protected disk");
+    cpp11::stop("Cannot open a writable connection from a write-protected disk");
   int mode = ADF_FI_EXPECT_FILE | ADF_FI_EXPECT_VALID_CHECKSUM;
   if (!writable) mode = mode | ADF_FI_EXPECT_EXIST | ADF_FI_THROW_ERROR;
   
@@ -141,7 +141,7 @@ SEXP adf_file_con_(SEXP extptr, std::string filename, bool writable) {
   check_volume_number(dev, vol_num);
   bool file_check = adf_check_file_state(dev, vol_num, sect);
   if (file_check)
-    Rf_error("Can only open 1 connection per file on a virtual device");
+    cpp11::stop("Can only open 1 connection per file on a virtual device");
 
   auto vol = dev->volList[vol_num];
   int vol_old = get_adf_vol(extptr);
@@ -160,7 +160,7 @@ SEXP adf_file_con_(SEXP extptr, std::string filename, bool writable) {
     auto fhead = new bFileHeaderBlock;
     RETCODE fcret = adfCreateFile(vol, parent, fn2, fhead);
     delete(fhead);
-    if (fcret != RC_OK) Rf_error("Failed to create file for writing.");
+    if (fcret != RC_OK) cpp11::stop("Failed to create file for writing.");
   } else {
     fns = (std::string)cpp11::strings(entry_pos["name"]).at(0);
   }
@@ -168,7 +168,7 @@ SEXP adf_file_con_(SEXP extptr, std::string filename, bool writable) {
   AdfFile * adf_file = adfFileOpen (vol, fn, fmode);
   adf_change_dir_internal(extptr, cur_dir, vol_old);
   
-  if (!adf_file) Rf_error("Failed to open file connection");
+  if (!adf_file) cpp11::stop("Failed to open file connection");
   
   AdfFileContainer * afc = (AdfFileContainer *)new AdfFileContainer;
   afc->f      = adf_file;

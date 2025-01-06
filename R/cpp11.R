@@ -24,6 +24,10 @@ adf_con_summary <- function(extptr) {
   .Call(`_adfExplorer_adf_con_summary`, extptr)
 }
 
+adf_file_read_ext <- function(extptr, req_size) {
+  .Call(`_adfExplorer_adf_file_read_ext`, extptr, req_size)
+}
+
 adf_change_dir <- function(extptr, path) {
   .Call(`_adfExplorer_adf_change_dir`, extptr, path)
 }
@@ -52,8 +56,8 @@ move_adf_internal <- function(extptr, source, destination) {
   .Call(`_adfExplorer_move_adf_internal`, extptr, source, destination)
 }
 
-adf_readbin <- function(extptr, what, n, sz, sgn, swap) {
-  .Call(`_adfExplorer_adf_readbin`, extptr, what, n, sz, sgn, swap)
+adf_readbin_size <- function(what, sz) {
+  .Call(`_adfExplorer_adf_readbin_size`, what, sz)
 }
 
 adf_readlines <- function(extptr, n_, ok, warn, encoding, skipNul) {
