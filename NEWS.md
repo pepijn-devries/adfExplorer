@@ -1,4 +1,4 @@
-adfExplorer 2.0.1
+adfExplorer 2.0.2
 -------------
 
   * Plugged memory leaks and fixed undefined behaviour
