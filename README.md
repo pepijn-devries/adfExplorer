@@ -7,7 +7,7 @@
 [![adfExplorer status
 badge](https://pepijn-devries.r-universe.dev/badges/adfExplorer)](https://pepijn-devries.r-universe.dev/adfExplorer)
 [![version](https://www.r-pkg.org/badges/version/adfExplorer)](https://CRAN.R-project.org/package=adfExplorer)
-[![codecov](https://codecov.io/gh/pepijn-devries/adfExplorer/graph/badge.svg?token=COQ0P9CFWV)](https://codecov.io/gh/pepijn-devries/adfExplorer)
+[![codecov](https://codecov.io/gh/pepijn-devries/adfExplorer/graph/badge.svg?token=COQ0P9CFWV)](https://app.codecov.io/gh/pepijn-devries/adfExplorer)
 ![cranlogs](https://cranlogs.r-pkg.org/badges/adfExplorer)
 <!-- badges: end -->
 

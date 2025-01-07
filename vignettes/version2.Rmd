@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 This vignette explains why version 2.0.0 was completely rewritten. It
 will also provide some hands on examples showing how versions >=2.0.0
 work differently from older versions and how you can modify your R code
-when you are switching the latest version.
+when you are switching to the latest version.
 
 Below version 2.0.0 everything was coded in `R`. Although, technically
 a lot could be achieved, it was not very effective. In order to work with Amiga
