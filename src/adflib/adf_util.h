@@ -95,8 +95,8 @@ static inline uint16_t swapShort ( const uint8_t * const p ) {
 }
 
 static inline uint32_t swapLong ( const uint8_t * const p ) {
-    return (uint32_t) ( ( swapShort(p) << 16 ) |
-                        swapShort( p + 2 ) );
+    return (uint32_t) ( ( (uint32_t)swapShort(p) << 16 ) |
+                        (uint32_t)swapShort( p + 2 ) );
 }
 
 
