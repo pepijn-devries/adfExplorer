@@ -121,15 +121,15 @@ be established with \code{adf_file_con()}.}
     when it determines if the quantity on file
     should be regarded as a signed or unsigned integer.}
 
-\item{endian}{The endian-ness (\code{"big"} or \code{"little"}) of the
+\item{endian}{The endianness (\code{"big"} or \code{"little"}) of the
     target system for the file.  Using \code{"swap"} will force swapping
-    endian-ness.}
+    endianness.}
 
 \item{ok}{logical.  Is it OK to reach the end of the connection before
     \code{n > 0} lines are read?  If not, an error will be generated.}
 
-\item{warn}{logical.  Warn if a text file is missing a final EOL or if
-    there are embedded nuls in the file.}
+\item{warn}{logical.  Warn if a text file is missing a final \abbr{EOL} or if
+    there are embedded \abbr{NUL}s in the file.}
 
 \item{encoding}{encoding to be assumed for input strings.  It is
     used to mark character strings as known to be in
@@ -140,13 +140,13 @@ be established with \code{adf_file_con()}.}
     and \sQuote{Details}.
   }
 
-\item{skipNul}{logical: should nuls be skipped?}
+\item{skipNul}{logical: should \abbr{NUL}s be skipped?}
 
 \item{object}{An \R object to be written to the connection.}
 
 \item{useBytes}{See \code{\link[base]{writeLines}}.}
 
-\item{text}{A character vector}
+\item{text}{a character vector.}
 
 \item{sep}{character string.  A string to be written to the connection
     after each line of text.}
