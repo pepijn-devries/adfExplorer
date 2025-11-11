@@ -1,0 +1,229 @@
+# adfExplorer
+
+`adfExplorer` can be used to read from and write to virtual Amiga Disks,
+a.k.a Amiga Disk Files (ADF).
+
+## Installation
+
+You can install the development version of adfExplorer from
+[r-universe](https://pepijn-devries.r-universe.dev/adfExplorer) with:
+
+``` r
+install.packages("adfExplorer", repos = c("https://pepijn-devries.r-universe.dev", "https://cloud.r-project.org"))
+```
+
+Or install the latest version from CRAN:
+
+``` r
+install.packages("adfExplorer")
+```
+
+## Background
+
+### Amiga Disk Files
+
+The Commodore Amiga was a home computer that relied heavily on it’s
+build-in 3.5 inch floppy disk drive in the late eighties and early
+nineties. The Amiga was a popular system which nowadays can be
+accurately [emulated](https://en.wikipedia.org/wiki/Amiga_emulation) on
+modern machines. A problem with the emulation of the Amiga is that most
+modern machines no longer have floppy disk drives. And if they do, they
+are usually physically not able to read Amiga formatted disks. To
+overcome this problem, the Amiga Disk File (ADF) was created. Such files
+are a virtual representation of a floppy disks which can be used in
+emulation.
+
+#### Legal notes
+
+Emulating the Commodore Amiga hardware is, as far as I can tell, legal.
+However, the Amiga had its operating system stored on a read only memory
+chip. Which is commonly referred to as the kickstart. This kickstart
+software is still protected by copyright law. Licensed copies can be
+bought legally from [AmigaForever](https://www.amigaforever.com). The
+same is true for much of the Amiga software, which is still protected by
+copyright.
+
+Note that for analysing ADF files with the `adfExplorer` package you
+don’t need the kickstart software. Just make sure the ADF files you use
+contain data or software for which you own (or don’t need) a licence.
+
+### The `adfExplorer` package
+
+This package will allow you to analyse Amiga Disk Files (ADF) with the R
+scripting language. It can also be used to transfer files from and to
+ADF in batches, e.g. for preparing disks for emulation purposes.
+
+The focus will be on the older Amiga operating systems (i.e., OS 3.x and
+less), as I am most familiar with those systems. In newer versions
+floppy disks became less important anyway. Note that this package cannot
+read extended ADF files containing information on the disk’s [Modified
+Frequency Modulation
+(MFM)](https://en.wikipedia.org/wiki/Modified_Frequency_Modulation).
+This information is typically only required for copy protected disks and
+is therefore out of the scope of this package.
+
+## Example
+
+``` r
+library(adfExplorer)
+#> 
+#> Attaching package: 'adfExplorer'
+#> The following objects are masked from 'package:base':
+#> 
+#>     readBin, readLines, writeBin, writeLines
+
+## First setup a connection to a virtual device
+adz_file <- system.file("example.adz", package = "adfExplorer")
+my_device <- connect_adf(adz_file)
+
+## Open a connection to a file on the virtual device
+fcon <- adf_file_con(my_device, "DF0:s/startup-sequence")
+
+## Read from the file
+my_startup <- readLines(fcon, warn = FALSE)
+
+## Close the file
+close(fcon)
+
+## Close the virtual device
+close(my_device)
+```
+
+## Acknowledgements
+
+The `adfExplorer` package is an R interface around the [`ADFlib`
+library](https://github.com/lclevy/ADFlib). The package would not have
+been possible without the work of Laurent Clévy, Tomasz Wolak and many
+other
+[contributors](https://github.com/lclevy/ADFlib/blob/master/AUTHORS) of
+ADFlib.
+
+## Code of Conduct
+
+Please note that the adfExplorer project is released with a [Contributor
+Code of
+Conduct](https://contributor-covenant.org/version/2/1/CODE_OF_CONDUCT.html).
+By contributing to this project, you agree to abide by its terms.
+
+# Package index
+
+## All functions
+
+- [`read_adf_block()`](https://pepijn-devries.github.io/adfExplorer/reference/adf_block.md)
+  [`write_adf_block()`](https://pepijn-devries.github.io/adfExplorer/reference/adf_block.md)
+  [`write_adf_block.adf_device(`*`<raw>`*`)`](https://pepijn-devries.github.io/adfExplorer/reference/adf_block.md)
+  [`write_adf_block.adf_device(`*`<adf_block>`*`)`](https://pepijn-devries.github.io/adfExplorer/reference/adf_block.md)
+  [`write_adf_block.adf_device(`*`<default>`*`)`](https://pepijn-devries.github.io/adfExplorer/reference/adf_block.md)
+  [`as_adf_block()`](https://pepijn-devries.github.io/adfExplorer/reference/adf_block.md)
+  [`new_adf_block()`](https://pepijn-devries.github.io/adfExplorer/reference/adf_block.md)
+  : Read or write raw data blocks to a virtual device
+
+- [`adf_directory()`](https://pepijn-devries.github.io/adfExplorer/reference/adf_directory.md)
+  [`` `adf_directory<-`() ``](https://pepijn-devries.github.io/adfExplorer/reference/adf_directory.md)
+  [`make_adf_dir()`](https://pepijn-devries.github.io/adfExplorer/reference/adf_directory.md)
+  [`make_adf_dir.adf_device(`*`<character>`*`)`](https://pepijn-devries.github.io/adfExplorer/reference/adf_directory.md)
+  [`make_adf_dir.adf_device(`*`<virtual_path>`*`)`](https://pepijn-devries.github.io/adfExplorer/reference/adf_directory.md)
+  : Changing and creating directories on a virtual device
+
+- [`adf_file_con()`](https://pepijn-devries.github.io/adfExplorer/reference/adf_file_con.md)
+  [`adf_file_con.adf_device(`*`<character>`*`)`](https://pepijn-devries.github.io/adfExplorer/reference/adf_file_con.md)
+  : Open a connection to a file on a virtual ADF device
+
+- [`close_all_devices()`](https://pepijn-devries.github.io/adfExplorer/reference/close_all_devices.md)
+  : Close all virtual devices
+
+- [`compress_adf()`](https://pepijn-devries.github.io/adfExplorer/reference/compress.md)
+  [`decompress_adz()`](https://pepijn-devries.github.io/adfExplorer/reference/compress.md)
+  : Compress ADF to ADZ files and vice versa
+
+- [`connect_adf()`](https://pepijn-devries.github.io/adfExplorer/reference/connect_adf.md)
+  : Create a connection to a virtual disk
+
+- [`create_adf_device()`](https://pepijn-devries.github.io/adfExplorer/reference/create_adf_device.md)
+  [`prepare_adf_device()`](https://pepijn-devries.github.io/adfExplorer/reference/create_adf_device.md)
+  : Create and format a virtual ADF device
+
+- [`demo_adf()`](https://pepijn-devries.github.io/adfExplorer/reference/demo_adf.md)
+  : Connect with a demonstration ADF file
+
+- [`device_type()`](https://pepijn-devries.github.io/adfExplorer/reference/device_info.md)
+  [`device_capacity()`](https://pepijn-devries.github.io/adfExplorer/reference/device_info.md)
+  [`volume_capacity()`](https://pepijn-devries.github.io/adfExplorer/reference/device_info.md)
+  [`volume_name()`](https://pepijn-devries.github.io/adfExplorer/reference/device_info.md)
+  [`` `volume_name<-`() ``](https://pepijn-devries.github.io/adfExplorer/reference/device_info.md)
+  [`n_volumes()`](https://pepijn-devries.github.io/adfExplorer/reference/device_info.md)
+  [`bytes_free()`](https://pepijn-devries.github.io/adfExplorer/reference/device_info.md)
+  [`is_bootable()`](https://pepijn-devries.github.io/adfExplorer/reference/device_info.md)
+  [`is_fast_file_system()`](https://pepijn-devries.github.io/adfExplorer/reference/device_info.md)
+  [`is_international()`](https://pepijn-devries.github.io/adfExplorer/reference/device_info.md)
+  [`is_dircache()`](https://pepijn-devries.github.io/adfExplorer/reference/device_info.md)
+  [`is_write_protected()`](https://pepijn-devries.github.io/adfExplorer/reference/device_info.md)
+  :
+
+  Obtain information about an `adf_device` connection
+
+- [`adf_entry_info()`](https://pepijn-devries.github.io/adfExplorer/reference/entry_info.md)
+  [`adf_entry_info.adf_device(`*`<virtual_path>`*`)`](https://pepijn-devries.github.io/adfExplorer/reference/entry_info.md)
+  [`adf_entry_info.adf_device(`*`<character>`*`)`](https://pepijn-devries.github.io/adfExplorer/reference/entry_info.md)
+  : Retrieve information from entry headers on virtual ADF devices
+
+- [`adf_file_exists()`](https://pepijn-devries.github.io/adfExplorer/reference/exists.md)
+  [`adf_dir_exists()`](https://pepijn-devries.github.io/adfExplorer/reference/exists.md)
+  : Test if an entry exists on a virtual device
+
+- [`list_adf_entries()`](https://pepijn-devries.github.io/adfExplorer/reference/list_adf_entries.md)
+  [`list_adf_entries.adf_device(`*`<character>`*`)`](https://pepijn-devries.github.io/adfExplorer/reference/list_adf_entries.md)
+  [`list_adf_entries.adf_device(`*`<virtual_path>`*`)`](https://pepijn-devries.github.io/adfExplorer/reference/list_adf_entries.md)
+  : List entries in a directory of a virtual ADF device
+
+- [`copy_adf_entry()`](https://pepijn-devries.github.io/adfExplorer/reference/move.md)
+  [`copy_adf_entry.character(`*`<virtual_path>`*`)`](https://pepijn-devries.github.io/adfExplorer/reference/move.md)
+  [`copy_adf_entry.virtual_path(`*`<virtual_path>`*`)`](https://pepijn-devries.github.io/adfExplorer/reference/move.md)
+  [`copy_adf_entry.virtual_path(`*`<character>`*`)`](https://pepijn-devries.github.io/adfExplorer/reference/move.md)
+  [`move_adf_entry()`](https://pepijn-devries.github.io/adfExplorer/reference/move.md)
+  [`move_adf_entry.character(`*`<virtual_path>`*`)`](https://pepijn-devries.github.io/adfExplorer/reference/move.md)
+  [`move_adf_entry.virtual_path(`*`<virtual_path>`*`)`](https://pepijn-devries.github.io/adfExplorer/reference/move.md)
+  [`move_adf_entry.virtual_path(`*`<character>`*`)`](https://pepijn-devries.github.io/adfExplorer/reference/move.md)
+  : Copy or move files between physical and virtual devices
+
+- [`` `adf_entry_name<-`() ``](https://pepijn-devries.github.io/adfExplorer/reference/name.md)
+  [`adf_entry_name()`](https://pepijn-devries.github.io/adfExplorer/reference/name.md)
+  : Obtain or modify an entry name on a virtual device
+
+- [`readBin()`](https://pepijn-devries.github.io/adfExplorer/reference/read_write.md)
+  [`readLines()`](https://pepijn-devries.github.io/adfExplorer/reference/read_write.md)
+  [`writeBin()`](https://pepijn-devries.github.io/adfExplorer/reference/read_write.md)
+  [`writeLines()`](https://pepijn-devries.github.io/adfExplorer/reference/read_write.md)
+  : Transfer binary data to and from connections
+
+- [`remove_adf_entry()`](https://pepijn-devries.github.io/adfExplorer/reference/remove_adf_entry.md)
+  [`remove_adf_entry.adf_device(`*`<character>`*`)`](https://pepijn-devries.github.io/adfExplorer/reference/remove_adf_entry.md)
+  [`remove_adf_entry.adf_device(`*`<virtual_path>`*`)`](https://pepijn-devries.github.io/adfExplorer/reference/remove_adf_entry.md)
+  : Remove entry (file / directory) from a virtual ADF device
+
+- [`format(`*`<adf_device>`*`)`](https://pepijn-devries.github.io/adfExplorer/reference/s3_methods.md)
+  [`format(`*`<adf_file_con>`*`)`](https://pepijn-devries.github.io/adfExplorer/reference/s3_methods.md)
+  [`format(`*`<adf_block>`*`)`](https://pepijn-devries.github.io/adfExplorer/reference/s3_methods.md)
+  [`format(`*`<virtual_path>`*`)`](https://pepijn-devries.github.io/adfExplorer/reference/s3_methods.md)
+  [`print(`*`<adf_device>`*`)`](https://pepijn-devries.github.io/adfExplorer/reference/s3_methods.md)
+  [`print(`*`<adf_file_con>`*`)`](https://pepijn-devries.github.io/adfExplorer/reference/s3_methods.md)
+  [`print(`*`<adf_block>`*`)`](https://pepijn-devries.github.io/adfExplorer/reference/s3_methods.md)
+  [`print(`*`<virtual_path>`*`)`](https://pepijn-devries.github.io/adfExplorer/reference/s3_methods.md)
+  [`as.character(`*`<virtual_path>`*`)`](https://pepijn-devries.github.io/adfExplorer/reference/s3_methods.md)
+  : Basic methods for S3 class objects
+
+- [`virtual_path()`](https://pepijn-devries.github.io/adfExplorer/reference/virtual_path.md)
+  : A path pointing to a file or directory on a virtual ADF device
+
+# Articles
+
+### All vignettes
+
+- [ADF S3 Class
+  Objects](https://pepijn-devries.github.io/adfExplorer/articles/adf_objects.md):
+- [ADF File System
+  Modes](https://pepijn-devries.github.io/adfExplorer/articles/file_system_modes.md):
+- [Version
+  2.0](https://pepijn-devries.github.io/adfExplorer/articles/version2.md):
+- [Virtual
+  Paths](https://pepijn-devries.github.io/adfExplorer/articles/virtual_paths.md):
