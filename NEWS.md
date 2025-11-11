@@ -1,3 +1,8 @@
+adfExplorer 2.0.3.0001
+-------------
+
+ * Retired deprecated functions
+
 adfExplorer 2.0.3
 -------------
 

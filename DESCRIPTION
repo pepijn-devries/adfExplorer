@@ -1,6 +1,6 @@
 Package: adfExplorer
 Title: Access and Manipulate Amiga Disk Files
-Version: 2.0.3
+Version: 2.0.3.0001
 Authors@R:
     c(
     person("Pepijn", "de Vries", role = c("aut", "cre"),
@@ -21,7 +21,7 @@ Description: Amiga Disk Files (ADF) are virtual
 License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.2
 LinkingTo: 
     cpp11
 Collate: 
@@ -31,7 +31,6 @@ Collate:
     'cpp11.R'
     'connect_adf.R'
     'demo.R'
-    'deprecated.R'
     'move.R'
     'device_info.R'
     'device_create.R'
