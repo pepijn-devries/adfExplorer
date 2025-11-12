@@ -49,16 +49,20 @@ SEXP adf_get_current_dir(SEXP extptr) {
   AdfVolume * vol = dev->volList[cur_vol];
   writable::list dev_l((R_xlen_t)0);
   dev_l.push_back(extptr);
+  writable::strings cd_names({"device", "path"});
+  
   writable::list result({
-    "device"_nm = dev_l,
-      "path"_nm = adf_entry_to_path(extptr, cur_vol, vol->curDirPtr, TRUE)
+    dev_l,
+    writable::strings((r_string)adf_entry_to_path(extptr, cur_vol, vol->curDirPtr, TRUE))
   });
+  result.attr("names") = cd_names;
   return result;
 }
 
 list list_adf_entries3_(SEXP extptr, AdfVolume * vol,
                         SECTNUM sector, int vol_num, bool recursive) {
   writable::list result;
+  writable::strings list_names((R_xlen_t)0);
   AdfEntry * entry;
   
   AdfList * root;
@@ -68,9 +72,11 @@ list list_adf_entries3_(SEXP extptr, AdfVolume * vol,
     entry = (AdfEntry *)alist->content;
     
     result.push_back({
-      "name"_nm = list()
+      list()
     });
-    writable::strings(result.attr("names")).at(result.size() - 1) = entry->name;
+    list_names.push_back(entry->name);
+    result.attr("names") = list_names;
+    //writable::strings(result.attr("names")).at(result.size() - 1) = entry->name;
     alist = alist->next;
     if (entry->type == ST_DIR && recursive) {
       result[entry->name] =

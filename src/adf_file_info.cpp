@@ -50,13 +50,18 @@ bool adf_check_volume(AdfDevice * dev, std::string vol_name,
 list adf_path_to_entry(SEXP extptr, std::string filename, int mode) {
   
   std::string entry_name = "";
+  
+  writable::strings entry_names({
+    "volume", "sector", "header_sectype", "parent", "name", "remainder"
+  });
   writable::list result({
-    "volume"_nm = (int)-1,
-      "sector"_nm = (int)-1,
-      "header_sectype"_nm = (int)-1,
-      "parent"_nm = (int)-1,
-      "name"_nm = writable::strings(r_string(entry_name)),
-      "remainder"_nm = writable::strings(r_string(entry_name))});
+    as_sexp((int)-1),
+    as_sexp((int)-1),
+    as_sexp((int)-1),
+    as_sexp((int)-1),
+    writable::strings(r_string(entry_name)),
+    writable::strings(r_string(entry_name))});
+  result.attr("names") = entry_names;
   
   AdfDevice * dev = get_adf_dev(extptr);
   int cur_vol     = get_adf_vol(extptr);
@@ -247,15 +252,19 @@ list adf_con_summary(SEXP extptr) {
   AdfFile * af = get_adffile(extptr);
   int nl = af->fileHdr->nameLen;
   if (nl > MAXNAMELEN) nl = MAXNAMELEN;
-  writable::list result({
-    "description"_nm = (std::string)(std::string(af->fileHdr->fileName).substr(0, nl)),
-    "class"_nm = "adf_file_con",
-    "mode"_nm = af->modeWrite ? "r+b" : "rb",
-    "text"_nm = "binary",
-    "opened"_nm = "opened",
-    "can read"_nm = af->modeRead ? "yes" : "no",
-    "can write"_nm = af->modeWrite ? "yes" : "no"
+  writable::strings summary_names({
+    "description", "class", "mode", "text", "opened", "can read", "can write"
   });
+  writable::list result({
+    writable::strings((r_string)std::string(af->fileHdr->fileName).substr(0, nl)),
+    writable::strings((r_string)"adf_file_con"),
+    writable::strings((r_string)(af->modeWrite ? "r+b" : "rb")),
+    writable::strings((r_string)"binary"),
+    writable::strings((r_string)"opened"),
+    writable::strings((r_string)(af->modeRead ? "yes" : "no")),
+    writable::strings((r_string)(af->modeWrite ? "yes" : "no"))
+  });
+  result.attr("names") = summary_names;
 
   return result;
 }

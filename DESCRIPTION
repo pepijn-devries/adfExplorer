@@ -1,6 +1,6 @@
 Package: adfExplorer
 Title: Access and Manipulate Amiga Disk Files
-Version: 2.0.3.0001
+Version: 2.0.3.0002
 Authors@R:
     c(
     person("Pepijn", "de Vries", role = c("aut", "cre"),
@@ -42,7 +42,7 @@ Collate:
     's3_methods.R'
     'virtual_path.R'
 Depends:
-    R (>= 3.5.0)
+    R (>= 4.1.0)
 Imports:
     methods,
     vctrs
