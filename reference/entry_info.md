@@ -95,7 +95,7 @@ adf_entry_info(my_device, "DF0:")
 #> [1] "2017-10-17 10:37:36 UTC"
 #> 
 #> [[1]]$diskName
-#> [1] "adfExampleOFS"
+#> <CHARSXP: "adfExampleOFS">
 #> 
 #> [[1]]$access
 #> [1] "2017-10-17 11:33:35 UTC"
@@ -141,13 +141,13 @@ adf_entry_info(my_device, "s")
 #> FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE 
 #> 
 #> [[1]]$comment
-#> [1] ""
+#> <CHARSXP: "">
 #> 
 #> [[1]]$modified
 #> [1] "2017-10-17 11:33:34 UTC"
 #> 
 #> [[1]]$dirname
-#> [1] "S"
+#> <CHARSXP: "S">
 #> 
 #> [[1]]$real
 #> [1] 0
@@ -202,13 +202,13 @@ adf_entry_info(my_device, "s/startup-sequence")
 #> [1] 664
 #> 
 #> [[1]]$comment
-#> [1] ""
+#> <CHARSXP: "">
 #> 
 #> [[1]]$modified
 #> [1] "2017-10-17 11:33:34 UTC"
 #> 
 #> [[1]]$filename
-#> [1] "Startup-Sequence"
+#> <CHARSXP: "Startup-Sequence">
 #> 
 #> [[1]]$real
 #> [1] 0
