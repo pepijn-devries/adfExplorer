@@ -61,25 +61,31 @@ list interpret_file_header_internal(AdfDevice *dev, int vol_num, int sectnum) {
   char name[MAXNAMELEN+3] = {0};
   memcpy(name, fheader->fileName, namelen);
   
+  writable::strings hdr_names({
+    "type", "headerKey", "highSeq", "dataSize", "firstData", "checkSum",
+    "dataBlocks", "access", "byteSize", "comment", "modified", "filename",
+    "real", "nextLink", "nextSameHash", "parent", "extension", "secType"
+  });
   writable::list result({
-    "type"_nm           = headerKey_to_str(fheader->type),
-      "headerKey"_nm    = (int)fheader->headerKey,
-      "highSeq"_nm      = (int)fheader->highSeq,
-      "dataSize"_nm     = (int)fheader->dataSize,
-      "firstData"_nm    = (int)fheader->firstData,
-      "checkSum"_nm     = (int)fheader->checkSum,
-      "dataBlocks"_nm   = datab,
-      "access"_nm       = access_from_int(fheader->access),
-      "byteSize"_nm     = (int)fheader->byteSize,
-      "comment"_nm      = r_string(comment),
-      "modified"_nm     = dmt_to_POSIXct(fheader->days, fheader->mins, fheader->ticks),
-      "filename"_nm     = r_string(name),
-      "real"_nm         = (int)fheader->real,
-      "nextLink"_nm     = (int)fheader->nextLink,
-      "nextSameHash"_nm = (int)fheader->nextSameHash,
-      "parent"_nm       = (int)fheader->parent,
-      "extension"_nm    = (int)fheader->extension,
-      "secType"_nm      = secType_to_str(fheader->secType)});
+    writable::strings((r_string)headerKey_to_str(fheader->type)),
+    as_sexp((int)fheader->headerKey),
+    as_sexp((int)fheader->highSeq),
+    as_sexp((int)fheader->dataSize),
+    as_sexp((int)fheader->firstData),
+    as_sexp((int)fheader->checkSum),
+    datab,
+    access_from_int(fheader->access),
+    as_sexp((int)fheader->byteSize),
+    r_string(comment),
+    dmt_to_POSIXct(fheader->days, fheader->mins, fheader->ticks),
+    r_string(name),
+    as_sexp((int)fheader->real),
+    as_sexp((int)fheader->nextLink),
+    as_sexp((int)fheader->nextSameHash),
+    as_sexp((int)fheader->parent),
+    as_sexp((int)fheader->extension),
+    as_sexp(secType_to_str(fheader->secType))});
+  result.attr("names") = hdr_names;
   return result;
 }
 
@@ -117,22 +123,28 @@ list interpret_dir_header_internal(AdfDevice *dev, int vol_num, int sectnum) {
   char name[MAXNAMELEN+3] = {0};
   memcpy(name, dheader->dirName, namelen);
   
+  writable::strings hdr_names({
+    "type", "sector", "highSeq", "checkSum", "hashTable", "access", "comment",
+    "modified", "dirname", "real", "nextLink", "nextSameHash", "parent",
+    "extension", "secType"
+  });
   writable::list result({
-    "type"_nm           = headerKey_to_str(dheader->type),
-      "sector"_nm       = (int)dheader->headerKey,
-      "highSeq"_nm      = (int)dheader->highSeq,
-      "checkSum"_nm     = (int)dheader->checkSum,
-      "hashTable"_nm    = hashtab,
-      "access"_nm       = access_from_int(dheader->access),
-      "comment"_nm      = r_string(comment),
-      "modified"_nm     = dmt_to_POSIXct(dheader->days, dheader->mins, dheader->ticks),
-      "dirname"_nm      = r_string(name),
-      "real"_nm         = (int)dheader->real,
-      "nextLink"_nm     = (int)dheader->nextLink,
-      "nextSameHash"_nm = (int)dheader->nextSameHash,
-      "parent"_nm       = (int)dheader->parent,
-      "extension"_nm    = (int)dheader->extension,
-      "secType"_nm      = secType_to_str(dheader->secType)});
+    as_sexp(headerKey_to_str(dheader->type)),
+    as_sexp((int)dheader->headerKey),
+    as_sexp((int)dheader->highSeq),
+    as_sexp((int)dheader->checkSum),
+    hashtab,
+    access_from_int(dheader->access),
+    r_string(comment),
+    dmt_to_POSIXct(dheader->days, dheader->mins, dheader->ticks),
+    r_string(name),
+    as_sexp((int)dheader->real),
+    as_sexp((int)dheader->nextLink),
+    as_sexp((int)dheader->nextSameHash),
+    as_sexp((int)dheader->parent),
+    as_sexp((int)dheader->extension),
+    as_sexp(secType_to_str(dheader->secType))});
+  result.attr("names") = hdr_names;
   return result;
 }
 
@@ -164,25 +176,30 @@ list interpret_root_header_internal(AdfDevice *dev, int vol_num) {
   writable::integers bmpag(BM_SIZE);
   for (int i = 0; i < bmpag.size(); i++) bmpag[i] = root->bmPages[i];
   
+  writable::strings hdr_names({
+    "type", "headerKey", "highSeq", "firstData", "checkSum", "hashTable", "bitmapFlag",
+    "bmPages", "bmExt", "creation", "diskName", "access", "creation_o", "nextSameHash",
+    "parent", "extension", "secType"
+  });
   writable::list result({
-    "type"_nm    = headerKey_to_str(root->type),
-      "headerKey"_nm  = root->headerKey,
-      "highSeq"_nm      = (int)root->highSeq,
-      "firstData"_nm    = (int)root->firstData,
-      "checkSum"_nm     = (int)root->checkSum,
-      "hashTable"_nm    = hashtab,
-      "bitmapFlag"_nm   = (r_bool)(root->bmFlag == -1),
-      "bmPages"_nm      = bmpag,
-      "bmExt"_nm        = (int)root->bmExt,
-      "creation"_nm     = dmt_to_POSIXct(root->cDays, root->cMins, root->cTicks),
-      "diskName"_nm     = r_string(diskname),
-      "access"_nm       = dmt_to_POSIXct(root->days, root->mins, root->ticks),
-      "creation_o"_nm   = dmt_to_POSIXct(root->coDays, root->coMins, root->coTicks),
-      "nextSameHash"_nm = (int)root->nextSameHash,
-      "parent"_nm       = (int)root->parent,
-      "extension"_nm    = (int)root->extension,
-      "secType"_nm      = secType_to_str(root->secType)});
-  
+    as_sexp(headerKey_to_str(root->type)),
+      as_sexp(root->headerKey),
+      as_sexp((int)root->highSeq),
+      as_sexp((int)root->firstData),
+      as_sexp((int)root->checkSum),
+      hashtab,
+      writable::logicals({(r_bool)(root->bmFlag == -1)}),
+      bmpag,
+      as_sexp((int)root->bmExt),
+      dmt_to_POSIXct(root->cDays, root->cMins, root->cTicks),
+      r_string(diskname),
+      dmt_to_POSIXct(root->days, root->mins, root->ticks),
+      dmt_to_POSIXct(root->coDays, root->coMins, root->coTicks),
+      as_sexp((int)root->nextSameHash),
+      as_sexp((int)root->parent),
+      as_sexp((int)root->extension),
+      as_sexp(secType_to_str(root->secType))});
+  result.attr("names") = hdr_names;
   return result;
 }
 
@@ -262,16 +279,15 @@ SEXP dmt_to_POSIXct(int days, int minutes, int ticks) {
 }
 
 logicals access_from_int(int access) {
-  writable::logicals result({
-    "D"_nm = (r_bool)hasD(access),
-      "E"_nm = (r_bool)hasE(access),
-      "W"_nm = (r_bool)hasW(access),
-      "R"_nm = (r_bool)hasR(access),
-      "A"_nm = (r_bool)hasA(access),
-      "P"_nm = (r_bool)hasP(access),
-      "S"_nm = (r_bool)hasS(access),
-      "H"_nm = (r_bool)hasH(access)
+  writable::strings acc_names({
+    "D", "E", "W", "R", "A", "P", "S", "H"
   });
+  writable::logicals result({
+    (r_bool)hasD(access), (r_bool)hasE(access), (r_bool)hasW(access),
+      (r_bool)hasR(access), (r_bool)hasA(access), (r_bool)hasP(access),
+      (r_bool)hasS(access), (r_bool)hasH(access)
+  });
+  result.attr("names") = acc_names;
   return result;
 }
 
