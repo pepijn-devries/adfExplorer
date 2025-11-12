@@ -1,4 +1,4 @@
-adfExplorer 2.0.3.0002
+adfExplorer 2.0.3.0003
 -------------
 
  * Retired deprecated functions
