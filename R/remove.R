@@ -15,6 +15,8 @@
 #' header data and if the entry is a file, the file data will still linger on the virtual disk.
 #' If you don't want that, set this argument to `TRUE`, in that case all file or directory data will
 #' be purged. Note that in the latter case, it won't be possible to recover your deleted file or directory.
+#' 
+#' See also [salvage_adf_entry()].
 #' @param ... Ignored
 #' @returns Returns the device connection
 #' @examples
