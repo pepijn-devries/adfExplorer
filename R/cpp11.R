@@ -72,6 +72,10 @@ adf_writelines <- function(text, extptr, sep, useBytes) {
   .Call(`_adfExplorer_adf_writelines`, text, extptr, sep, useBytes)
 }
 
+get_bitmap <- function(extptr, vol_num) {
+  .Call(`_adfExplorer_get_bitmap`, extptr, vol_num)
+}
+
 read_adf_block_ <- function(extptr, sector) {
   .Call(`_adfExplorer_read_adf_block_`, extptr, sector)
 }
@@ -174,4 +178,12 @@ adf_file_con_info <- function(extptr) {
 
 close_adf <- function(extptr) {
   invisible(.Call(`_adfExplorer_close_adf`, extptr))
+}
+
+dumpster_dive <- function(extptr, vol_num) {
+  .Call(`_adfExplorer_dumpster_dive`, extptr, vol_num)
+}
+
+undelete_adf_entry <- function(extptr, vol_num, sect) {
+  .Call(`_adfExplorer_undelete_adf_entry`, extptr, vol_num, sect)
 }

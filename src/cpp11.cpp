@@ -131,6 +131,13 @@ extern "C" SEXP _adfExplorer_adf_writelines(SEXP text, SEXP extptr, SEXP sep, SE
     return cpp11::as_sexp(adf_writelines(cpp11::as_cpp<cpp11::decay_t<strings>>(text), cpp11::as_cpp<cpp11::decay_t<SEXP>>(extptr), cpp11::as_cpp<cpp11::decay_t<std::string>>(sep), cpp11::as_cpp<cpp11::decay_t<bool>>(useBytes)));
   END_CPP11
 }
+// bitmap.cpp
+logicals get_bitmap(SEXP extptr, int vol_num);
+extern "C" SEXP _adfExplorer_get_bitmap(SEXP extptr, SEXP vol_num) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(get_bitmap(cpp11::as_cpp<cpp11::decay_t<SEXP>>(extptr), cpp11::as_cpp<cpp11::decay_t<int>>(vol_num)));
+  END_CPP11
+}
 // block_adf.cpp
 SEXP read_adf_block_(SEXP extptr, int sector);
 extern "C" SEXP _adfExplorer_read_adf_block_(SEXP extptr, SEXP sector) {
@@ -316,6 +323,20 @@ extern "C" SEXP _adfExplorer_close_adf(SEXP extptr) {
     return R_NilValue;
   END_CPP11
 }
+// undelete.cpp
+list dumpster_dive(SEXP extptr, int vol_num);
+extern "C" SEXP _adfExplorer_dumpster_dive(SEXP extptr, SEXP vol_num) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(dumpster_dive(cpp11::as_cpp<cpp11::decay_t<SEXP>>(extptr), cpp11::as_cpp<cpp11::decay_t<int>>(vol_num)));
+  END_CPP11
+}
+// undelete.cpp
+SEXP undelete_adf_entry(SEXP extptr, int vol_num, int sect);
+extern "C" SEXP _adfExplorer_undelete_adf_entry(SEXP extptr, SEXP vol_num, SEXP sect) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(undelete_adf_entry(cpp11::as_cpp<cpp11::decay_t<SEXP>>(extptr), cpp11::as_cpp<cpp11::decay_t<int>>(vol_num), cpp11::as_cpp<cpp11::decay_t<int>>(sect)));
+  END_CPP11
+}
 
 extern "C" {
 static const R_CallMethodDef CallEntries[] = {
@@ -354,6 +375,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_adfExplorer_adf_writelines",         (DL_FUNC) &_adfExplorer_adf_writelines,         4},
     {"_adfExplorer_close_adf",              (DL_FUNC) &_adfExplorer_close_adf,              1},
     {"_adfExplorer_close_all_devices_",     (DL_FUNC) &_adfExplorer_close_all_devices_,     0},
+    {"_adfExplorer_dumpster_dive",          (DL_FUNC) &_adfExplorer_dumpster_dive,          2},
+    {"_adfExplorer_get_bitmap",             (DL_FUNC) &_adfExplorer_get_bitmap,             2},
     {"_adfExplorer_interpret_dir_header",   (DL_FUNC) &_adfExplorer_interpret_dir_header,   3},
     {"_adfExplorer_interpret_file_header",  (DL_FUNC) &_adfExplorer_interpret_file_header,  3},
     {"_adfExplorer_interpret_root_header",  (DL_FUNC) &_adfExplorer_interpret_root_header,  2},
@@ -362,6 +385,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_adfExplorer_open_adf_",              (DL_FUNC) &_adfExplorer_open_adf_,              2},
     {"_adfExplorer_read_adf_block_",        (DL_FUNC) &_adfExplorer_read_adf_block_,        2},
     {"_adfExplorer_seek_adf",               (DL_FUNC) &_adfExplorer_seek_adf,               3},
+    {"_adfExplorer_undelete_adf_entry",     (DL_FUNC) &_adfExplorer_undelete_adf_entry,     3},
     {"_adfExplorer_write_adf_block_",       (DL_FUNC) &_adfExplorer_write_adf_block_,       3},
     {NULL, NULL, 0}
 };

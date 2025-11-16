@@ -1,6 +1,6 @@
 Package: adfExplorer
 Title: Access and Manipulate Amiga Disk Files
-Version: 2.0.3.0003
+Version: 2.0.3.0004
 Authors@R:
     c(
     person("Pepijn", "de Vries", role = c("aut", "cre"),
@@ -26,13 +26,14 @@ LinkingTo:
     cpp11
 Collate: 
     'adfExplorer-package.R'
+    'move.R'
+    'device_info.R'
+    'bitmap.R'
     'blocks.R'
     'compress.R'
     'cpp11.R'
     'connect_adf.R'
     'demo.R'
-    'move.R'
-    'device_info.R'
     'device_create.R'
     'helpers.R'
     'directory.R'
@@ -40,6 +41,7 @@ Collate:
     'remove.R'
     's3_conn.R'
     's3_methods.R'
+    'undelete.R'
     'virtual_path.R'
 Depends:
     R (>= 4.1.0)
@@ -47,8 +49,9 @@ Imports:
     methods,
     vctrs
 Suggests:
-    adfExplorer,
+    AmigaFFH,
     knitr,
+    ProTrackR2,
     rmarkdown,
     testthat (>= 3.0.0)
 VignetteBuilder: knitr

@@ -32,7 +32,9 @@ virtual path.}
 parent directory is removed and its flags in the bitmap block are set to 'available'. The entry's
 header data and if the entry is a file, the file data will still linger on the virtual disk.
 If you don't want that, set this argument to \code{TRUE}, in that case all file or directory data will
-be purged. Note that in the latter case, it won't be possible to recover your deleted file or directory.}
+be purged. Note that in the latter case, it won't be possible to recover your deleted file or directory.
+
+See also \code{\link[=salvage_adf_entry]{salvage_adf_entry()}}.}
 
 \item{...}{Ignored}
 }

@@ -121,7 +121,8 @@ writeBin.adf_file_con <-
     swap <- endian != .Platform$endian
     if(!is.vector(object) || mode(object) == "list")
       stop("can only write vector objects")
-    adf_writebin(object, con, size, swap, useBytes)
+    adf_writebin(object, con, size, swap, useBytes) |>
+      invisible()
   }
 
 #' @rdname read_write
