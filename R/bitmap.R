@@ -18,6 +18,8 @@
 #' 
 #' ## Show blocks used by the file system
 #' bitmap[bitmap]
+#' 
+#' close(disk)
 #' @include device_info.R
 #' @export
 get_adf_bitmap <- function(dev, vol = 0L, ...) {
