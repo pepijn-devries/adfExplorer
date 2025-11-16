@@ -35,6 +35,8 @@
 #' 
 #' # It is now listed as an entry on the disk:
 #' list_adf_entries(disk, recursive = TRUE)
+#' 
+#' close(disk)
 #' @rdname salvage_adf_entry
 #' @export
 adf_dumpster_dive <- function(dev, vol = 0L, ...) {

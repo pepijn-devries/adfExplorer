@@ -1,6 +1,6 @@
 Package: adfExplorer
 Title: Access and Manipulate Amiga Disk Files
-Version: 2.0.3.0004
+Version: 2.0.3.0005
 Authors@R:
     c(
     person("Pepijn", "de Vries", role = c("aut", "cre"),
