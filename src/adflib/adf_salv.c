@@ -182,6 +182,7 @@ RETCODE adfCheckParent ( struct AdfVolume * vol,
     if ( rc != RC_OK )
         return rc;
 
+    free(block.name); /* Edit PdV ensure block name is freed */
     if ( block.type!=T_HEADER 
         || (block.secType!=ST_DIR && block.secType!=ST_ROOT) ) {
         // (*adfEnv.wFct)("adfCheckParent : parent secType is incorrect");
