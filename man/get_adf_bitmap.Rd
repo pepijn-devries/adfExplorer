@@ -30,12 +30,12 @@ bitmap block. This function returns the bitmap table for
 the specified volume.
 }
 \examples{
-disk <- demo_adf()
+my_device <- demo_adf()
 
-bitmap <- get_adf_bitmap(disk)
+bitmap <- get_adf_bitmap(my_device)
 
 ## Show blocks used by the file system
 bitmap[bitmap]
 
-close(disk)
+close(my_device)
 }

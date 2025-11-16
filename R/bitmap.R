@@ -12,14 +12,14 @@
 #' is reserved by the file system.
 #' @inheritParams device_type
 #' @examples
-#' disk <- demo_adf()
+#' my_device <- demo_adf()
 #' 
-#' bitmap <- get_adf_bitmap(disk)
+#' bitmap <- get_adf_bitmap(my_device)
 #' 
 #' ## Show blocks used by the file system
 #' bitmap[bitmap]
 #' 
-#' close(disk)
+#' close(my_device)
 #' @include device_info.R
 #' @export
 get_adf_bitmap <- function(dev, vol = 0L, ...) {
