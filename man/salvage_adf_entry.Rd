@@ -29,7 +29,7 @@ In case of \code{salvage_adf_entry()}, the \code{disk} (\code{adf_device} class 
 is returned, where (if successful) the record is restored.
 }
 \description{
-Functions to attempt to salvage files and directories on
+Functions to attempt to salvage files and directories from
 virtual disks (ADF).
 }
 \details{
@@ -59,4 +59,6 @@ salvage_adf_entry(disk, sector = salvageable$sect)
 
 # It is now listed as an entry on the disk:
 list_adf_entries(disk, recursive = TRUE)
+
+close(disk)
 }

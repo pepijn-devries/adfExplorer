@@ -36,4 +36,6 @@ bitmap <- get_adf_bitmap(disk)
 
 ## Show blocks used by the file system
 bitmap[bitmap]
+
+close(disk)
 }
