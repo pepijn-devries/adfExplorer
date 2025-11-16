@@ -46,5 +46,6 @@ adf_dumpster_dive <- function(dev, vol = 0L, ...) {
 #' @rdname salvage_adf_entry
 #' @export
 salvage_adf_entry <- function(dev, vol = 0L, sector, ...) {
+  # TODO 'easter egg.txt' is still listed as salvageable after recovering it!
   undelete_adf_entry(dev, vol, sector)
 }
