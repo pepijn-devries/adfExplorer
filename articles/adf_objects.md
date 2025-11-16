@@ -267,3 +267,9 @@ does not affect your virtual device.
 ``` r
 rm(block1, block2, block3)
 ```
+
+Finally, let’s clean up after our selves by closing the opened device:
+
+``` r
+close(my_device)
+```

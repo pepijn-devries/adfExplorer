@@ -1,6 +1,6 @@
 # Salvage entries on ADF disks
 
-Functions to attempt to salvage files and directories on virtual disks
+Functions to attempt to salvage files and directories from virtual disks
 (ADF).
 
 ## Usage
@@ -62,17 +62,17 @@ permanently removed.
 ## Examples
 
 ``` r
-disk <- demo_adf(write_protected = FALSE)
+my_device <- demo_adf(write_protected = FALSE)
 # The demo disk contains a deleted file that could be salvaged:
-salvageable <- adf_dumpster_dive(disk)
+salvageable <- adf_dumpster_dive(my_device)
 
 # Let's recover it:
-salvage_adf_entry(disk, sector = salvageable$sect)
+salvage_adf_entry(my_device, sector = salvageable$sect)
 #> Bootable DOS Floppy DD
 #>   Volume 0 [-i-]: adfExampleOFS (2.2%)
 
 # It is now listed as an entry on the disk:
-list_adf_entries(disk, recursive = TRUE)
+list_adf_entries(my_device, recursive = TRUE)
 #> DIR  DEWR...     Devs
 #> FILE DEWR...iguration
 #> DIR  DEWR...        S
@@ -85,4 +85,6 @@ list_adf_entries(disk, recursive = TRUE)
 #> DIR  DEWR...     mods
 #> FILE DEWR...mod.intro
 #> FILE DEWR...r egg.txt
+
+close(my_device)
 ```

@@ -15,7 +15,7 @@ the specified volume."><meta property="og:image" content="https://pepijn-devries
 
     <a class="navbar-brand me-2" href="../index.html">adfExplorer</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.3.0004</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.3.0005</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -89,9 +89,9 @@ is reserved by the file system.</p>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">disk</span> <span class="op">&lt;-</span> <span class="fu"><a href="demo_adf.html">demo_adf</a></span><span class="op">(</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">my_device</span> <span class="op">&lt;-</span> <span class="fu"><a href="demo_adf.html">demo_adf</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">bitmap</span> <span class="op">&lt;-</span> <span class="fu">get_adf_bitmap</span><span class="op">(</span><span class="va">disk</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">bitmap</span> <span class="op">&lt;-</span> <span class="fu">get_adf_bitmap</span><span class="op">(</span><span class="va">my_device</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## Show blocks used by the file system</span></span></span>
 <span class="r-in"><span><span class="va">bitmap</span><span class="op">[</span><span class="va">bitmap</span><span class="op">]</span></span></span>
@@ -101,6 +101,8 @@ is reserved by the file system.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  912  913  914 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> TRUE TRUE TRUE </span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/connections.html" class="external-link">close</a></span><span class="op">(</span><span class="va">my_device</span><span class="op">)</span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

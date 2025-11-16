@@ -39,9 +39,9 @@ reserved by the file system.
 ## Examples
 
 ``` r
-disk <- demo_adf()
+my_device <- demo_adf()
 
-bitmap <- get_adf_bitmap(disk)
+bitmap <- get_adf_bitmap(my_device)
 
 ## Show blocks used by the file system
 bitmap[bitmap]
@@ -51,4 +51,6 @@ bitmap[bitmap]
 #> TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE 
 #>  912  913  914 
 #> TRUE TRUE TRUE 
+
+close(my_device)
 ```
