@@ -64,6 +64,9 @@
   [`adf_dir_exists()`](https://pepijn-devries.github.io/adfExplorer/reference/exists.md)
   : Test if an entry exists on a virtual device
 
+- [`get_adf_bitmap()`](https://pepijn-devries.github.io/adfExplorer/reference/get_adf_bitmap.md)
+  : Get virtual disks bitmap flags
+
 - [`list_adf_entries()`](https://pepijn-devries.github.io/adfExplorer/reference/list_adf_entries.md)
   [`list_adf_entries.adf_device(`*`<character>`*`)`](https://pepijn-devries.github.io/adfExplorer/reference/list_adf_entries.md)
   [`list_adf_entries.adf_device(`*`<virtual_path>`*`)`](https://pepijn-devries.github.io/adfExplorer/reference/list_adf_entries.md)
@@ -104,6 +107,10 @@
   [`print(`*`<virtual_path>`*`)`](https://pepijn-devries.github.io/adfExplorer/reference/s3_methods.md)
   [`as.character(`*`<virtual_path>`*`)`](https://pepijn-devries.github.io/adfExplorer/reference/s3_methods.md)
   : Basic methods for S3 class objects
+
+- [`adf_dumpster_dive()`](https://pepijn-devries.github.io/adfExplorer/reference/salvage_adf_entry.md)
+  [`salvage_adf_entry()`](https://pepijn-devries.github.io/adfExplorer/reference/salvage_adf_entry.md)
+  : Salvage entries on ADF disks
 
 - [`virtual_path()`](https://pepijn-devries.github.io/adfExplorer/reference/virtual_path.md)
   : A path pointing to a file or directory on a virtual ADF device

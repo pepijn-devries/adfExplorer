@@ -54,6 +54,9 @@ remove_adf_entry.adf_device(x, path, flush = FALSE, ...)
   latter case, it won't be possible to recover your deleted file or
   directory.
 
+  See also
+  [`salvage_adf_entry()`](https://pepijn-devries.github.io/adfExplorer/reference/salvage_adf_entry.md).
+
 - ...:
 
   Ignored
@@ -79,7 +82,7 @@ list_adf_entries(my_device, "Devs")
 ## remove the file 'system-configuration' from the virtual device
 remove_adf_entry(my_device, "devs/system-configuration")
 #> Bootable DOS Floppy DD
-#>   Volume 0 [---]: adfExampleOFS (2.0%)
+#>   Volume 0 [-i-]: adfExampleOFS (2.0%)
 
 ## List files in directory 'Devs' again:
 list_adf_entries(my_device, "Devs")

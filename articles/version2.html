@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">adfExplorer</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.3.0003</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.3.0004</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -185,19 +185,20 @@ subdirectories):</p>
 <span><span class="co"># ---------------- New code</span></span>
 <span><span class="va">con</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/adf_file_con.html">adf_file_con</a></span><span class="op">(</span><span class="va">my_disk2</span>, <span class="st">"startup-sequence"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/read_write.html">readLines</a></span><span class="op">(</span><span class="va">con</span>, warn <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="co">#&gt;  [1] "; The Startup-Sequence is executed after booting"                                                                                         </span></span>
-<span><span class="co">#&gt;  [2] "; Everything after semicolons are comments and is ignored"                                                                                </span></span>
-<span><span class="co">#&gt;  [3] "; By default standard commands are loaded from"                                                                                           </span></span>
-<span><span class="co">#&gt;  [4] "; the ROM kickstart. Additional commands should be"                                                                                       </span></span>
-<span><span class="co">#&gt;  [5] "; stored on the disk in the SYS:C directory."                                                                                             </span></span>
-<span><span class="co">#&gt;  [6] "; For demonstration purposes we only echo some"                                                                                           </span></span>
-<span><span class="co">#&gt;  [7] "; text to the screen... Note that this will not"                                                                                          </span></span>
-<span><span class="co">#&gt;  [8] "; work on Amiga OS &lt;2.0 as \"Echo\" is not available"                                                                                     </span></span>
-<span><span class="co">#&gt;  [9] "; in older ROM kickstart versions."                                                                                                       </span></span>
-<span><span class="co">#&gt; [10] ""                                                                                                                                         </span></span>
-<span><span class="co">#&gt; [11] "Echo \"\033c\033[22m\033[32mADF Explorer Example Disk\" ; Note that the weird characters at the start are escape-codes to format the text"</span></span>
-<span><span class="co">#&gt; [12] "Echo \"\033[0mThis disk was created as an example for the\""                                                                              </span></span>
-<span><span class="co">#&gt; [13] "Echo \"R package 'adfExplorer' by Pepijn de Vries.\""</span></span>
+<span><span class="co">#&gt;  [1] "; The Startup-Sequence is executed after booting"                                           </span></span>
+<span><span class="co">#&gt;  [2] "; Everything after semicolons are comments and is ignored"                                  </span></span>
+<span><span class="co">#&gt;  [3] "; By default standard commands are loaded from"                                             </span></span>
+<span><span class="co">#&gt;  [4] "; the ROM kickstart. Additional commands should be"                                         </span></span>
+<span><span class="co">#&gt;  [5] "; stored on the disk in the SYS:C directory."                                               </span></span>
+<span><span class="co">#&gt;  [6] "; For demonstration purposes we only echo some"                                             </span></span>
+<span><span class="co">#&gt;  [7] "; text to the screen... Note that this will not"                                            </span></span>
+<span><span class="co">#&gt;  [8] "; work on Amiga OS &lt;2.0 as \"Echo\" is not available"                                       </span></span>
+<span><span class="co">#&gt;  [9] "; in older ROM kickstart versions."                                                         </span></span>
+<span><span class="co">#&gt; [10] ""                                                                                           </span></span>
+<span><span class="co">#&gt; [11] "Echo \"\033c\033[22m\033[32mADF Explorer Example Disk\" ; Note that the weird characters at"</span></span>
+<span><span class="co">#&gt; [12] "the start are escape-codes to format the text"                                              </span></span>
+<span><span class="co">#&gt; [13] "Echo \"\033[0mThis disk was created as an example for the\""                                </span></span>
+<span><span class="co">#&gt; [14] "Echo \"R package 'adfExplorer' by Pepijn de Vries.\""</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/connections.html" class="external-link">close</a></span><span class="op">(</span><span class="va">con</span><span class="op">)</span></span></code></pre></div>
 <p>Clean up after yourself:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">

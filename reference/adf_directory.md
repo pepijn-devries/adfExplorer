@@ -105,7 +105,7 @@ adf_directory(my_device)
 ## Create a new directory
 make_adf_dir(my_device, "DF0:s/newdir")
 #> Bootable DOS Floppy DD
-#>   Volume 0 [---]: adfExampleOFS (2.2%)
+#>   Volume 0 [-i-]: adfExampleOFS (2.2%)
 
 ## Change the current dir to the new directory:
 adf_directory(my_device) <- "DF0:s/newdir"

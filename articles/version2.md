@@ -124,19 +124,20 @@ Read from a file on the virtual disk:
 # ---------------- New code
 con <- adf_file_con(my_disk2, "startup-sequence")
 readLines(con, warn = FALSE)
-#>  [1] "; The Startup-Sequence is executed after booting"                                                                                         
-#>  [2] "; Everything after semicolons are comments and is ignored"                                                                                
-#>  [3] "; By default standard commands are loaded from"                                                                                           
-#>  [4] "; the ROM kickstart. Additional commands should be"                                                                                       
-#>  [5] "; stored on the disk in the SYS:C directory."                                                                                             
-#>  [6] "; For demonstration purposes we only echo some"                                                                                           
-#>  [7] "; text to the screen... Note that this will not"                                                                                          
-#>  [8] "; work on Amiga OS <2.0 as \"Echo\" is not available"                                                                                     
-#>  [9] "; in older ROM kickstart versions."                                                                                                       
-#> [10] ""                                                                                                                                         
-#> [11] "Echo \"\033c\033[22m\033[32mADF Explorer Example Disk\" ; Note that the weird characters at the start are escape-codes to format the text"
-#> [12] "Echo \"\033[0mThis disk was created as an example for the\""                                                                              
-#> [13] "Echo \"R package 'adfExplorer' by Pepijn de Vries.\""
+#>  [1] "; The Startup-Sequence is executed after booting"                                           
+#>  [2] "; Everything after semicolons are comments and is ignored"                                  
+#>  [3] "; By default standard commands are loaded from"                                             
+#>  [4] "; the ROM kickstart. Additional commands should be"                                         
+#>  [5] "; stored on the disk in the SYS:C directory."                                               
+#>  [6] "; For demonstration purposes we only echo some"                                             
+#>  [7] "; text to the screen... Note that this will not"                                            
+#>  [8] "; work on Amiga OS <2.0 as \"Echo\" is not available"                                       
+#>  [9] "; in older ROM kickstart versions."                                                         
+#> [10] ""                                                                                           
+#> [11] "Echo \"\033c\033[22m\033[32mADF Explorer Example Disk\" ; Note that the weird characters at"
+#> [12] "the start are escape-codes to format the text"                                              
+#> [13] "Echo \"\033[0mThis disk was created as an example for the\""                                
+#> [14] "Echo \"R package 'adfExplorer' by Pepijn de Vries.\""
 close(con)
 ```
 

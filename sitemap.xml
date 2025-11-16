@@ -22,6 +22,7 @@
 <url><loc>https://pepijn-devries.github.io/adfExplorer/reference/device_info.html</loc></url>
 <url><loc>https://pepijn-devries.github.io/adfExplorer/reference/entry_info.html</loc></url>
 <url><loc>https://pepijn-devries.github.io/adfExplorer/reference/exists.html</loc></url>
+<url><loc>https://pepijn-devries.github.io/adfExplorer/reference/get_adf_bitmap.html</loc></url>
 <url><loc>https://pepijn-devries.github.io/adfExplorer/reference/index.html</loc></url>
 <url><loc>https://pepijn-devries.github.io/adfExplorer/reference/list_adf_entries.html</loc></url>
 <url><loc>https://pepijn-devries.github.io/adfExplorer/reference/move.html</loc></url>
@@ -29,6 +30,7 @@
 <url><loc>https://pepijn-devries.github.io/adfExplorer/reference/read_write.html</loc></url>
 <url><loc>https://pepijn-devries.github.io/adfExplorer/reference/remove_adf_entry.html</loc></url>
 <url><loc>https://pepijn-devries.github.io/adfExplorer/reference/s3_methods.html</loc></url>
+<url><loc>https://pepijn-devries.github.io/adfExplorer/reference/salvage_adf_entry.html</loc></url>
 <url><loc>https://pepijn-devries.github.io/adfExplorer/reference/virtual_path.html</loc></url>
 </urlset>
 

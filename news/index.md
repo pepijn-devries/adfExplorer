@@ -1,7 +1,12 @@
 # Changelog
 
-## adfExplorer 2.0.3.0003
+## adfExplorer 2.0.3.0004
 
+- Added
+  [`get_adf_bitmap()`](https://pepijn-devries.github.io/adfExplorer/reference/get_adf_bitmap.md),
+  [`adf_dumpster_dive()`](https://pepijn-devries.github.io/adfExplorer/reference/salvage_adf_entry.md)
+  and
+  [`salvage_adf_entry()`](https://pepijn-devries.github.io/adfExplorer/reference/salvage_adf_entry.md).
 - Retired deprecated functions
 - Fix for CRAN issues
 

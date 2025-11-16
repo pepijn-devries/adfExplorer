@@ -134,7 +134,7 @@ is_fast_file_system(my_device) # tests if volume uses FFS
 #> [1] FALSE
 
 is_international(my_device) # tests if file system uses intl mode
-#> [1] FALSE
+#> [1] TRUE
 
 is_dircache(my_device) # tests if file system uses dir caching
 #> [1] FALSE

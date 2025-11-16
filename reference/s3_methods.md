@@ -57,7 +57,7 @@ con       <- adf_file_con(my_device, "s/startup-sequence")
 block     <- read_adf_block(my_device, 0L)
 
 format(my_device)
-#> [1] "Bootable write protected DOS Floppy DD\n  Volume 0 [---]: adfExampleOFS (2.1%)"
+#> [1] "Bootable write protected DOS Floppy DD\n  Volume 0 [-i-]: adfExampleOFS (2.1%)"
 format(vp)
 #>  [1] "DIR  DEWR...     Devs" "FILE DEWR...iguration" "DIR  DEWR...        S"
 #>  [4] "FILE DEWR...-Sequence" "DIR  DEWR...     this" "DIR  DEWR...       is"
@@ -69,7 +69,7 @@ format(block)
 
 print(my_device)
 #> Bootable write protected DOS Floppy DD
-#>   Volume 0 [---]: adfExampleOFS (2.1%)
+#>   Volume 0 [-i-]: adfExampleOFS (2.1%)
 print(vp)
 #> DIR  DEWR...     Devs
 #> FILE DEWR...iguration
@@ -86,12 +86,12 @@ print(con)
 #> A read only connection to virtual file:
 #> adfExampleOFS:S/Startup-Sequence
 print(block)
-#> 0x000  444F5300 E33D0E73 00000370 43FA003E  DOS.ã=.s...pCú.>
+#> 0x000  444F5302 31AC2977 00000370 43FA003E  DOS.1¬)w...pCú.>
 #> 0x010  70254EAE FDD84A80 670C2240 08E90006  p.N®ýØJg..@.é..
 #> 0x020  00224EAE FE6243FA 00184EAE FFA04A80  ..N®þbCú..N®ÿ J
 #> 0x030  670A2040 20680016 70004E75 70FF4E75  g. @ h..p.NupÿNu
-#> 0x040  646F732E 6C696272 61727900 65787061  dos.library.expa
-#> 0x050  6E73696F 6E2E6C69 62726172 79000000  nsion.library...
+#> 0x040  646F732E 6C696272 61727900 22657870  dos.library..exp
+#> 0x050  616E7369 6F6E2E6C 69627261 72790000  ansion.library..
 #> 0x060  00000000 00000000 00000000 00000000  ................
 #> 0x070  00000000 00000000 00000000 00000000  ................
 #> 0x080  00000000 00000000 00000000 00000000  ................

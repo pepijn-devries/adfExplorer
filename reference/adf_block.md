@@ -81,8 +81,8 @@ info <- adf_entry_info(my_device, "S/startup-sequence")
 
 filedata_block <- read_adf_block(my_device, rev(info[[1]]$dataBlocks)[[1]])
 filedata_block
-#> 0x000  00000008 00000393 00000001 000001E8  ..............è
-#> 0x010  00000395 5161C69B 3B205468 65205374  ...QaÆ; The St
+#> 0x000  00000008 00000376 00000001 000001E8  .......v.......è
+#> 0x010  00000378 5161C6D5 3B205468 65205374  ...xQaÆÕ; The St
 #> 0x020  61727475 702D5365 7175656E 63652069  artup-Sequence i
 #> 0x030  73206578 65637574 65642061 66746572  s executed after
 #> 0x040  20626F6F 74696E67 0A3B2045 76657279   booting.; Every
