@@ -26,15 +26,17 @@
 #' In case of `salvage_adf_entry()`, the `disk` (`adf_device` class object)
 #' is returned, where (if successful) the record is restored.
 #' @examples
-#' disk <- demo_adf(write_protected = FALSE)
+#' my_device <- demo_adf(write_protected = FALSE)
 #' # The demo disk contains a deleted file that could be salvaged:
-#' salvageable <- adf_dumpster_dive(disk)
+#' salvageable <- adf_dumpster_dive(my_device)
 #' 
 #' # Let's recover it:
-#' salvage_adf_entry(disk, sector = salvageable$sect)
+#' salvage_adf_entry(my_device, sector = salvageable$sect)
 #' 
 #' # It is now listed as an entry on the disk:
-#' list_adf_entries(disk, recursive = TRUE)
+#' list_adf_entries(my_device, recursive = TRUE)
+#' 
+#' close(my_device)
 #' @rdname salvage_adf_entry
 #' @export
 adf_dumpster_dive <- function(dev, vol = 0L, ...) {
@@ -44,5 +46,6 @@ adf_dumpster_dive <- function(dev, vol = 0L, ...) {
 #' @rdname salvage_adf_entry
 #' @export
 salvage_adf_entry <- function(dev, vol = 0L, sector, ...) {
+  # TODO 'easter egg.txt' is still listed as salvageable after recovering it!
   undelete_adf_entry(dev, vol, sector)
 }

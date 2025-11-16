@@ -1,9 +1,10 @@
-adfExplorer 2.0.3.0004
+adfExplorer 2.0.3.0005
 -------------
 
  * Added `get_adf_bitmap()`, `adf_dumpster_dive()` and
    `salvage_adf_entry()`.
  * Retired deprecated functions
+ * Improved test coverage
  * Fix for CRAN issues
 
 adfExplorer 2.0.3

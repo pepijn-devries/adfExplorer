@@ -2,7 +2,10 @@
 "_PACKAGE"
 NULL
 
-.onUnload <- function(libpath) library.dynam.unload("adfExplorer", libpath)
+.onUnload <- function(libpath) {
+  close_all_devices()
+  library.dynam.unload("adfExplorer", libpath)
+}
 
 #' @useDynLib adfExplorer, .registration = TRUE
 #' @importFrom methods setOldClass

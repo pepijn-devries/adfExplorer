@@ -24,3 +24,12 @@ test_that("File existence can be tested for multiple directories", {
     close(my_device)
   })
 })
+
+test_that("A new directory can be created using a virtual path", {
+  expect_no_error({
+    my_device <- demo_adf(write_protected = FALSE)
+    target <- virtual_path(my_device, "foobar")
+    make_adf_dir(my_device, target)
+    close(my_device)
+  })
+})

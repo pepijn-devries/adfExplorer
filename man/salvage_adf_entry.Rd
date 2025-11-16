@@ -29,7 +29,7 @@ In case of \code{salvage_adf_entry()}, the \code{disk} (\code{adf_device} class 
 is returned, where (if successful) the record is restored.
 }
 \description{
-Functions to attempt to salvage files and directories on
+Functions to attempt to salvage files and directories from
 virtual disks (ADF).
 }
 \details{
@@ -50,13 +50,15 @@ Note that these functions won't work when you have flushed the file
 and its data have been permanently removed.
 }
 \examples{
-disk <- demo_adf(write_protected = FALSE)
+my_device <- demo_adf(write_protected = FALSE)
 # The demo disk contains a deleted file that could be salvaged:
-salvageable <- adf_dumpster_dive(disk)
+salvageable <- adf_dumpster_dive(my_device)
 
 # Let's recover it:
-salvage_adf_entry(disk, sector = salvageable$sect)
+salvage_adf_entry(my_device, sector = salvageable$sect)
 
 # It is now listed as an entry on the disk:
-list_adf_entries(disk, recursive = TRUE)
+list_adf_entries(my_device, recursive = TRUE)
+
+close(my_device)
 }
