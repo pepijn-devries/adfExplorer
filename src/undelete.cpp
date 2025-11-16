@@ -40,7 +40,6 @@ list dumpster_dive(SEXP extptr, int vol_num) {
 [[cpp11::register]]
 SEXP undelete_adf_entry(SEXP extptr, int vol_num, int sect) {
   AdfDevice * dev = get_adf_dev(extptr);
-  int mode = ADF_FI_EXPECT_DIR | ADF_FI_EXPECT_VALID_CHECKSUM;
   list dumpster = dumpster_dive(extptr, vol_num);
   writable::integers sects(dumpster["sect"]);
   writable::integers par(dumpster["parent"]);
