@@ -2,7 +2,7 @@
 
 void check_volume_number(AdfDevice *dev, int vol_num) {
   if (dev->nVol < 1) cpp11::stop("No volumes on device");
-  if (vol_num < 0 || vol_num >= dev->nVol) cpp11::stop("Invalid volume number");
+  if (vol_num < 0 || vol_num >= dev->nVol) cpp11::stop("Volume not found on device");
   return;
 }
 

@@ -12,7 +12,7 @@ test_that("Files can be removed using a virtual path", {
   expect_no_error({
     my_device <- demo_adf(write_protected = FALSE)
     vp <- virtual_path(my_device, "s/startup-sequence")
-    remove_adf_entry(my_device, vp)
+    remove_adf_entry(my_device, vp, flush = TRUE)
     close(my_device)
   })
 })

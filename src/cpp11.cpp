@@ -34,10 +34,10 @@ extern "C" SEXP _adfExplorer_adf_dir_exists_(SEXP extptr, SEXP path) {
   END_CPP11
 }
 // adf_file_info.cpp
-list adf_entry_info_(SEXP extptr, std::string path);
-extern "C" SEXP _adfExplorer_adf_entry_info_(SEXP extptr, SEXP path) {
+list adf_entry_info_(SEXP extptr, std::string path, int mode);
+extern "C" SEXP _adfExplorer_adf_entry_info_(SEXP extptr, SEXP path, SEXP mode) {
   BEGIN_CPP11
-    return cpp11::as_sexp(adf_entry_info_(cpp11::as_cpp<cpp11::decay_t<SEXP>>(extptr), cpp11::as_cpp<cpp11::decay_t<std::string>>(path)));
+    return cpp11::as_sexp(adf_entry_info_(cpp11::as_cpp<cpp11::decay_t<SEXP>>(extptr), cpp11::as_cpp<cpp11::decay_t<std::string>>(path), cpp11::as_cpp<cpp11::decay_t<int>>(mode)));
   END_CPP11
 }
 // adf_file_info.cpp
@@ -350,7 +350,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_adfExplorer_adf_dev_size",           (DL_FUNC) &_adfExplorer_adf_dev_size,           1},
     {"_adfExplorer_adf_dev_type",           (DL_FUNC) &_adfExplorer_adf_dev_type,           1},
     {"_adfExplorer_adf_dir_exists_",        (DL_FUNC) &_adfExplorer_adf_dir_exists_,        2},
-    {"_adfExplorer_adf_entry_info_",        (DL_FUNC) &_adfExplorer_adf_entry_info_,        2},
+    {"_adfExplorer_adf_entry_info_",        (DL_FUNC) &_adfExplorer_adf_entry_info_,        3},
     {"_adfExplorer_adf_file_con_",          (DL_FUNC) &_adfExplorer_adf_file_con_,          3},
     {"_adfExplorer_adf_file_con_info",      (DL_FUNC) &_adfExplorer_adf_file_con_info,      1},
     {"_adfExplorer_adf_file_exists_",       (DL_FUNC) &_adfExplorer_adf_file_exists_,       2},
