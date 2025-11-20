@@ -16,8 +16,8 @@ adf_dir_exists_ <- function(extptr, path) {
   .Call(`_adfExplorer_adf_dir_exists_`, extptr, path)
 }
 
-adf_entry_info_ <- function(extptr, path) {
-  .Call(`_adfExplorer_adf_entry_info_`, extptr, path)
+adf_entry_info_ <- function(extptr, path, mode) {
+  .Call(`_adfExplorer_adf_entry_info_`, extptr, path, mode)
 }
 
 adf_con_summary <- function(extptr) {

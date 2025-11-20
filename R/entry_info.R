@@ -130,9 +130,9 @@ adf_entry_info.adf_device.virtual_path <- function(x, path, ...) {
 #' @export
 adf_entry_info.adf_device.character <- function(x, path, ...) {
   if (length(path) > 1) {
-    lapply(path, \(y) adf_entry_info_(x, y))
+    lapply(path, \(y) adf_entry_info_(x, y, 16L))
   } else {
-    list(adf_entry_info_(x, path))
+    list(adf_entry_info_(x, path, 16L))
   }
 }
 
@@ -152,7 +152,7 @@ adf_entry_info.virtual_path <- function(x, path, ...) {
 #' @export
 adf_entry_info.adf_file_con <- function(x, path, ...) {
   if (!missing(path)) stop("`path` only needs to be specified when `x` is an `adf_device`.")
-  list(adf_entry_info_(x, ""))
+  list(adf_entry_info_(x, "", 16L))
 }
 
 #' Obtain or modify an entry name on a virtual device

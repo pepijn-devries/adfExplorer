@@ -133,7 +133,6 @@ list adf_path_to_entry(SEXP extptr, std::string filename, int mode) {
   result["header_sectype"] = as_sexp((int)entry_sectype);
   result["parent"]         = as_sexp((int)parent);
   
-  
   if (((mode & ADF_FI_EXPECT_FILE) != 0) &&
       entry_sectype != ST_FILE) {
     const char * message = "Path does not point to a file";
@@ -180,13 +179,13 @@ bool adf_dir_exists_(SEXP extptr, std::string path) {
 }
 
 [[cpp11::register]]
-list adf_entry_info_(SEXP extptr, std::string path) {
+list adf_entry_info_(SEXP extptr, std::string path, int mode) {
   int sector, vol_num, sectype;
   writable::list result;
   if (Rf_inherits(extptr, "adf_device")) {
     AdfDevice * dev = get_adf_dev(extptr);
     
-    list entry = adf_path_to_entry(extptr, path, 0);
+    list entry = adf_path_to_entry(extptr, path, mode);
     sector  = integers(entry["sector"]).at(0);
     vol_num = integers(entry["volume"]).at(0);
     sectype = integers(entry["header_sectype"]).at(0);

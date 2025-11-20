@@ -275,6 +275,8 @@ RETCODE adfUndelFile ( struct AdfVolume *        vol,
     if ( rc != RC_OK )
         return rc;
 
+    adfSetBlockUsed(vol,entry->headerKey); /* Edit PdV we should set the bitmap flag for the header as well */
+    
     for(i=0; i<fileBlocks.nbData; i++)
         if ( !adfIsBlockFree(vol,fileBlocks.data[i]) )
             return RC_ERROR;

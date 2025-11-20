@@ -45,6 +45,14 @@ test_that("Cannot make multiple directories at once 1", {
   })
 })
 
+test_that("Cannot change directory when path points to a file", {
+  on.exit(close_all_devices(), add = TRUE, after = FALSE)
+  expect_error({
+    my_device <- demo_adf(write_protected = FALSE)
+    adf_directory(my_device) <- "mods/mod.intro"
+  })
+})
+
 test_that("Cannot make multiple directories at once 2", {
   on.exit(close_all_devices(), add = TRUE, after = FALSE)
   expect_error({
@@ -115,6 +123,14 @@ test_that("Path argument should be missing when calling `adf_entry_info` with vi
   expect_error({
     my_device <- demo_adf()
     adf_entry_info(virtual_path(my_device, c("s")), "s")
+  })
+})
+
+test_that("`adf_entry_info` does not work for non-existing path", {
+  on.exit(close_all_devices(), add = TRUE, after = FALSE)
+  expect_error({
+    my_device <- demo_adf()
+    adf_entry_info(my_device, "df0:foobar")
   })
 })
 
