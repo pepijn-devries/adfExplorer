@@ -14,13 +14,13 @@ Source:
 [`DESCRIPTION`](https://github.com/pepijn-devries/adfExplorer/blob/master/DESCRIPTION)
 
 de Vries P, Clévy L (2025). *adfExplorer: Access and Manipulate Amiga
-Disk Files*. R package version 2.0.3.0005,
+Disk Files*. R package version 2.0.3.0006,
 <https://pepijn-devries.github.io/adfExplorer/>.
 
     @Manual{,
       title = {adfExplorer: Access and Manipulate Amiga Disk Files},
       author = {Pepijn {de Vries} and Laurent Clévy},
       year = {2025},
-      note = {R package version 2.0.3.0005},
+      note = {R package version 2.0.3.0006},
       url = {https://pepijn-devries.github.io/adfExplorer/},
     }
