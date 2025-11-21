@@ -113,6 +113,7 @@ test_that("Entries can be listed", {
     entries <- list_adf_entries(my_device)
     entries <- list_adf_entries(my_device, "s")
     entries <- list_adf_entries(my_device, virtual_path(my_device, "devs"))
+    entries <- list_adf_entries(virtual_path(my_device, "devs"))
     close(my_device)
   })
 })
