@@ -1,4 +1,4 @@
-adfExplorer 2.0.3.0007
+adfExplorer 2.1.0
 -------------
 
  * Added `get_adf_bitmap()`, `adf_dumpster_dive()` and
