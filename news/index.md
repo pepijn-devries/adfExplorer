@@ -1,6 +1,6 @@
 # Changelog
 
-## adfExplorer 2.0.3.0007
+## adfExplorer 2.1.0
 
 - Added
   [`get_adf_bitmap()`](https://pepijn-devries.github.io/adfExplorer/reference/get_adf_bitmap.md),
