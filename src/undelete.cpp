@@ -56,7 +56,11 @@ SEXP undelete_adf_entry(SEXP extptr, int vol_num, int sect) {
   check_volume_number(dev, vol_num);
   AdfVolume * vol = dev->volList[vol_num];
   
-  RETCODE rc = adfUndelEntry(vol, dest_sect, sect);
+  RETCODE rc;
+  
+  rc = adfCheckEntry(vol, sect, 0);
+  if (rc == RC_OK)
+    rc = adfUndelEntry(vol, dest_sect, sect);
   
   if (rc != RC_OK) stop("Failed to salvage entry");
 
