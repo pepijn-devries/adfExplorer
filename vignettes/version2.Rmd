@@ -33,7 +33,7 @@ to be extracted from that copy. After which the file data can be stored to disk:
 ![Diagram of extracting a file with adfExplorer <2.0.0](../man/figures/diagram_old.svg)
 
 After working on this approach for a while, I learned about the existence of
-[ADFlib](https://github.com/lclevy/ADFlib). This is when I decided to start from scratch
+[ADFlib](https://github.com/adflib/ADFlib). This is when I decided to start from scratch
 and set up a more efficient design resulting in version 2.0.0. There I took the `C`
 code from `ADFlib` and build an interface to `R` in `C++`. This strategy had several
 advantages:
